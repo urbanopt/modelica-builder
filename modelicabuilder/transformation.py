@@ -1,0 +1,31 @@
+from collections import namedtuple
+
+from modelicabuilder.selector import (
+    ComponentDeclarationByTypeSelector,
+    ComponentArgumentValueSelector,
+)
+from modelicabuilder.edit import Edit
+
+# Transformation is an abstraction of a collection of nodes and changes to
+# those nodes. selector indicates which nodes to apply the change to.
+# edit indicates the change to apply
+Transformation = namedtuple('Transformation', ['selector', 'edit'])
+
+
+def ReplaceComponentArgumentValueByType(
+        component_type,
+        argument_name,
+        new_value):
+    """ReplaceComponentArgumentValueByType creates a transformation which changes a
+    component's initialization value for an argument
+
+    :param component_type: string, type of the component to select
+    :param argument_name: string, name of argument to modify
+    :param new_value: string, new argument value
+    :return: Transformation
+    """
+    selector = (ComponentDeclarationByTypeSelector(component_type)
+                .chain(ComponentArgumentValueSelector(argument_name)))
+    edit = Edit.make_replace(new_value)
+
+    return Transformation(selector, edit)

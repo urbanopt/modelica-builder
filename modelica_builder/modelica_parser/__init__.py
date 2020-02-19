@@ -1,7 +1,7 @@
 from antlr4 import FileStream, CommonTokenStream
 
-from modelicabuilder.modelicaparser.modelicaLexer import modelicaLexer
-from modelicabuilder.modelicaparser.modelicaParser import modelicaParser
+from modelica_builder.modelica_parser.modelicaLexer import modelicaLexer
+from modelica_builder.modelica_parser.modelicaParser import modelicaParser
 
 __all__ = [
     'modelicaLexer',

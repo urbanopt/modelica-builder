@@ -1,10 +1,10 @@
 from collections import namedtuple
 
-from modelicabuilder.selector import (
+from modelica_builder.selector import (
     ComponentDeclarationByTypeSelector,
     ComponentArgumentValueSelector,
 )
-from modelicabuilder.edit import Edit
+from modelica_builder.edit import Edit
 
 # Transformation is an abstraction of a collection of nodes and changes to
 # those nodes. selector indicates which nodes to apply the change to.

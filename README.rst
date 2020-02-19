@@ -1,0 +1,92 @@
+============================
+Modelica Building (ModBuild)
+============================
+
+*Note: this project is still in flux and the name/methods/namespaces may change*
+
+The Modelica Builder  project aims to make in-place modifcations to Modelica language files easier.
+The principal use case is to load, modify using higher level abstracted methods, and then save the
+resulting file. The user has access to the entire Abstract Syntax Tree of the entire Modelica grammar.
+
+
+.. code-block:: python
+
+    transformation = ReplaceComponentArgumentValueByType("ElectroMechanicalElement", "k", "8")
+    transformer = Transformer()
+    transformer.add(transformation)
+
+    result = transformer.execute('DCMotor.mo')
+
+    # new file (as a string) will be in the result variable
+    print(result)
+
+
+The Modelica Builder project does not:
+
+* Compile nor check for syntax validity
+
+
+Setup
+-----
+
+.. code-block:: bash
+
+    # install
+    pip install -r requirements.txt
+
+Usage
+-----
+Transformations specify what nodes to change and how to change them. This is done by combining
+Selectors and Edits. Selectors specify how to select nodes in the AST, and edits are modifications
+(insert, replace, delete) to the text of selected nodes.
+
+A Transformer is a collection of Transformations, which can then be applied to a file.
+
+See the tests for more examples and information.
+
+
+Development
+-----------
+
+If you change the source grammar file you need to regenerate the parser and lexer.
+
+With docker installed, run these commands from this the repo's root directory
+
+.. code-block:: bash
+
+    # build Antlr container
+    docker build -t antlr4:latest -f antlr/Dockerfile .
+
+    # run parser generator for python
+    docker run -v "$(pwd)/modelica_building/modelica_parser":/var/antlrResult \
+        antlr4:latest \
+        -Dlanguage=Python3 /var/antlrResult/modelica.g4
+
+    # commit results along with grammar file
+
+
+If not using Docker, Install antlr4 following `these instructions <https://github.com/antlr/antlr4/blob/master/doc/getting-started.md#installation>`
+
+.. code-block:: bash
+
+    # in modelica_building/modelica_parser
+    antlr4 -Dlanguage=Python3 modelica.g4
+
+    # commit results along with grammar file
+
+Testing
+*******
+
+To run the tests, simply run the following:
+
+.. code-block:: python
+
+    py.test
+
+Known Issues
+------------
+
+* The transformations occur on strings which are immutable. Need to investigate using byte arrays.
+
+
+

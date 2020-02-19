@@ -1,5 +1,5 @@
-from modelicabuilder.edit import Edit
-from modelicabuilder.modelicaparser import parse
+from modelica_builder.edit import Edit
+from modelica_builder.modelica_parser import parse
 
 
 class Transformer:

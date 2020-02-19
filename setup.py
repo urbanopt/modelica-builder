@@ -1,14 +1,22 @@
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+    Setup file for modelica_builder.
+    Use setup.cfg to configure your project.
 
-from setuptools import setup, find_packages
+    This file was generated with PyScaffold 3.2.3.
+    PyScaffold helps you to put up the scaffold of your new Python project.
+    Learn more under: https://pyscaffold.org/
+"""
+import sys
+from pkg_resources import VersionConflict, require
+from setuptools import setup
 
-with open('requirements.txt', 'r') as f:
-    install_requirements = f.readlines()
+try:
+    require('setuptools>=38.3')
+except VersionConflict:
+    print("Error: version of setuptools is too old (<38.3)!")
+    sys.exit(1)
 
-setup(
-    name="modelicaTransformer",
-    version="0.1.0",
-    description=("Allows parsing and modifying Modelica files"),
-    install_requires=install_requirements,
-    packages=find_packages()
-)
+
+if __name__ == "__main__":
+    setup(use_pyscaffold=True)

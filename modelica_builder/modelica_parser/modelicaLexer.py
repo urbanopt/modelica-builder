@@ -1,8 +1,9 @@
 # Generated from /var/antlrResult/modelica.g4 by ANTLR 4.8
-from antlr4 import *
-from io import StringIO
-from typing.io import TextIO
 import sys
+from io import StringIO
+
+from antlr4 import *
+from typing.io import TextIO
 
 
 def serializedATN():

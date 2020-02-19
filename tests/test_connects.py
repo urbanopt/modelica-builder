@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from unittest import TestCase
 import os
+from unittest import TestCase
+
 from modelica_builder.edit import Edit
 from modelica_builder.selector import Selector, ConnectSelector, select
 from modelica_builder.transformation import Transformation

@@ -3,6 +3,7 @@
 
 import os
 from unittest import TestCase
+
 from modelica_builder.transformation import ReplaceComponentArgumentValueByType
 from modelica_builder.transformer import Transformer
 

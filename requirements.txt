@@ -3,8 +3,10 @@
 antlr4-python3-runtime==4.8
 
 # Testing packages
+pre-commit==2.1.0
 Pygments==2.5.2
 pytest==5.3.5
 pytest-cov==2.8.1
 tox==3.14.4
+
 

@@ -17,7 +17,9 @@ class TestComponents(TestCase):
 
     def test_change_arg(self):
         # Build the transformations
-        transformation = ReplaceComponentArgumentValueByType("ElectroMechanicalElement", "k", "8")
+        transformation = ReplaceComponentArgumentValueByType(
+            "ElectroMechanicalElement", "k", "8"
+        )
 
         # create the list of transformations to run
         transformer = Transformer()
@@ -34,5 +36,3 @@ class TestComponents(TestCase):
             file.write(result)
 
         self.assertTrue(os.path.exists(os.path.join(self.output_dir, 'DCMotor_01.mo')))
-
-

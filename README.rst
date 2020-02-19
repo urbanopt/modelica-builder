@@ -87,6 +87,3 @@ Known Issues
 ------------
 
 * The transformations occur on strings which are immutable. Need to investigate using byte arrays.
-
-
-

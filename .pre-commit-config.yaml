@@ -1,4 +1,8 @@
-exclude: '^docs/conf.py'
+exclude: |
+  (?x)(
+    ^docs/conf.py|
+    ^modelica_builder/modelica_parser/
+  )
 
 repos:
 - repo: git://github.com/pre-commit/pre-commit-hooks

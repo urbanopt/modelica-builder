@@ -4,12 +4,13 @@ import os
 from unittest import TestCase
 
 from modelica_builder.edit import Edit
-from modelica_builder.selector import Selector, ConnectSelector, select
+from modelica_builder.selector import ConnectSelector, Selector, select
 from modelica_builder.transformation import Transformation
 from modelica_builder.transformer import Transformer
 
 
-# TODO: Can we move this to a more general location, it seems useful as a function wihtin the library.
+# TODO: Can we move this to a more general location, it seems useful as a function within
+# the library.
 class ComponentReferenceSelector(Selector):
     def __init__(self, component_identifier):
         self._component_identifier = component_identifier

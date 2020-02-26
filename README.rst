@@ -65,7 +65,7 @@ With docker installed, run these commands from this the repo's root directory
     # commit results along with grammar file
 
 
-If not using Docker, Install antlr4 following `these instructions <https://github.com/antlr/antlr4/blob/master/doc/getting-started.md#installation>`
+If not using Docker, Install antlr4 following `these instructions <https://github.com/antlr/antlr4/blob/master/doc/getting-started.md#installation>`_
 
 .. code-block:: bash
 

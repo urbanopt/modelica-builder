@@ -4,8 +4,10 @@ from modelica_builder.modelica_parser import parse
 
 class Transformer:
     """Transformer collects transformations and applies them to files"""
-    _transformations = []
-    _edits = []
+
+    def __init__(self):
+        self._transformations = []
+        self._edits = []
 
     def add(self, transformation):
         """add adds a transformation to be applied

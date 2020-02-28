@@ -1,21 +1,14 @@
+from modelica_builder import modelica_parser
+
+
 class Edit:
-    start = None
-    stop = None
-    data = None
+    def __init__(self, start, stop, data):
+        self.start = start
+        self.stop = stop
+        self.data = data
 
     def __lt__(self, other):
         return self.start < other.start
-
-    @staticmethod
-    def _get_span(node):
-        """get the character start and end of a node
-
-        :param node: object, node to get span
-        :return: start, stop, character indices for start and stop of node
-        """
-        # TODO: handle different node types
-        # e.g. if it's a terminal this might not work
-        return node.start.start, node.stop.stop
 
     @classmethod
     def make_delete(cls):
@@ -24,12 +17,8 @@ class Edit:
         :return: function, edit function for delete
         """
         def delete(node):
-            start, stop = cls._get_span(node)
-            edit = cls()
-            edit.start = start
-            edit.stop = stop
-            edit.data = None
-            return edit
+            start, stop = modelica_parser.get_span(node)
+            return cls(start, stop, None)
 
         return delete
 
@@ -41,13 +30,9 @@ class Edit:
         :return: function, edit function for replace
         """
         def replace(node):
-            start, stop = cls._get_span(node)
+            start, stop = modelica_parser.get_span(node)
 
-            edit = cls()
-            edit.start = start
-            edit.stop = stop
-            edit.data = data
-            return edit
+            return cls(start, stop, data)
 
         return replace
 
@@ -60,15 +45,13 @@ class Edit:
         :return: function, edit function for insert
         """
         def insert(node):
-            start, stop = cls._get_span(node)
+            start, stop = modelica_parser.get_span(node)
             if insert_after:
                 start = stop + 1
 
-            edit = cls()
-            edit.start = start
-            edit.stop = stop
-            edit.data = data
-            return edit
+            # set stop to start, we aren't removing any data
+            stop = start
+            return cls(start, stop, data)
 
         return insert
 

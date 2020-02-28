@@ -223,3 +223,30 @@ class ConnectSelector(Selector):
 
     def _select(self, root, parser):
         return select(root, parser, 'connect_clause')
+
+
+class ElementListSelector(Selector):
+    """ElementListSelector is a selector which returns the element list"""
+
+    def _select(self, root, parser):
+        return select(root, parser, 'element_list')
+
+
+class NthChildSelector(Selector):
+    def __init__(self, n):
+        """NthChildSelector is a selector which returns the nth child
+
+        :param n: int, child's index. If n < 0, it selects the last child
+        """
+        self._idx = n
+
+    def _select(self, root, parser):
+        idx = self._idx
+        if self._idx < 0:
+            # get last child's index
+            idx = root.getChildCount() - 1
+
+        child = root.getChild(idx)
+        if child is None:
+            return []
+        return [child]

@@ -1,25 +1,10 @@
-from antlr4 import FileStream, CommonTokenStream
-
 from modelica_builder.modelica_parser.modelicaLexer import modelicaLexer
 from modelica_builder.modelica_parser.modelicaParser import modelicaParser
+from modelica_builder.modelica_parser.utils import parse, get_span
 
 __all__ = [
     'modelicaLexer',
     'modelicaParser',
-    'parse'
+    'parse',
+    'get_span'
 ]
-
-
-def parse(source):
-    """parse creates an AST from the given file
-
-    :param source: string, file to parse
-    :return: tree, parser, the tree and parser used to construct the tree
-    """
-    fs = FileStream(source)
-    lexer = modelicaLexer(fs)
-    stream = CommonTokenStream(lexer)
-    parser = modelicaParser(stream)
-    tree = parser.stored_definition()
-
-    return tree, parser

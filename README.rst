@@ -1,6 +1,6 @@
-============================
-Modelica Building (ModBuild)
-============================
+===========================
+Modelica Builder (ModBuild)
+===========================
 
 *Note: this project is still in flux and the name/methods/namespaces may change*
 

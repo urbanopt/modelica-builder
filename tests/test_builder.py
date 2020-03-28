@@ -25,10 +25,10 @@ class TestComponentBuilder(TestCase):
         component_builder.set_argument('k', 10)
         component_builder.add_annotation('Placement(transformation(extent{{10, 16}, {0, 26}}))')
 
-        transformer = Transformer()
+        transformer = Transformer(os.path.join(self.data_dir, 'DCMotor.mo'))
         transformer.add(component_builder.transformation())
 
-        result = transformer.execute(os.path.join(self.data_dir, 'DCMotor.mo'))
+        result = transformer.execute()
 
         # Assert
         # write the new file to disk
@@ -39,7 +39,7 @@ class TestComponentBuilder(TestCase):
             diffs = get_diffs(f.readlines(), result.splitlines(keepends=True))
 
             self.assertEqual(1, len(diffs['additions']), f'should have 1 addition, has these: {diffs["additions"]}')
-            self.assertEqual(0, len(diffs['subtractions']), f'should have 0 subtractions, has these: {diffs["subtractions"]}')
+            self.assertEqual(0, len(diffs['deletions']), f'should have 0 deletions, has these: {diffs["deletions"]}')
 
             self.assertIn('CustomType MyComponent(k=10) annotation(Placement(transformation(extent{{10, 16}, {0, 26}}))', diffs['additions'][0])
 
@@ -52,10 +52,10 @@ class TestComponentBuilder(TestCase):
         component_builder.set_argument('k', 10)
         component_builder.add_annotation('Placement(transformation(extent{{10, 16}, {0, 26}}))')
 
-        transformer = Transformer()
+        transformer = Transformer(os.path.join(self.data_dir, 'DCMotor.mo'))
         transformer.add(component_builder.transformation())
 
-        result = transformer.execute(os.path.join(self.data_dir, 'DCMotor.mo'))
+        result = transformer.execute()
 
         # Assert
         # write the new file to disk
@@ -66,7 +66,7 @@ class TestComponentBuilder(TestCase):
             diffs = get_diffs(f.readlines(), result.splitlines(keepends=True))
 
             self.assertEqual(1, len(diffs['additions']), f'should have 1 addition, has these: {diffs["additions"]}')
-            self.assertEqual(0, len(diffs['subtractions']), f'should have 0 subtractions, has these: {diffs["subtractions"]}')
+            self.assertEqual(0, len(diffs['deletions']), f'should have 0 deletions, has these: {diffs["deletions"]}')
 
             self.assertIn('CustomType MyComponent(k=10) annotation(Placement(transformation(extent{{10, 16}, {0, 26}}))', diffs['additions'][0])
 
@@ -79,10 +79,10 @@ class TestComponentBuilder(TestCase):
         component_builder.set_argument('k', 10)
         component_builder.add_annotation('Placement(transformation(extent{{10, 16}, {0, 26}}))')
 
-        transformer = Transformer()
+        transformer = Transformer(os.path.join(self.data_dir, 'DCMotor.mo'))
         transformer.add(component_builder.transformation())
 
-        result = transformer.execute(os.path.join(self.data_dir, 'DCMotor.mo'))
+        result = transformer.execute()
 
         # Assert
         # write the new file to disk
@@ -93,6 +93,6 @@ class TestComponentBuilder(TestCase):
             diffs = get_diffs(f.readlines(), result.splitlines(keepends=True))
 
             self.assertEqual(1, len(diffs['additions']), f'should have 1 addition, has these: {diffs["additions"]}')
-            self.assertEqual(0, len(diffs['subtractions']), f'should have 0 subtractions, has these: {diffs["subtractions"]}')
+            self.assertEqual(0, len(diffs['deletions']), f'should have 0 deletions, has these: {diffs["deletions"]}')
 
             self.assertIn('CustomType MyComponent(k=10) annotation(Placement(transformation(extent{{10, 16}, {0, 26}}))', diffs['additions'][0])

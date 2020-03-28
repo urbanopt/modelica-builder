@@ -5,7 +5,7 @@ from unittest import TestCase
 
 from .tests import ASTAssertions
 
-from modelica_builder.selector import ElementListSelector, NthChildSelector
+from modelica_builder.selector import ElementListSelector, NthChildSelector, Selector
 from modelica_builder.modelica_parser import parse
 
 
@@ -15,6 +15,37 @@ class TestSelectors(TestCase, ASTAssertions):
         self.output_dir = os.path.join(os.path.dirname(__file__), 'output')
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
+
+    def test_assert_count_fails(self):
+        # Setup
+        class NoneSelector(Selector):
+            """NoneSelector selects nothing"""
+            def _select(self, root, parser):
+                return []
+
+        tree, parser = parse(os.path.join(self.data_dir, 'DCMotor.mo'))
+
+        # Act, Assert
+        selector = NoneSelector().assert_count(1, 'Unexpected number of nodes selected')
+
+        with self.assertRaises(Exception):
+            selector.apply(tree, parser)
+
+    def test_assert_count_passes(self):
+        # Setup
+        class OneSelector(Selector):
+            """OneSelector selects one node"""
+            def _select(self, root, parser):
+                # note that we aren't really using a node from tree
+                # it shouldn't matter for this test
+                return [{}]
+
+        tree, parser = parse(os.path.join(self.data_dir, 'DCMotor.mo'))
+
+        # Act, Assert
+        selector = OneSelector().assert_count(1, 'Unexpected number of nodes selected')
+        # no exception should be raised
+        selector.apply(tree, parser)
 
     def test_element_list_selector(self):
         # Setup

@@ -22,10 +22,10 @@ class TestComponents(TestCase):
         )
 
         # create the list of transformations to run
-        transformer = Transformer()
+        transformer = Transformer(os.path.join(self.data_dir, 'DCMotor.mo'))
         transformer.add(transformation)
 
-        result = transformer.execute(os.path.join(self.data_dir, 'DCMotor.mo'))
+        result = transformer.execute()
 
         # original doesn't exist, new one exists
         self.assertNotIn('ElectroMechanicalElement EM(k=10, J=10, b=2);', result)

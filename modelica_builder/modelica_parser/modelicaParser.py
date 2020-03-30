@@ -316,13 +316,13 @@ def serializedATN():
         buf.write("B\2\u0232\u0233\5\u0086D\2\u0233\u0235\3\2\2\2\u0234\u0229")
         buf.write("\3\2\2\2\u0234\u022d\3\2\2\2\u0234\u022e\3\2\2\2\u0234")
         buf.write("\u022f\3\2\2\2\u0234\u0230\3\2\2\2\u0234\u0231\3\2\2\2")
-        buf.write("\u0235\u0236\3\2\2\2\u0236\u0237\7\4\2\2\u0237\u0238\5")
-        buf.write("\u0098M\2\u0238Q\3\2\2\2\u0239\u023d\5\u0084C\2\u023a")
-        buf.write("\u023b\7\61\2\2\u023b\u023e\5h\65\2\u023c\u023e\5\u0086")
-        buf.write("D\2\u023d\u023a\3\2\2\2\u023d\u023c\3\2\2\2\u023e\u024d")
-        buf.write("\3\2\2\2\u023f\u0240\7\30\2\2\u0240\u0241\5\u0090I\2\u0241")
-        buf.write("\u0242\7\32\2\2\u0242\u0243\7\61\2\2\u0243\u0244\5\u0084")
-        buf.write("C\2\u0244\u0245\5\u0086D\2\u0245\u024d\3\2\2\2\u0246\u024d")
+        buf.write("\u0235\u0236\3\2\2\2\u0236\u0237\5\u0098M\2\u0237\u0238")
+        buf.write("\7\4\2\2\u0238Q\3\2\2\2\u0239\u023d\5\u0084C\2\u023a\u023b")
+        buf.write("\7\61\2\2\u023b\u023e\5h\65\2\u023c\u023e\5\u0086D\2\u023d")
+        buf.write("\u023a\3\2\2\2\u023d\u023c\3\2\2\2\u023e\u024d\3\2\2\2")
+        buf.write("\u023f\u0240\7\30\2\2\u0240\u0241\5\u0090I\2\u0241\u0242")
+        buf.write("\7\32\2\2\u0242\u0243\7\61\2\2\u0243\u0244\5\u0084C\2")
+        buf.write("\u0244\u0245\5\u0086D\2\u0245\u024d\3\2\2\2\u0246\u024d")
         buf.write("\7\66\2\2\u0247\u024d\7\67\2\2\u0248\u024d\5V,\2\u0249")
         buf.write("\u024d\5Z.\2\u024a\u024d\5`\61\2\u024b\u024d\5d\63\2\u024c")
         buf.write("\u0239\3\2\2\2\u024c\u023f\3\2\2\2\u024c\u0246\3\2\2\2")
@@ -3665,9 +3665,9 @@ class modelicaParser ( Parser ):
 
 
             self.state = 564
-            self.match(modelicaParser.T__1)
-            self.state = 565
             self.comment()
+            self.state = 565
+            self.match(modelicaParser.T__1)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -6244,14 +6244,15 @@ class modelicaParser ( Parser ):
 
         localctx = modelicaParser.CommentContext(self, self._ctx, self.state)
         self.enterRule(localctx, 150, self.RULE_comment)
+        self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 1014
             self.string_comment()
             self.state = 1016
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,129,self._ctx)
-            if la_ == 1:
+            _la = self._input.LA(1)
+            if _la==modelicaParser.T__87:
                 self.state = 1015
                 self.annotation()
 
@@ -6295,26 +6296,26 @@ class modelicaParser ( Parser ):
 
         localctx = modelicaParser.String_commentContext(self, self._ctx, self.state)
         self.enterRule(localctx, 152, self.RULE_string_comment)
+        self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 1026
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,131,self._ctx)
-            if la_ == 1:
+            _la = self._input.LA(1)
+            if _la==modelicaParser.STRING:
                 self.state = 1018
                 self.match(modelicaParser.STRING)
                 self.state = 1023
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,130,self._ctx)
-                while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
-                    if _alt==1:
-                        self.state = 1019
-                        self.match(modelicaParser.T__72)
-                        self.state = 1020
-                        self.match(modelicaParser.STRING) 
+                _la = self._input.LA(1)
+                while _la==modelicaParser.T__72:
+                    self.state = 1019
+                    self.match(modelicaParser.T__72)
+                    self.state = 1020
+                    self.match(modelicaParser.STRING)
                     self.state = 1025
                     self._errHandler.sync(self)
-                    _alt = self._interp.adaptivePredict(self._input,130,self._ctx)
+                    _la = self._input.LA(1)
 
 
 

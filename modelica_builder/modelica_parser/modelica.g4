@@ -193,7 +193,7 @@ algorithm_section
    ;
 
 equation
-   : (simple_expression '=' expression | if_equation | for_equation | connect_clause | when_equation | name function_call_args) ';' comment
+   : (simple_expression '=' expression | if_equation | for_equation | connect_clause | when_equation | name function_call_args) comment ';'
    ;
 
 statement

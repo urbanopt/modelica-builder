@@ -65,7 +65,7 @@ class TestSelectors(TestCase, ASTAssertions):
 
         # Act
         selector = (ElementListSelector()
-                    .chain(NthChildSelector(2)))
+                    .chain(NthChildSelector(1)))
         element = selector.apply(tree, parser)
 
         # Assert

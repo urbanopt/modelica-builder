@@ -56,7 +56,7 @@ class ComponentBuilder:
             # is defined as (element ';')* meaning there's a semicolon for every
             # element to account for.
             selector = (ElementListSelector()
-                        .chain(NthChildSelector((self._insert_index * 2) - 1)))
+                        .chain(NthChildSelector(self._insert_index)))
             insert_after = True
 
         edit = Edit.make_insert(self.build(), insert_after=insert_after)

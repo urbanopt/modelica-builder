@@ -52,9 +52,6 @@ class ComponentBuilder:
                         .chain(NthChildSelector(-1)))
             insert_after = True
         else:
-            # index is really (insert_index * 2) - 1 because the element_list
-            # is defined as (element ';')* meaning there's a semicolon for every
-            # element to account for.
             selector = (ElementListSelector()
                         .chain(NthChildSelector(self._insert_index)))
             insert_after = True

@@ -184,7 +184,7 @@ short_class_definition
    ;
 
 equation_section
-   : ('initial')? 'equation' (equation ';')*
+   : ('initial')? 'equation' (equation)*
    ;
 
 algorithm_section
@@ -192,7 +192,7 @@ algorithm_section
    ;
 
 equation
-   : (simple_expression '=' expression | if_equation | for_equation | connect_clause | when_equation | name function_call_args) comment
+   : (simple_expression '=' expression | if_equation | for_equation | connect_clause | when_equation | name function_call_args) ';' comment
    ;
 
 statement

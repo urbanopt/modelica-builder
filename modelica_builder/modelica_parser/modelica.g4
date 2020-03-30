@@ -83,13 +83,14 @@ external_function_call
    ;
 
 element_list
-   : (element ';')*
+   : (element)*
    ;
 
 element
-   : import_clause
+   : (import_clause
    | extends_clause
    | ('redeclare')? ('final')? ('inner')? ('outer')? ((class_definition | component_clause) | 'replaceable' (class_definition | component_clause) (constraining_clause comment)?)
+   ) ';'
    ;
 
 import_clause

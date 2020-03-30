@@ -40,14 +40,14 @@ def serializedATN():
         buf.write("\13\f\3\f\3\f\5\f\u0131\n\f\3\f\5\f\u0134\n\f\3\f\5\f")
         buf.write("\u0137\n\f\3\f\5\f\u013a\n\f\3\f\3\f\3\f\5\f\u013f\n\f")
         buf.write("\3\r\3\r\3\16\3\16\3\16\5\16\u0146\n\16\3\16\3\16\3\16")
-        buf.write("\5\16\u014b\n\16\3\16\3\16\3\17\3\17\3\17\7\17\u0152\n")
-        buf.write("\17\f\17\16\17\u0155\13\17\3\20\3\20\3\20\5\20\u015a\n")
-        buf.write("\20\3\20\5\20\u015d\n\20\3\20\5\20\u0160\n\20\3\20\5\20")
-        buf.write("\u0163\n\20\3\20\3\20\5\20\u0167\n\20\3\20\3\20\3\20\5")
-        buf.write("\20\u016c\n\20\3\20\3\20\3\20\5\20\u0171\n\20\5\20\u0173")
-        buf.write("\n\20\5\20\u0175\n\20\3\21\3\21\3\21\3\21\3\21\3\21\3")
-        buf.write("\21\3\21\3\21\3\21\3\21\3\21\3\21\5\21\u0184\n\21\3\21")
-        buf.write("\3\21\3\22\3\22\3\22\7\22\u018b\n\22\f\22\16\22\u018e")
+        buf.write("\5\16\u014b\n\16\3\16\3\16\3\17\7\17\u0150\n\17\f\17\16")
+        buf.write("\17\u0153\13\17\3\20\3\20\3\20\5\20\u0158\n\20\3\20\5")
+        buf.write("\20\u015b\n\20\3\20\5\20\u015e\n\20\3\20\5\20\u0161\n")
+        buf.write("\20\3\20\3\20\5\20\u0165\n\20\3\20\3\20\3\20\5\20\u016a")
+        buf.write("\n\20\3\20\3\20\3\20\5\20\u016f\n\20\5\20\u0171\n\20\5")
+        buf.write("\20\u0173\n\20\3\20\3\20\3\21\3\21\3\21\3\21\3\21\3\21")
+        buf.write("\3\21\3\21\3\21\3\21\3\21\3\21\3\21\5\21\u0184\n\21\3")
+        buf.write("\21\3\21\3\22\3\22\3\22\7\22\u018b\n\22\f\22\16\22\u018e")
         buf.write("\13\22\3\23\3\23\3\23\5\23\u0193\n\23\3\23\5\23\u0196")
         buf.write("\n\23\3\24\3\24\3\24\5\24\u019b\n\24\3\25\3\25\3\25\5")
         buf.write("\25\u01a0\n\25\3\25\3\25\3\26\5\26\u01a5\n\26\3\26\5\26")
@@ -115,7 +115,7 @@ def serializedATN():
         buf.write("\3\2\2\2\b\u00bf\3\2\2\2\n\u00e8\3\2\2\2\f\u0102\3\2\2")
         buf.write("\2\16\u0104\3\2\2\2\20\u0115\3\2\2\2\22\u0117\3\2\2\2")
         buf.write("\24\u011f\3\2\2\2\26\u0122\3\2\2\2\30\u0140\3\2\2\2\32")
-        buf.write("\u0145\3\2\2\2\34\u0153\3\2\2\2\36\u0174\3\2\2\2 \u0176")
+        buf.write("\u0145\3\2\2\2\34\u0151\3\2\2\2\36\u0172\3\2\2\2 \u0176")
         buf.write("\3\2\2\2\"\u0187\3\2\2\2$\u018f\3\2\2\2&\u0197\3\2\2\2")
         buf.write("(\u019c\3\2\2\2*\u01a4\3\2\2\2,\u01ac\3\2\2\2.\u01ae\3")
         buf.write("\2\2\2\60\u01b6\3\2\2\2\62\u01bc\3\2\2\2\64\u01bf\3\2")
@@ -214,25 +214,25 @@ def serializedATN():
         buf.write("\u0147\3\2\2\2\u0147\u0148\7[\2\2\u0148\u014a\7\30\2\2")
         buf.write("\u0149\u014b\5\u0092J\2\u014a\u0149\3\2\2\2\u014a\u014b")
         buf.write("\3\2\2\2\u014b\u014c\3\2\2\2\u014c\u014d\7\32\2\2\u014d")
-        buf.write("\33\3\2\2\2\u014e\u014f\5\36\20\2\u014f\u0150\7\4\2\2")
-        buf.write("\u0150\u0152\3\2\2\2\u0151\u014e\3\2\2\2\u0152\u0155\3")
-        buf.write("\2\2\2\u0153\u0151\3\2\2\2\u0153\u0154\3\2\2\2\u0154\35")
-        buf.write("\3\2\2\2\u0155\u0153\3\2\2\2\u0156\u0175\5 \21\2\u0157")
-        buf.write("\u0175\5$\23\2\u0158\u015a\7 \2\2\u0159\u0158\3\2\2\2")
-        buf.write("\u0159\u015a\3\2\2\2\u015a\u015c\3\2\2\2\u015b\u015d\7")
-        buf.write("\5\2\2\u015c\u015b\3\2\2\2\u015c\u015d\3\2\2\2\u015d\u015f")
-        buf.write("\3\2\2\2\u015e\u0160\7!\2\2\u015f\u015e\3\2\2\2\u015f")
-        buf.write("\u0160\3\2\2\2\u0160\u0162\3\2\2\2\u0161\u0163\7\"\2\2")
-        buf.write("\u0162\u0161\3\2\2\2\u0162\u0163\3\2\2\2\u0163\u0172\3")
-        buf.write("\2\2\2\u0164\u0167\5\4\3\2\u0165\u0167\5(\25\2\u0166\u0164")
-        buf.write("\3\2\2\2\u0166\u0165\3\2\2\2\u0167\u0173\3\2\2\2\u0168")
-        buf.write("\u016b\7#\2\2\u0169\u016c\5\4\3\2\u016a\u016c\5(\25\2")
-        buf.write("\u016b\u0169\3\2\2\2\u016b\u016a\3\2\2\2\u016c\u0170\3")
-        buf.write("\2\2\2\u016d\u016e\5&\24\2\u016e\u016f\5\u0098M\2\u016f")
-        buf.write("\u0171\3\2\2\2\u0170\u016d\3\2\2\2\u0170\u0171\3\2\2\2")
-        buf.write("\u0171\u0173\3\2\2\2\u0172\u0166\3\2\2\2\u0172\u0168\3")
-        buf.write("\2\2\2\u0173\u0175\3\2\2\2\u0174\u0156\3\2\2\2\u0174\u0157")
-        buf.write("\3\2\2\2\u0174\u0159\3\2\2\2\u0175\37\3\2\2\2\u0176\u0183")
+        buf.write("\33\3\2\2\2\u014e\u0150\5\36\20\2\u014f\u014e\3\2\2\2")
+        buf.write("\u0150\u0153\3\2\2\2\u0151\u014f\3\2\2\2\u0151\u0152\3")
+        buf.write("\2\2\2\u0152\35\3\2\2\2\u0153\u0151\3\2\2\2\u0154\u0173")
+        buf.write("\5 \21\2\u0155\u0173\5$\23\2\u0156\u0158\7 \2\2\u0157")
+        buf.write("\u0156\3\2\2\2\u0157\u0158\3\2\2\2\u0158\u015a\3\2\2\2")
+        buf.write("\u0159\u015b\7\5\2\2\u015a\u0159\3\2\2\2\u015a\u015b\3")
+        buf.write("\2\2\2\u015b\u015d\3\2\2\2\u015c\u015e\7!\2\2\u015d\u015c")
+        buf.write("\3\2\2\2\u015d\u015e\3\2\2\2\u015e\u0160\3\2\2\2\u015f")
+        buf.write("\u0161\7\"\2\2\u0160\u015f\3\2\2\2\u0160\u0161\3\2\2\2")
+        buf.write("\u0161\u0170\3\2\2\2\u0162\u0165\5\4\3\2\u0163\u0165\5")
+        buf.write("(\25\2\u0164\u0162\3\2\2\2\u0164\u0163\3\2\2\2\u0165\u0171")
+        buf.write("\3\2\2\2\u0166\u0169\7#\2\2\u0167\u016a\5\4\3\2\u0168")
+        buf.write("\u016a\5(\25\2\u0169\u0167\3\2\2\2\u0169\u0168\3\2\2\2")
+        buf.write("\u016a\u016e\3\2\2\2\u016b\u016c\5&\24\2\u016c\u016d\5")
+        buf.write("\u0098M\2\u016d\u016f\3\2\2\2\u016e\u016b\3\2\2\2\u016e")
+        buf.write("\u016f\3\2\2\2\u016f\u0171\3\2\2\2\u0170\u0164\3\2\2\2")
+        buf.write("\u0170\u0166\3\2\2\2\u0171\u0173\3\2\2\2\u0172\u0154\3")
+        buf.write("\2\2\2\u0172\u0155\3\2\2\2\u0172\u0157\3\2\2\2\u0173\u0174")
+        buf.write("\3\2\2\2\u0174\u0175\7\4\2\2\u0175\37\3\2\2\2\u0176\u0183")
         buf.write("\7$\2\2\u0177\u0178\7[\2\2\u0178\u0179\7\26\2\2\u0179")
         buf.write("\u0184\5\u0082B\2\u017a\u017b\5\u0082B\2\u017b\u017c\7")
         buf.write("%\2\2\u017c\u0184\3\2\2\2\u017d\u017e\5\u0082B\2\u017e")
@@ -515,8 +515,8 @@ def serializedATN():
         buf.write("\u00b0\u00b4\u00bc\u00bf\u00c4\u00c9\u00cf\u00d2\u00d6")
         buf.write("\u00e1\u00e8\u00ef\u00f2\u00fb\u00fe\u0102\u010f\u011c")
         buf.write("\u0129\u012b\u0130\u0133\u0136\u0139\u013e\u0145\u014a")
-        buf.write("\u0153\u0159\u015c\u015f\u0162\u0166\u016b\u0170\u0172")
-        buf.write("\u0174\u0183\u018c\u0192\u0195\u019a\u019f\u01a4\u01a7")
+        buf.write("\u0151\u0157\u015a\u015d\u0160\u0164\u0169\u016e\u0170")
+        buf.write("\u0172\u0183\u018c\u0192\u0195\u019a\u019f\u01a4\u01a7")
         buf.write("\u01aa\u01b3\u01b8\u01c1\u01c4\u01c9\u01cf\u01d3\u01dc")
         buf.write("\u01e1\u01e4\u01e7\u01eb\u01ef\u01f5\u01f8\u01fc\u01ff")
         buf.write("\u0204\u0207\u0214\u021a\u021e\u0226\u0234\u023d\u024c")
@@ -1886,15 +1886,13 @@ class modelicaParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 337
+            self.state = 335
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << modelicaParser.T__2) | (1 << modelicaParser.T__3) | (1 << modelicaParser.T__4) | (1 << modelicaParser.T__5) | (1 << modelicaParser.T__6) | (1 << modelicaParser.T__7) | (1 << modelicaParser.T__8) | (1 << modelicaParser.T__9) | (1 << modelicaParser.T__10) | (1 << modelicaParser.T__11) | (1 << modelicaParser.T__12) | (1 << modelicaParser.T__13) | (1 << modelicaParser.T__14) | (1 << modelicaParser.T__15) | (1 << modelicaParser.T__16) | (1 << modelicaParser.T__18) | (1 << modelicaParser.T__29) | (1 << modelicaParser.T__30) | (1 << modelicaParser.T__31) | (1 << modelicaParser.T__32) | (1 << modelicaParser.T__33) | (1 << modelicaParser.T__38) | (1 << modelicaParser.T__39) | (1 << modelicaParser.T__40) | (1 << modelicaParser.T__41) | (1 << modelicaParser.T__42) | (1 << modelicaParser.T__43) | (1 << modelicaParser.T__44))) != 0) or _la==modelicaParser.T__86 or _la==modelicaParser.IDENT:
                 self.state = 332
                 self.element()
-                self.state = 333
-                self.match(modelicaParser.T__1)
-                self.state = 339
+                self.state = 337
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
 
@@ -1957,66 +1955,64 @@ class modelicaParser ( Parser ):
         self.enterRule(localctx, 28, self.RULE_element)
         self._la = 0 # Token type
         try:
-            self.state = 370
+            self.enterOuterAlt(localctx, 1)
+            self.state = 368
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [modelicaParser.T__33]:
-                self.enterOuterAlt(localctx, 1)
-                self.state = 340
+                self.state = 338
                 self.import_clause()
                 pass
             elif token in [modelicaParser.T__18]:
-                self.enterOuterAlt(localctx, 2)
-                self.state = 341
+                self.state = 339
                 self.extends_clause()
                 pass
             elif token in [modelicaParser.T__2, modelicaParser.T__3, modelicaParser.T__4, modelicaParser.T__5, modelicaParser.T__6, modelicaParser.T__7, modelicaParser.T__8, modelicaParser.T__9, modelicaParser.T__10, modelicaParser.T__11, modelicaParser.T__12, modelicaParser.T__13, modelicaParser.T__14, modelicaParser.T__15, modelicaParser.T__16, modelicaParser.T__29, modelicaParser.T__30, modelicaParser.T__31, modelicaParser.T__32, modelicaParser.T__38, modelicaParser.T__39, modelicaParser.T__40, modelicaParser.T__41, modelicaParser.T__42, modelicaParser.T__43, modelicaParser.T__44, modelicaParser.T__86, modelicaParser.IDENT]:
-                self.enterOuterAlt(localctx, 3)
-                self.state = 343
+                self.state = 341
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==modelicaParser.T__29:
-                    self.state = 342
+                    self.state = 340
                     self.match(modelicaParser.T__29)
 
 
-                self.state = 346
+                self.state = 344
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==modelicaParser.T__2:
-                    self.state = 345
+                    self.state = 343
                     self.match(modelicaParser.T__2)
 
 
-                self.state = 349
+                self.state = 347
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==modelicaParser.T__30:
-                    self.state = 348
+                    self.state = 346
                     self.match(modelicaParser.T__30)
 
 
-                self.state = 352
+                self.state = 350
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==modelicaParser.T__31:
-                    self.state = 351
+                    self.state = 349
                     self.match(modelicaParser.T__31)
 
 
-                self.state = 368
+                self.state = 366
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
                 if token in [modelicaParser.T__3, modelicaParser.T__4, modelicaParser.T__5, modelicaParser.T__6, modelicaParser.T__7, modelicaParser.T__8, modelicaParser.T__9, modelicaParser.T__10, modelicaParser.T__11, modelicaParser.T__12, modelicaParser.T__13, modelicaParser.T__14, modelicaParser.T__15, modelicaParser.T__16, modelicaParser.T__38, modelicaParser.T__39, modelicaParser.T__40, modelicaParser.T__41, modelicaParser.T__42, modelicaParser.T__43, modelicaParser.T__44, modelicaParser.T__86, modelicaParser.IDENT]:
-                    self.state = 356
+                    self.state = 354
                     self._errHandler.sync(self)
                     token = self._input.LA(1)
                     if token in [modelicaParser.T__3, modelicaParser.T__4, modelicaParser.T__5, modelicaParser.T__6, modelicaParser.T__7, modelicaParser.T__8, modelicaParser.T__9, modelicaParser.T__10, modelicaParser.T__11, modelicaParser.T__12, modelicaParser.T__13, modelicaParser.T__14, modelicaParser.T__15, modelicaParser.T__16]:
-                        self.state = 354
+                        self.state = 352
                         self.class_definition()
                         pass
                     elif token in [modelicaParser.T__38, modelicaParser.T__39, modelicaParser.T__40, modelicaParser.T__41, modelicaParser.T__42, modelicaParser.T__43, modelicaParser.T__44, modelicaParser.T__86, modelicaParser.IDENT]:
-                        self.state = 355
+                        self.state = 353
                         self.component_clause()
                         pass
                     else:
@@ -2024,29 +2020,29 @@ class modelicaParser ( Parser ):
 
                     pass
                 elif token in [modelicaParser.T__32]:
-                    self.state = 358
+                    self.state = 356
                     self.match(modelicaParser.T__32)
-                    self.state = 361
+                    self.state = 359
                     self._errHandler.sync(self)
                     token = self._input.LA(1)
                     if token in [modelicaParser.T__3, modelicaParser.T__4, modelicaParser.T__5, modelicaParser.T__6, modelicaParser.T__7, modelicaParser.T__8, modelicaParser.T__9, modelicaParser.T__10, modelicaParser.T__11, modelicaParser.T__12, modelicaParser.T__13, modelicaParser.T__14, modelicaParser.T__15, modelicaParser.T__16]:
-                        self.state = 359
+                        self.state = 357
                         self.class_definition()
                         pass
                     elif token in [modelicaParser.T__38, modelicaParser.T__39, modelicaParser.T__40, modelicaParser.T__41, modelicaParser.T__42, modelicaParser.T__43, modelicaParser.T__44, modelicaParser.T__86, modelicaParser.IDENT]:
-                        self.state = 360
+                        self.state = 358
                         self.component_clause()
                         pass
                     else:
                         raise NoViableAltException(self)
 
-                    self.state = 366
+                    self.state = 364
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if _la==modelicaParser.T__37:
-                        self.state = 363
+                        self.state = 361
                         self.constraining_clause()
-                        self.state = 364
+                        self.state = 362
                         self.comment()
 
 
@@ -2058,6 +2054,8 @@ class modelicaParser ( Parser ):
             else:
                 raise NoViableAltException(self)
 
+            self.state = 370
+            self.match(modelicaParser.T__1)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)

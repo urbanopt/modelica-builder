@@ -58,7 +58,7 @@ With docker installed, run these commands from this the repo's root directory
     docker build -t antlr4:latest -f antlr/Dockerfile .
 
     # run parser generator for python
-    docker run -v "$(pwd)/modelica_building/modelica_parser":/var/antlrResult \
+    docker run -v "$(pwd)/modelica_builder/modelica_parser":/var/antlrResult \
         antlr4:latest \
         -Dlanguage=Python3 /var/antlrResult/modelica.g4
 

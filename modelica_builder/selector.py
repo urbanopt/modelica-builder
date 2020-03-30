@@ -202,6 +202,41 @@ class ComponentDeclarationByIdentifierSelector(Selector):
             if node.declaration().IDENT().getText() == self._identifier]
 
 
+class ComponentDeclarationSelector(Selector):
+    """ComponentDeclarationSelector is a selector which matches component declarations
+    based on their type and/or identifier
+    """
+
+    def __init__(self, type_name=None, identifier=None):
+        self._type_name = type_name
+        self._identifier = identifier
+
+        super().__init__()
+
+    def _select(self, root, parser):
+        if self._type_name is not None:
+            # select the component clauses that match the type
+            selected_clauses = select(root, parser, 'component_clause',
+                                      'type_specifier', self._type_name)
+
+            # select the actual declarations within these clauses
+            component_declaration_nodes = []
+            for node in selected_clauses:
+                component_declaration_nodes += select(root, parser, 'component_declaration')
+
+        else:
+            component_declaration_nodes = select(root, parser, 'component_declaration')
+
+        if self._identifier is None:
+            return component_declaration_nodes
+
+        # filter component_declaration nodes if identifier was provided
+        return [
+            node
+            for node in component_declaration_nodes
+            if node.declaration().IDENT().getText() == self._identifier]
+
+
 class ComponentArgumentValueSelector(Selector):
     """ComponentArgumentSelector returns arguments to component
     declarations
@@ -270,6 +305,15 @@ class ElementListSelector(Selector):
 
     def _select(self, root, parser):
         return select(root, parser, 'element_list')
+
+
+class ParentSelector(Selector):
+    """ParentSelector selects the parent"""
+
+    def _select(self, root, parser):
+        if root.parentCtx:
+            return [root.parentCtx]
+        return []
 
 
 class NthChildSelector(Selector):

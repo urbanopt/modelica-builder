@@ -30,9 +30,21 @@ class TestModel(TestCase, DiffAssertions):
         self.result = model.execute()
 
         # Assert
-        # check diffs
         self.assertHasAdditions(source_file, self.result, ['connect(PortA, PortB);'])
         self.assertNoDeletions(source_file, self.result)
+
+    def test_model_remove_connect_specific(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.remove_connect('DC.p', 'R.n')
+        self.result = model.execute()
+
+        # Assert
+        self.assertNoAdditions(source_file, self.result)
+        self.assertHasDeletions(source_file, self.result, ['connect(DC.p, R.n);'])
 
     def test_model_edit_connect_both_ports(self):
         # Setup
@@ -44,14 +56,13 @@ class TestModel(TestCase, DiffAssertions):
         self.result = model.execute()
 
         # Assert
-        # check diffs
         expected_additions = [
-            'connect(PortA, PortB)',
+            'connect(PortA, PortB);',
         ]
         self.assertHasAdditions(source_file, self.result, expected_additions)
 
         expected_deletions = [
-            'connect(DC.p, R.n)'
+            'connect(DC.p, R.n);'
         ]
         self.assertHasDeletions(source_file, self.result, expected_deletions)
 
@@ -64,9 +75,9 @@ class TestModel(TestCase, DiffAssertions):
         model.edit_connect('DC.p', 'R.n', new_port_a='PortA')
         self.result = model.execute()
 
-        # check diffs
-        self.assertHasAdditions(source_file, self.result, ['connect(PortA, R.n)'])
-        self.assertHasDeletions(source_file, self.result, ['connect(DC.p, R.n)'])
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['connect(PortA, R.n);'])
+        self.assertHasDeletions(source_file, self.result, ['connect(DC.p, R.n);'])
 
     def test_model_edit_connect_match_star(self):
         # Setup
@@ -77,9 +88,9 @@ class TestModel(TestCase, DiffAssertions):
         model.edit_connect('*', 'R.n', new_port_b='PortB')
         self.result = model.execute()
 
-        # check diffs
-        self.assertHasAdditions(source_file, self.result, ['connect(DC.p, PortB)'])
-        self.assertHasDeletions(source_file, self.result, ['connect(DC.p, R.n)'])
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['connect(DC.p, PortB);'])
+        self.assertHasDeletions(source_file, self.result, ['connect(DC.p, R.n);'])
 
     def test_model_edit_connect_bad_edit(self):
         # Setup
@@ -90,3 +101,42 @@ class TestModel(TestCase, DiffAssertions):
         # not allowed to replace a wildcard port (could result in duplicate connects)
         with self.assertRaises(Exception):
             model.edit_connect('*', 'R.n', new_port_a='PortA')
+
+    def test_model_insert_component(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.insert_component(0, 'FancyClass', 'myInstance', {'arg1': '1234'}, ['my annotation'])
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['FancyClass myInstance(arg1=1234) annotation(my annotation);'])
+        self.assertNoDeletions(source_file, self.result)
+
+    def test_model_remove_component(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.remove_component('Resistor', 'R')
+        self.result = model.execute()
+
+        # Assert
+        self.assertNoAdditions(source_file, self.result)
+        self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])
+
+    def test_model_update_component_argument(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.update_component_argument('Resistor', 'R', 'R', '54321')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['Resistor R(R=54321);'])
+        self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])

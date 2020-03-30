@@ -1,16 +1,18 @@
 import os
 
 from modelica_builder.edit import Edit
-from modelica_builder.selector import NthChildSelector, ConnectClauseSelector
+from modelica_builder.selector import NthChildSelector, ConnectClauseSelector, ParentSelector, ComponentDeclarationSelector, ComponentArgumentValueSelector
 from modelica_builder.transformation import Transformation
 from modelica_builder.transformer import Transformer
-from modelica_builder.builder import ConnectBuilder
+from modelica_builder.builder import ConnectBuilder, ComponentBuilder
 
 
 class Model(Transformer):
     def __init__(self, source):
         if not os.path.exists(source):
             raise Exception(f'Modelica file does not exist: {source}')
+        self._source = source
+
         super().__init__(source)
 
     def add_connect(self, port_a, port_b, annotations=None):
@@ -22,6 +24,17 @@ class Model(Transformer):
         """
         connect = ConnectBuilder(port_a, port_b, annotations)
         self.add(connect.transformation())
+
+    def remove_connect(self, port_a, port_b):
+        """remove_connect finds and removes the connect clause that matches
+
+        :param port_a: string, first port identifier; an asterisk matches all
+        :param port_b: string, second port identifier; an asterisk matches all
+        """
+        # select the parent of the component to also select the semicolon and comments
+        selector = (ConnectClauseSelector(port_a, port_b)
+                    .chain(ParentSelector()))
+        self.add(Transformation(selector, Edit.make_delete()))
 
     def edit_connect(self, port_a, port_b, new_port_a=None, new_port_b=None):
         """edit_connect finds all connect clauses that match the pattern
@@ -47,3 +60,70 @@ class Model(Transformer):
             selector = (ConnectClauseSelector(port_a, port_b)
                         .chain(NthChildSelector(4)))
             self.add(Transformation(selector, Edit.make_replace(new_port_b)))
+
+    def insert_component(self, insert_index, type_, identifier, arguments=None, annotations=None):
+        """insert_component constructs and inserts a component
+
+        :param insert_index: int, index to place the new component. if < 0, it will insert at the end
+        :param type_: string, type of the component
+        :param identifier: string, component identifier
+        :param arguments: dict {string: string}, component initialization arguments with arg name as the key and arg value as the value
+        :param annotations: list of strings, annotations to add to the component
+        """
+        component = ComponentBuilder(insert_index, type_, identifier)
+        if arguments is not None:
+            for arg_name, arg_value in arguments.items():
+                component.set_argument(arg_name, arg_value)
+
+        if annotations is not None:
+            for annotation in annotations:
+                component.add_annotation(annotation)
+
+        self.add(component.transformation())
+
+    def remove_component(self, type_=None, identifier=None):
+        """remove_component removes a component declaration.
+        Note that if the component is part of a list of declarations, e.g.
+        TypeName IdentifierA, IdentifierB, IdentifierC;
+        then _all_ declarations are removed.
+
+        :param type_: string, optional, type in the declaration
+        :param identifier: string, optional, identifier in the declaration
+        """
+        if type_ is None and identifier is None:
+            raise Exception('At least one of the parameters must not be None')
+
+        selector = (ComponentDeclarationSelector(type_, identifier)
+                    .chain(ParentSelector())  # component_list
+                    .chain(ParentSelector())  # component_clause
+                    .chain(ParentSelector()))  # element
+
+        self.add(Transformation(selector, Edit.make_delete()))
+
+    def update_component_argument(self, type_, identifier, argument_name, new_value):
+        """update_component_argument changes the value of an _existing_ component
+        initialization argument value. ie this won't work if the argument isn't
+        already used
+
+        :param type_: string, component type
+        :param identifier: string, component identifier
+        :param argument_name: string, argument to update
+        :param new_value: string, new argument value
+        """
+        selector = (ComponentDeclarationSelector(type_, identifier)
+                    .chain(ComponentArgumentValueSelector(argument_name)))
+
+        self.add(Transformation(selector, Edit.make_replace(new_value)))
+
+    def save(self):
+        """overwrite the source file with the processed result"""
+        self.save_as(self._source)
+
+    def save_as(self, filename):
+        """save the result to a file
+
+        :param filename: string, name of file
+        """
+        result = self.execute()
+        with open(filename, 'w') as f:
+            f.write(result)

@@ -1,10 +1,10 @@
+from modelica_builder.edit import Edit
 from modelica_builder.selector import (
     ElementListSelector,
-    NthChildSelector,
     EquationSectionSelector,
+    NthChildSelector
 )
 from modelica_builder.transformation import Transformation
-from modelica_builder.edit import Edit
 
 
 class ComponentBuilder:

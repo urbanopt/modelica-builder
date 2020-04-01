@@ -3,10 +3,10 @@
 import os
 from unittest import TestCase
 
-from .tests import ASTAssertions
-
-from modelica_builder.selector import ElementListSelector, NthChildSelector, Selector
 from modelica_builder.modelica_parser import parse
+from modelica_builder.selector import ElementListSelector, NthChildSelector, Selector
+
+from .tests import ASTAssertions
 
 
 class TestSelectors(TestCase, ASTAssertions):
@@ -64,8 +64,7 @@ class TestSelectors(TestCase, ASTAssertions):
         tree, parser = parse(os.path.join(self.data_dir, 'DCMotor.mo'))
 
         # Act
-        selector = (ElementListSelector()
-                    .chain(NthChildSelector(1)))
+        selector = (ElementListSelector().chain(NthChildSelector(1)))
         element = selector.apply(tree, parser)
 
         # Assert

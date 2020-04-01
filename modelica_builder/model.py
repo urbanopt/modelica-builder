@@ -1,10 +1,16 @@
 import os
 
+from modelica_builder.builder import ComponentBuilder, ConnectBuilder
 from modelica_builder.edit import Edit
-from modelica_builder.selector import NthChildSelector, ConnectClauseSelector, ParentSelector, ComponentDeclarationSelector, ComponentArgumentValueSelector
+from modelica_builder.selector import (
+    ComponentArgumentValueSelector,
+    ComponentDeclarationSelector,
+    ConnectClauseSelector,
+    NthChildSelector,
+    ParentSelector
+)
 from modelica_builder.transformation import Transformation
 from modelica_builder.transformer import Transformer
-from modelica_builder.builder import ConnectBuilder, ComponentBuilder
 
 
 class Model(Transformer):

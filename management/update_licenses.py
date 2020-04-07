@@ -19,7 +19,7 @@ All rights reserved.
 ****************************************************************************************************
 """'''
 
-EXCLUDE_FILES = ["__init__.py"]
+EXCLUDE_FILES = ["__init__.py", "modelicaLexer.py", "modelicaListener.py", "modelicaParser.py"]
 PATHS = [
     {"glob": "modelica_builder/**/*.py", "license": PYTHON_LICENSE, "REGEX": PYTHON_REGEX, },
     {"glob": "management/**/*.py", "license": PYTHON_LICENSE, "REGEX": PYTHON_REGEX},

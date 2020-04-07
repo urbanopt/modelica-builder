@@ -1,6 +1,10 @@
-from modelica_builder.selector import ElementListSelector, NthChildSelector
-from modelica_builder.transformation import Transformation
 from modelica_builder.edit import Edit
+from modelica_builder.selector import (
+    ElementListSelector,
+    EquationSectionSelector,
+    NthChildSelector
+)
+from modelica_builder.transformation import Transformation
 
 
 class ComponentBuilder:
@@ -48,11 +52,8 @@ class ComponentBuilder:
                         .chain(NthChildSelector(-1)))
             insert_after = True
         else:
-            # index is really (insert_index * 2) - 1 because the element_list
-            # is defined as (element ';')* meaning there's a semicolon for every
-            # element to account for.
             selector = (ElementListSelector()
-                        .chain(NthChildSelector((self._insert_index * 2) - 1)))
+                        .chain(NthChildSelector(self._insert_index)))
             insert_after = True
 
         edit = Edit.make_insert(self.build(), insert_after=insert_after)
@@ -68,6 +69,43 @@ class ComponentBuilder:
             arguments = f"({', '.join([f'{k}={v}' for k, v in self._arguments.items()])})"
         annotations = ''
         if self._annotations:
-            annotations = f"annotation({', '.join(self._annotations)})"
+            annotations = f" annotation({', '.join(self._annotations)})"
 
-        return f'\n\t{self._type} {self._identifier}{arguments} {annotations};\n\t'
+        return f'\n\t{self._type} {self._identifier}{arguments}{annotations};\n\t'
+
+
+class ConnectBuilder:
+    def __init__(self, a, b, annotations=None):
+        """ConnectBuilder allows you to construct a connect clause
+
+        :param a: string, port a
+        :param b: string, port b
+        :param annotation: list, list of annotation strings
+        """
+        self._a = a
+        self._b = b
+        self._annotations = [] if annotations is None else annotations
+
+    def transformation(self):
+        """transformation creates the transformation required for inserting the
+        built connect clause
+
+        :return: Transformation
+        """
+        # select the last child of the equation section and insert after it
+        selector = (EquationSectionSelector()
+                    .chain(NthChildSelector(-1))
+                    .assert_count(1, 'Failed to find end of the equation section'))
+        edit = Edit.make_insert(self.build(), insert_after=True)
+        return Transformation(selector, edit)
+
+    def build(self):
+        """build constructs the text for the connect clause
+
+        :return: string
+        """
+        annotations = ''
+        if self._annotations:
+            annotations = f" annotation({', '.join(self._annotations)})"
+
+        return f'\n\tconnect({self._a}, {self._b}){annotations};\n\t'

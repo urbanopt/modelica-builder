@@ -105,7 +105,10 @@ def select_path(root, parser, path):
 
 class Selector(ABC):
     """Selector is the base class for all selectors"""
-    _chained_selector = None
+    def __init__(self):
+        self._chained_selector = None
+        self._assert_count = None
+        self._assert_message = None
 
     @abstractmethod
     def _select(self, root, parser):
@@ -117,6 +120,11 @@ class Selector(ABC):
         """
         pass
 
+    def assert_count(self, count, message):
+        self._assert_count = count
+        self._assert_message = message
+        return self
+
     def apply(self, root, parser):
         """apply runs selector as well as any chained selectors
 
@@ -125,6 +133,9 @@ class Selector(ABC):
         :return: list, list of nodes that were selected
         """
         selected_nodes = self._select(root, parser)
+        if self._assert_count is not None and len(selected_nodes) != self._assert_count:
+            raise Exception(f'Failed selector count assertion: {self._assert_message}')
+
         if not self._chained_selector:
             return selected_nodes
 
@@ -156,6 +167,7 @@ class ComponentDeclarationByTypeSelector(Selector):
 
     def __init__(self, type_name):
         self._type_name = type_name
+        super().__init__()
 
     def _select(self, root, parser):
         nodes = select(
@@ -179,6 +191,7 @@ class ComponentDeclarationByIdentifierSelector(Selector):
 
     def __init__(self, identifier):
         self._identifier = identifier
+        super().__init__()
 
     def _select(self, root, parser):
         nodes = select(root, parser, 'component_declaration')
@@ -189,6 +202,41 @@ class ComponentDeclarationByIdentifierSelector(Selector):
             if node.declaration().IDENT().getText() == self._identifier]
 
 
+class ComponentDeclarationSelector(Selector):
+    """ComponentDeclarationSelector is a selector which matches component declarations
+    based on their type and/or identifier
+    """
+
+    def __init__(self, type_name=None, identifier=None):
+        self._type_name = type_name
+        self._identifier = identifier
+
+        super().__init__()
+
+    def _select(self, root, parser):
+        if self._type_name is not None:
+            # select the component clauses that match the type
+            selected_clauses = select(root, parser, 'component_clause',
+                                      'type_specifier', self._type_name)
+
+            # select the actual declarations within these clauses
+            component_declaration_nodes = []
+            for node in selected_clauses:
+                component_declaration_nodes += select(root, parser, 'component_declaration')
+
+        else:
+            component_declaration_nodes = select(root, parser, 'component_declaration')
+
+        if self._identifier is None:
+            return component_declaration_nodes
+
+        # filter component_declaration nodes if identifier was provided
+        return [
+            node
+            for node in component_declaration_nodes
+            if node.declaration().IDENT().getText() == self._identifier]
+
+
 class ComponentArgumentValueSelector(Selector):
     """ComponentArgumentSelector returns arguments to component
     declarations
@@ -196,6 +244,7 @@ class ComponentArgumentValueSelector(Selector):
 
     def __init__(self, argument_name):
         self._argument_name = argument_name
+        super().__init__()
 
     def _select(self, root, parser):
         return select_path(
@@ -218,11 +267,37 @@ class ComponentArgumentValueSelector(Selector):
         )
 
 
-class ConnectSelector(Selector):
-    """ConnectSelector is a Selector which returns connect clauses"""
+class ConnectClauseSelector(Selector):
+    """ConnectClauseSelector is a Selector which returns connect clauses"""
+
+    def __init__(self, port_a='*', port_b='*'):
+        """
+        :param port_a: string, identifier to match for first port; matches all if set to '*'
+        :param port_b: string, identifier to match for second port; matches all if set to '*'
+        """
+        self._port_a = port_a
+        self._port_b = port_b
+        super().__init__()
 
     def _select(self, root, parser):
-        return select(root, parser, 'connect_clause')
+        nodes = select(root, parser, 'connect_clause')
+
+        # filter connect clauses
+        filtered_nodes = []
+        for node in nodes:
+            # check port a
+            port_a_node = node.getChild(2)
+            if self._port_a != '*' and self._port_a != port_a_node.getText():
+                continue
+
+            # check port b
+            port_b_node = node.getChild(4)
+            if self._port_b != '*' and self._port_b != port_b_node.getText():
+                continue
+
+            filtered_nodes.append(node)
+
+        return filtered_nodes
 
 
 class ElementListSelector(Selector):
@@ -232,6 +307,15 @@ class ElementListSelector(Selector):
         return select(root, parser, 'element_list')
 
 
+class ParentSelector(Selector):
+    """ParentSelector selects the parent"""
+
+    def _select(self, root, parser):
+        if root.parentCtx:
+            return [root.parentCtx]
+        return []
+
+
 class NthChildSelector(Selector):
     def __init__(self, n):
         """NthChildSelector is a selector which returns the nth child
@@ -239,6 +323,7 @@ class NthChildSelector(Selector):
         :param n: int, child's index. If n < 0, it selects the last child
         """
         self._idx = n
+        super().__init__()
 
     def _select(self, root, parser):
         idx = self._idx
@@ -250,3 +335,8 @@ class NthChildSelector(Selector):
         if child is None:
             return []
         return [child]
+
+
+class EquationSectionSelector(Selector):
+    def _select(self, root, parser):
+        return select(root, parser, 'equation_section')

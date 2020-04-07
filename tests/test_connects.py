@@ -4,7 +4,7 @@ import os
 from unittest import TestCase
 
 from modelica_builder.edit import Edit
-from modelica_builder.selector import ConnectSelector, Selector, select
+from modelica_builder.selector import ConnectClauseSelector, Selector, select
 from modelica_builder.transformation import Transformation
 from modelica_builder.transformer import Transformer
 
@@ -14,6 +14,7 @@ from modelica_builder.transformer import Transformer
 class ComponentReferenceSelector(Selector):
     def __init__(self, component_identifier):
         self._component_identifier = component_identifier
+        super().__init__()
 
     def _select(self, root, parser):
         nodes = select(root, parser, 'component_reference')
@@ -34,14 +35,14 @@ class TestConnects(TestCase):
 
     def test_connect(self):
         # select connect clause component reference of "DC.p"
-        selector = (ConnectSelector().chain(ComponentReferenceSelector('DC.p')))
+        selector = (ConnectClauseSelector().chain(ComponentReferenceSelector('DC.p')))
 
         # replace our selected nodes with DC.n
         transformation = Transformation(selector, Edit.make_replace('DC.n'))
-        transformer = Transformer()
+        transformer = Transformer(os.path.join(self.data_dir, 'DCMotor.mo'))
         transformer.add(transformation)
 
-        result = transformer.execute(os.path.join(self.data_dir, 'DCMotor.mo'))
+        result = transformer.execute()
 
         # original doesn't exist, new one exists
         self.assertNotIn('connect(DC.p, R.n);', result)

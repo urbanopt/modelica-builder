@@ -83,13 +83,14 @@ external_function_call
    ;
 
 element_list
-   : (element ';')*
+   : (element)*
    ;
 
 element
-   : import_clause
+   : (import_clause
    | extends_clause
    | ('redeclare')? ('final')? ('inner')? ('outer')? ((class_definition | component_clause) | 'replaceable' (class_definition | component_clause) (constraining_clause comment)?)
+   ) ';'
    ;
 
 import_clause
@@ -184,7 +185,7 @@ short_class_definition
    ;
 
 equation_section
-   : ('initial')? 'equation' (equation ';')*
+   : ('initial')? 'equation' (equation)*
    ;
 
 algorithm_section
@@ -192,7 +193,7 @@ algorithm_section
    ;
 
 equation
-   : (simple_expression '=' expression | if_equation | for_equation | connect_clause | when_equation | name function_call_args) comment
+   : (simple_expression '=' expression | if_equation | for_equation | connect_clause | when_equation | name function_call_args) comment ';'
    ;
 
 statement

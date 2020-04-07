@@ -11,6 +11,8 @@ import sys
 from pkg_resources import VersionConflict, require
 from setuptools import setup
 
+from management.update_licenses import UpdateLicenses
+
 try:
     require('setuptools>=38.3')
 except VersionConflict:
@@ -19,4 +21,7 @@ except VersionConflict:
 
 
 if __name__ == "__main__":
-    setup(use_pyscaffold=True)
+    setup(
+        use_pyscaffold=True,
+        cmdclass={"update_licenses": UpdateLicenses}
+    )

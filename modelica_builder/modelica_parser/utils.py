@@ -1,3 +1,11 @@
+"""
+****************************************************************************************************
+:copyright (c) 2020, Alliance for Sustainable Energy, LLC.
+All rights reserved.
+****************************************************************************************************
+"""
+
+
 from antlr4 import FileStream, CommonTokenStream
 from antlr4.tree.Tree import TerminalNodeImpl
 

@@ -74,6 +74,20 @@ If not using Docker, Install antlr4 following `these instructions <https://githu
 
     # commit results along with grammar file
 
+Managed Tasks
+-------------
+
+Updating Licenses
+*****************
+
+To apply the copyright/license to all the files, run the following managed task. To update, then update the
+script, and then rerun the managed task.
+
+.. code-block:: bash
+
+    ./setup.py update_licenses
+
+
 Testing
 *******
 

@@ -1,3 +1,11 @@
+"""
+****************************************************************************************************
+:copyright (c) 2020, Alliance for Sustainable Energy, LLC.
+All rights reserved.
+****************************************************************************************************
+"""
+
+
 # Generated from /var/antlrResult/modelica.g4 by ANTLR 4.8
 from antlr4 import *
 from io import StringIO

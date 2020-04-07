@@ -1,3 +1,11 @@
+"""
+****************************************************************************************************
+:copyright (c) 2020, Alliance for Sustainable Energy, LLC.
+All rights reserved.
+****************************************************************************************************
+"""
+
+
 from collections import namedtuple
 
 from modelica_builder.edit import Edit

@@ -1,3 +1,11 @@
+"""
+****************************************************************************************************
+:copyright (c) 2020, Alliance for Sustainable Energy, LLC.
+All rights reserved.
+****************************************************************************************************
+"""
+
+
 from abc import ABC, abstractmethod
 
 from antlr4.xpath import XPath

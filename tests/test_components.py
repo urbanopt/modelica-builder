@@ -1,3 +1,11 @@
+"""
+****************************************************************************************************
+:copyright (c) 2020, Alliance for Sustainable Energy, LLC.
+All rights reserved.
+****************************************************************************************************
+"""
+
+
 # This example changes the initialization of the ElectroMechanicalElement "EM"
 # argument "k"
 

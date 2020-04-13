@@ -27,6 +27,19 @@ class TestModel(TestCase, DiffAssertions):
             test_name = self.id().split('.')[-1]
             with open(os.path.join(self.output_dir, f'{test_name}__result.txt'), 'w') as f:
                 f.write(self.result)
+    
+    def test_set_within_statement(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.set_within_statement('A.B.C')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['within A.B.C;'])
+        self.assertHasDeletions(source_file, self.result, ['within models;'])
 
     def test_model_add_connect(self):
         # Setup

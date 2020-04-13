@@ -348,3 +348,8 @@ class NthChildSelector(Selector):
 class EquationSectionSelector(Selector):
     def _select(self, root, parser):
         return select(root, parser, 'equation_section')
+
+
+class WithinSelector(Selector):
+    def _select(self, root, parser):
+        return select(root, parser, 'within_statement')

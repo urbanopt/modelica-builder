@@ -15,7 +15,8 @@ from modelica_builder.selector import (
     ComponentDeclarationSelector,
     ConnectClauseSelector,
     NthChildSelector,
-    ParentSelector
+    ParentSelector,
+    WithinSelector
 )
 from modelica_builder.transformation import Transformation
 from modelica_builder.transformer import Transformer
@@ -28,6 +29,16 @@ class Model(Transformer):
         self._source = source
 
         super().__init__(source)
+    
+    def set_within_statement(self, within_string):
+        """changes 'within <string>;' at the beginning of
+        the file
+
+        :param within_string: string, new value
+        """
+        selector = (WithinSelector()
+                    .assert_count(1, 'A single within statement must already exist'))
+        self.add(Transformation(selector, Edit.make_replace(f'within {within_string};')))
 
     def add_connect(self, port_a, port_b, annotations=None):
         """add_connect creates a new connect clause in the equation section

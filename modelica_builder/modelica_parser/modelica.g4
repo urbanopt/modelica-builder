@@ -27,7 +27,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 grammar modelica;
 
 stored_definition
-   : ('within' (name)? ';')* (('final')? class_definition ';')*
+   : ( within_statement )* (('final')? class_definition ';')*
+   ;
+
+within_statement
+   : 'within' (name)? ';'
    ;
 
 class_definition

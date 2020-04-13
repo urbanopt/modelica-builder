@@ -1,3 +1,5 @@
+within models;
+
 model DCMotor
   Resistor R(R=100);
   Inductor L(L=100);

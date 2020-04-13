@@ -18,6 +18,9 @@ class Transformer:
         self._tree, self._parser = parse(source)
         self._transformations = {}
 
+    def apply_selector(self, selector):
+        return selector.apply(self._tree, self._parser)
+
     def add(self, transformation):
         """add adds a transformation to be applied
 

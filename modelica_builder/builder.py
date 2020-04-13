@@ -25,6 +25,7 @@ class ComponentBuilder:
         """
         self._arguments = {}
         self._annotations = []
+        self._string_comment = None
         self._insert_index = insert_index
         self._type = type_
         self._identifier = identifier
@@ -36,6 +37,9 @@ class ComponentBuilder:
         :param arg_value: string, value of the argument
         """
         self._arguments[arg_name] = arg_value
+
+    def set_string_comment(self, string_comment):
+        self._string_comment = string_comment
 
     def add_annotation(self, annotation):
         """add_annotation adds an annotation to the component
@@ -75,11 +79,16 @@ class ComponentBuilder:
         arguments = ''
         if self._arguments:
             arguments = f"({', '.join([f'{k}={v}' for k, v in self._arguments.items()])})"
+
+        string_comment = ''
+        if self._string_comment:
+            string_comment = f' "{self._string_comment}"'
+
         annotations = ''
         if self._annotations:
             annotations = f" annotation({', '.join(self._annotations)})"
 
-        return f'\n\t{self._type} {self._identifier}{arguments}{annotations};\n\t'
+        return f'\n\t{self._type} {self._identifier}{arguments}{string_comment}{annotations};\n\t'
 
 
 class ConnectBuilder:

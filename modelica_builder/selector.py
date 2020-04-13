@@ -353,3 +353,11 @@ class EquationSectionSelector(Selector):
 class WithinSelector(Selector):
     def _select(self, root, parser):
         return select(root, parser, 'within_statement')
+
+class ModelIdentifierSelector(Selector):
+    def _select(self, root, parser):
+        result = select(root, parser, 'long_class_specifier')
+        if result:
+            # grab IDENT, the first child
+            return [result[0].getChild(0)]
+        return []

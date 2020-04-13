@@ -14,6 +14,7 @@ from modelica_builder.selector import (
     ComponentArgumentValueSelector,
     ComponentDeclarationSelector,
     ConnectClauseSelector,
+    ModelIdentifierSelector,
     NthChildSelector,
     ParentSelector,
     WithinSelector
@@ -30,6 +31,26 @@ class Model(Transformer):
 
         super().__init__(source)
     
+    def get_name(self):
+        """returns the model's name
+
+        :return: string
+        """
+        selector = ModelIdentifierSelector()
+        result = self.apply_selector(selector)
+        if result:
+            return result[0].getText()
+
+        raise Exception('Model name not found')
+
+    def set_name(self, name):
+        """sets the model's name
+
+        :param name: string
+        """
+        selector = ModelIdentifierSelector()
+        self.add(Transformation(selector, Edit.make_replace(name)))
+
     def set_within_statement(self, within_string):
         """changes 'within <string>;' at the beginning of
         the file
@@ -86,7 +107,7 @@ class Model(Transformer):
                         .chain(NthChildSelector(4)))
             self.add(Transformation(selector, Edit.make_replace(new_port_b)))
 
-    def insert_component(self, insert_index, type_, identifier, arguments=None, annotations=None):
+    def insert_component(self, insert_index, type_, identifier, arguments=None, string_comment=None, annotations=None):
         """insert_component constructs and inserts a component
 
         :param insert_index: int, index to place the new component. if < 0, it will insert at the end
@@ -99,6 +120,9 @@ class Model(Transformer):
         if arguments is not None:
             for arg_name, arg_value in arguments.items():
                 component.set_argument(arg_name, arg_value)
+
+        if string_comment is not None:
+            component.set_string_comment(string_comment)
 
         if annotations is not None:
             for annotation in annotations:

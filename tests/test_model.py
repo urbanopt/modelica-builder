@@ -40,7 +40,7 @@ class TestModel(TestCase, DiffAssertions):
         self.assertEqual('DCMotor', name)
 
     def test_set_name(self):
-         # Setup
+        # Setup
         source_file = os.path.join(self.data_dir, 'DCMotor.mo')
         model = Model(source_file)
 
@@ -154,8 +154,8 @@ class TestModel(TestCase, DiffAssertions):
 
         # Act
         model.insert_component(0, 'FancyClass', 'myInstance',
-            arguments={'arg1': '1234'}, string_comment='my comment',
-            annotations=['my annotation'])
+                               arguments={'arg1': '1234'}, string_comment='my comment',
+                               annotations=['my annotation'])
         self.result = model.execute()
 
         # Assert

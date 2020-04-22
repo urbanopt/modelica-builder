@@ -30,7 +30,7 @@ class Model(Transformer):
         self._source = source
 
         super().__init__(source)
-    
+
     def get_name(self):
         """returns the model's name
 

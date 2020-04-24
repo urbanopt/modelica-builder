@@ -137,6 +137,20 @@ class TestModel(TestCase, DiffAssertions):
         self.assertHasAdditions(source_file, self.result, ['connect(DC.p, PortB);'])
         self.assertHasDeletions(source_file, self.result, ['connect(DC.p, R.n);'])
 
+    def test_model_edit_connect_negated_match(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        # replace connections where port a is fake_port_a and port b is not fake_port_b
+        model.edit_connect('fake_port_a', '!fake_port_b', new_port_b='PortC')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['connect(fake_port_a, PortC);'])
+        self.assertHasDeletions(source_file, self.result, ['connect(fake_port_a, fake_port_c);'])
+
     def test_model_edit_connect_bad_edit(self):
         # Setup
         source_file = os.path.join(self.data_dir, 'DCMotor.mo')

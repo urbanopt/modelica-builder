@@ -195,23 +195,45 @@ class ConnectClauseSelector(Selector):
     BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/equation_section/equation/connect_clause'
 
     def __init__(self, port_a='*', port_b='*'):
+        """Allowed patterns for ports:
+          - '*': matches all
+          - '!': prepended to a name indicates it should match everything but that name
+
+        :param port_a: string, identifier to match for first port
+        :param port_b: string, identifier to match for second port
         """
-        :param port_a: string, identifier to match for first port; matches all if set to '*'
-        :param port_b: string, identifier to match for second port; matches all if set to '*'
-        """
-        self._port_a = port_a
-        self._port_b = port_b
+
+        if port_a.startswith('!'):
+            self._port_a = port_a[1:]
+            self._port_a_negated = True
+        else:
+            self._port_a = port_a
+            self._port_a_negated = False
+
+        if port_b.startswith('!'):
+            self._port_b = port_b[1:]
+            self._port_b_negated = True
+        else:
+            self._port_b = port_b
+            self._port_b_negated = False
+
         super().__init__()
 
     def _select(self, base, parser):
         # check port a
         port_a_node = base.getChild(2)
-        if self._port_a != '*' and self._port_a != port_a_node.getText():
+        port_a_matches = self._port_a == port_a_node.getText()
+        if self._port_a_negated:
+            port_a_matches = not port_a_matches
+        if self._port_a != '*' and not port_a_matches:
             return []
 
         # check port b
         port_b_node = base.getChild(4)
-        if self._port_b != '*' and self._port_b != port_b_node.getText():
+        port_b_matches = self._port_b == port_b_node.getText()
+        if self._port_b_negated:
+            port_b_matches = not port_b_matches
+        if self._port_b != '*' and not port_b_matches:
             return []
 
         return [base]

@@ -166,8 +166,9 @@ class ComponentArgumentValueSelector(Selector):
     """
     BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause/component_list/component_declaration'
 
-    def __init__(self, argument_name):
+    def __init__(self, argument_name, argument_value=None):
         self._argument_name = argument_name
+        self._argument_value = argument_value
         super().__init__()
 
     def _select(self, base, parser):
@@ -182,12 +183,16 @@ class ComponentArgumentValueSelector(Selector):
                 filtered_modifications.append(element_modification)
 
         # get the argument expressions (ie argument values)
-        result = []
+        results = []
         for element_modification in filtered_modifications:
             xpath = '//expression'
-            result.extend(XPath.XPath.findAll(element_modification, xpath, parser))
+            results.extend(XPath.XPath.findAll(element_modification, xpath, parser))
 
-        return result
+        # filter out non-matching values if argument_value is specified
+        if self._argument_value is not None:
+            results = [result for result in results if result.getText() == self._argument_value]
+
+        return results
 
 
 class ConnectClauseSelector(Selector):
@@ -295,5 +300,6 @@ class ModelIdentifierSelector(Selector):
     BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier'
 
     def _select(self, base, parser):
-        # return the first identifier
-        return [base.IDENT()[0]]
+        # return both identifiers
+        # (first is the initial declaration second is the 'end <modelname>')
+        return [base.IDENT()[0], base.IDENT()[1]]

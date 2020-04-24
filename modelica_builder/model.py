@@ -149,7 +149,7 @@ class Model(Transformer):
 
         self.add(Transformation(selector, Edit.make_delete()))
 
-    def update_component_argument(self, type_, identifier, argument_name, new_value):
+    def update_component_argument(self, type_, identifier, argument_name, new_value, if_value=None):
         """update_component_argument changes the value of an _existing_ component
         initialization argument value. ie this won't work if the argument isn't
         already used
@@ -158,9 +158,10 @@ class Model(Transformer):
         :param identifier: string, component identifier
         :param argument_name: string, argument to update
         :param new_value: string, new argument value
+        :param if_value: string, if provided it will only update the value if the existing value matches this
         """
         selector = (ComponentDeclarationSelector(type_, identifier)
-                    .chain(ComponentArgumentValueSelector(argument_name)))
+                    .chain(ComponentArgumentValueSelector(argument_name, argument_value=if_value)))
 
         self.add(Transformation(selector, Edit.make_replace(new_value)))
 

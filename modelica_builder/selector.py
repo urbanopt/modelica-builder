@@ -7,6 +7,7 @@ All rights reserved.
 
 
 from abc import ABC, abstractmethod
+import re
 
 from antlr4.xpath import XPath
 
@@ -190,7 +191,13 @@ class ComponentArgumentValueSelector(Selector):
 
         # filter out non-matching values if argument_value is specified
         if self._argument_value is not None:
-            results = [result for result in results if result.getText() == self._argument_value]
+            filtered_results = []
+            for result in results:
+                a = result.getText()
+                b = self._argument_value
+                if re.sub(r"\s*", "", a) == re.sub(r"\s*", "", b):
+                    filtered_results.append(result)
+            results = filtered_results
 
         return results
 

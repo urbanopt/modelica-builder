@@ -215,6 +215,19 @@ class TestModel(TestCase, DiffAssertions):
         self.assertHasAdditions(source_file, self.result, ['Resistor R(R=54321);'])
         self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])
 
+    def test_model_update_component_argument_conditional_true_w_whitespace(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.update_component_argument('Resistor', 'R', 'R', '54321', if_value='  100\n')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['Resistor R(R=54321);'])
+        self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])
+
     def test_model_update_component_argument_conditional_false(self):
         # Setup
         source_file = os.path.join(self.data_dir, 'DCMotor.mo')

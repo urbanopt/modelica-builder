@@ -12,7 +12,11 @@ import os
 from unittest import TestCase
 
 from modelica_builder.modelica_parser import parse
-from modelica_builder.selector import ElementListSelector, NthChildSelector, Selector
+from modelica_builder.selector import (
+    ElementListSelector,
+    NthChildSelector,
+    Selector,
+)
 
 from .tests import ASTAssertions
 
@@ -37,7 +41,7 @@ class TestSelectors(TestCase, ASTAssertions):
         selector = NoneSelector().assert_count(1, 'Unexpected number of nodes selected')
 
         with self.assertRaises(Exception):
-            selector.apply(tree, parser)
+            selector.apply_to_root(tree, parser)
 
     def test_assert_count_passes(self):
         # Setup
@@ -53,7 +57,7 @@ class TestSelectors(TestCase, ASTAssertions):
         # Act, Assert
         selector = OneSelector().assert_count(1, 'Unexpected number of nodes selected')
         # no exception should be raised
-        selector.apply(tree, parser)
+        selector.apply_to_root(tree, parser)
 
     def test_element_list_selector(self):
         # Setup
@@ -61,7 +65,7 @@ class TestSelectors(TestCase, ASTAssertions):
 
         # Act
         selector = ElementListSelector()
-        element_list = selector.apply(tree, parser)
+        element_list = selector.apply_to_root(tree, parser)
 
         # Assert
         self.assertEqual(1, len(element_list), "should have one element list")
@@ -73,7 +77,7 @@ class TestSelectors(TestCase, ASTAssertions):
 
         # Act
         selector = (ElementListSelector().chain(NthChildSelector(1)))
-        element = selector.apply(tree, parser)
+        element = selector.apply_to_root(tree, parser)
 
         # Assert
         self.assertEqual(1, len(element), "should have one element")

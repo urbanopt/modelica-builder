@@ -1,3 +1,5 @@
+within models;
+
 model DCMotor
   Resistor R(R=100);
   Inductor L(L=100);
@@ -12,4 +14,6 @@ equation
   connect(EM.p, DC.n);
   connect(DC.n, G.p);
   connect(EM.flange, load.flange);
+  connect(fake_port_a, fake_port_b);
+  connect(fake_port_a, fake_port_c);
 end DCMotor;

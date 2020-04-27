@@ -17,6 +17,15 @@ class modelicaListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by modelicaParser#within_statement.
+    def enterWithin_statement(self, ctx:modelicaParser.Within_statementContext):
+        pass
+
+    # Exit a parse tree produced by modelicaParser#within_statement.
+    def exitWithin_statement(self, ctx:modelicaParser.Within_statementContext):
+        pass
+
+
     # Enter a parse tree produced by modelicaParser#class_definition.
     def enterClass_definition(self, ctx:modelicaParser.Class_definitionContext):
         pass

@@ -7,111 +7,19 @@ All rights reserved.
 
 
 from abc import ABC, abstractmethod
+import re
 
 from antlr4.xpath import XPath
 
-
-def select(root, parser, rule, child=None, child_value=None):
-    """select selects the rule in AST that has a child with child_value
-    If child is None, then it just returns the matched rule nodes
-    e.g. select a component declaration whose identifier is
-    thermalZoneTwoElements
-
-    :param root: object, tree to search
-    :param parser: object, parser that generated the tree
-    :param rule: string, name of node to search for
-    :param child: string, (optional) name of direct descendant used to filter nodes by inspecting it's text
-    :param child_value: (optional) string, value to match text to
-    """
-    matches = XPath.XPath.findAll(root, f'//{rule}', parser)
-    if len(matches) == 0:
-        return []
-
-    # check if the nodes should be filtered
-    if child is None:
-        return matches
-
-    def child_missing():
-        return []
-
-    results = []
-    for match in matches:
-        # this works b/c nodes of AST are ParserRuleContext, and calling child
-        # node as a method returns that context
-        children = getattr(match, child, child_missing)()
-
-        # possible for match to have multiple children of the same type
-        # e.g. connect_clause has two component_reference, so treat result as a
-        # list
-        if not isinstance(children, list):
-            children = [children]
-
-        # filter this match based on child condition
-        for _child in children:
-            val = _child.getText()
-            if val == child_value:
-                results.append(match)
-
-    return results
-
-
-def select_path(root, parser, path):
-    """select_path selects nodes based on a series of node selectors
-
-    Example:
-    select_path(
-        root,
-        parser,
-        [
-            {
-                # get component
-                'rule': 'declaration',
-                'child': 'IDENT',
-                'child_value': self._component_identifier
-            },
-            {
-                # get argument
-                'rule': 'element_modification',
-                'child': 'name',
-                'child_value': self._argument_name
-            },
-            {
-                # get argument value
-                'rule': 'expression',
-                'child': None,
-                'child_value': None
-            }
-        ]
-    )
-
-    :param root: object, tree root to search
-    :param parser: object, parser that made the tree
-    :param path: list of dicts, sparse path to a node
-    """
-    selectors = path
-
-    selected_nodes = [root]
-    # for each selector, apply it to our selected nodes
-    for selector in selectors:
-        # early exit if search ends
-        if not selected_nodes:
-            return []
-
-        new_roots = []
-        for node in selected_nodes:
-            new_roots += select(
-                node,
-                parser,
-                selector['rule'],
-                selector.get('child'),
-                selector.get('child_value'))
-
-        selected_nodes = new_roots
-
-    return selected_nodes
+DEFAULT_BASE_PATH = 'stored_definition'
 
 
 class Selector(ABC):
+    # Classes should override this to specify which grammar rule the selector will get called on
+    #   when _select is called, this node will be passed as the `base` argument
+    #   unless it is being chained after another selector
+    BASE_PATH = DEFAULT_BASE_PATH
+
     """Selector is the base class for all selectors"""
     def __init__(self):
         self._chained_selector = None
@@ -119,28 +27,46 @@ class Selector(ABC):
         self._assert_message = None
 
     @abstractmethod
-    def _select(self, root, parser):
+    def _select(self, base, parser):
         """_select should be overridden when implementing a Selector
 
-        :param root: object, root of tree to search
+        :param base: object, base of tree to search
         :param parser: object, parser that built the tree
         :return: list, list of nodes that were selected
         """
         pass
+
+    def get_base_rule(self):
+        return self.BASE_PATH.split('/')[-1]
 
     def assert_count(self, count, message):
         self._assert_count = count
         self._assert_message = message
         return self
 
-    def apply(self, root, parser):
+    def apply_to_root(self, tree_root, parser):
+        """apply_to_root applies a selector to the AST root, rather than its base node
+
+        Note that this is different from the apply() method because that one has an expected
+        rule context to be passed as the base node, whereas you just need the tree root for this method
+
+        Both apply_to_root and apply exist to allow using an xpath for a selector
+        and to allow using a listener which walks the tree (respectively)
+        """
+        bases = XPath.XPath.findAll(tree_root, self.BASE_PATH, parser)
+        result = []
+        for base in bases:
+            result.extend(self.apply(base, parser))
+        return result
+
+    def apply(self, base, parser):
         """apply runs selector as well as any chained selectors
 
-        :param root: object, root of tree to search
+        :param base: object, base of tree to search
         :param parser: object, parser that built the tree
         :return: list, list of nodes that were selected
         """
-        selected_nodes = self._select(root, parser)
+        selected_nodes = self._select(base, parser)
         if self._assert_count is not None and len(selected_nodes) != self._assert_count:
             raise Exception(f'Failed selector count assertion: {self._assert_message}')
 
@@ -172,48 +98,42 @@ class ComponentDeclarationByTypeSelector(Selector):
     """ComponentDeclarationByIdentitySelector is a selector which returns component
     declarations that match the given constraints
     """
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause'
 
     def __init__(self, type_name):
         self._type_name = type_name
         super().__init__()
 
-    def _select(self, root, parser):
-        nodes = select(
-            root,
-            parser,
-            'component_clause',
-            'type_specifier',
-            self._type_name)
+    def _select(self, base, parser):
+        # type_specifier is second child
+        type_specifier = base.type_specifier()
+        if type_specifier.getText() != self._type_name:
+            return []
 
-        results = []
-        for node in nodes:
-            results += select(node, parser, 'component_declaration')
-
-        return results
+        xpath = 'component_clause/component_list/component_declaration'
+        return XPath.XPath.findAll(base, xpath, parser)
 
 
 class ComponentDeclarationByIdentifierSelector(Selector):
     """ComponentDeclarationByIdentitySelector is a selector which returns component
     declarations that match the given constraints
     """
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause/component_declaration'
 
     def __init__(self, identifier):
         self._identifier = identifier
         super().__init__()
 
-    def _select(self, root, parser):
-        nodes = select(root, parser, 'component_declaration')
-
-        return [
-            node
-            for node in nodes
-            if node.declaration().IDENT().getText() == self._identifier]
+    def _select(self, base, parser):
+        declaration_text = base.declaration().IDENT().getText()
+        return [base] if declaration_text == self._identifier else []
 
 
 class ComponentDeclarationSelector(Selector):
     """ComponentDeclarationSelector is a selector which matches component declarations
     based on their type and/or identifier
     """
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause'
 
     def __init__(self, type_name=None, identifier=None):
         self._type_name = type_name
@@ -221,19 +141,15 @@ class ComponentDeclarationSelector(Selector):
 
         super().__init__()
 
-    def _select(self, root, parser):
-        if self._type_name is not None:
-            # select the component clauses that match the type
-            selected_clauses = select(root, parser, 'component_clause',
-                                      'type_specifier', self._type_name)
+    def _select(self, base, parser):
+        # check the type
+        type_specifier = base.type_specifier()
+        if self._type_name is not None and type_specifier.getText() != self._type_name:
+            return []
 
-            # select the actual declarations within these clauses
-            component_declaration_nodes = []
-            for node in selected_clauses:
-                component_declaration_nodes += select(root, parser, 'component_declaration')
-
-        else:
-            component_declaration_nodes = select(root, parser, 'component_declaration')
+        # select the declaration(s)
+        xpath = 'component_clause/component_list/component_declaration'
+        component_declaration_nodes = XPath.XPath.findAll(base, xpath, parser)
 
         if self._identifier is None:
             return component_declaration_nodes
@@ -249,78 +165,106 @@ class ComponentArgumentValueSelector(Selector):
     """ComponentArgumentSelector returns arguments to component
     declarations
     """
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause/component_list/component_declaration'
 
-    def __init__(self, argument_name):
+    def __init__(self, argument_name, argument_value=None):
         self._argument_name = argument_name
+        self._argument_value = argument_value
         super().__init__()
 
-    def _select(self, root, parser):
-        return select_path(
-            root,
-            parser,
-            [
-                {
-                    # get argument
-                    'rule': 'element_modification',
-                    'child': 'name',
-                    'child_value': self._argument_name
-                },
-                {
-                    # get argument value
-                    'rule': 'expression',
-                    'child': None,
-                    'child_value': None
-                },
-            ]
-        )
+    def _select(self, base, parser):
+        xpath = 'component_declaration/declaration/modification/class_modification/argument_list/argument/element_modification_or_replaceable/element_modification'
+        element_modifications = XPath.XPath.findAll(base, xpath, parser)
+
+        # filter modifications (ie arguments) to those that match our name
+        filtered_modifications = []
+        for element_modification in element_modifications:
+            argument_name_text = element_modification.name().getText()
+            if argument_name_text == self._argument_name:
+                filtered_modifications.append(element_modification)
+
+        # get the argument expressions (ie argument values)
+        results = []
+        for element_modification in filtered_modifications:
+            xpath = '//expression'
+            results.extend(XPath.XPath.findAll(element_modification, xpath, parser))
+
+        # filter out non-matching values if argument_value is specified
+        if self._argument_value is not None:
+            filtered_results = []
+            for result in results:
+                a = result.getText()
+                b = self._argument_value
+                if re.sub(r"\s*", "", a) == re.sub(r"\s*", "", b):
+                    filtered_results.append(result)
+            results = filtered_results
+
+        return results
 
 
 class ConnectClauseSelector(Selector):
     """ConnectClauseSelector is a Selector which returns connect clauses"""
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/equation_section/equation/connect_clause'
 
     def __init__(self, port_a='*', port_b='*'):
+        """Allowed patterns for ports:
+          - '*': matches all
+          - '!': prepended to a name indicates it should match everything but that name
+
+        :param port_a: string, identifier to match for first port
+        :param port_b: string, identifier to match for second port
         """
-        :param port_a: string, identifier to match for first port; matches all if set to '*'
-        :param port_b: string, identifier to match for second port; matches all if set to '*'
-        """
-        self._port_a = port_a
-        self._port_b = port_b
+
+        if port_a.startswith('!'):
+            self._port_a = port_a[1:]
+            self._port_a_negated = True
+        else:
+            self._port_a = port_a
+            self._port_a_negated = False
+
+        if port_b.startswith('!'):
+            self._port_b = port_b[1:]
+            self._port_b_negated = True
+        else:
+            self._port_b = port_b
+            self._port_b_negated = False
+
         super().__init__()
 
-    def _select(self, root, parser):
-        nodes = select(root, parser, 'connect_clause')
+    def _select(self, base, parser):
+        # check port a
+        port_a_node = base.getChild(2)
+        port_a_matches = self._port_a == port_a_node.getText()
+        if self._port_a_negated:
+            port_a_matches = not port_a_matches
+        if self._port_a != '*' and not port_a_matches:
+            return []
 
-        # filter connect clauses
-        filtered_nodes = []
-        for node in nodes:
-            # check port a
-            port_a_node = node.getChild(2)
-            if self._port_a != '*' and self._port_a != port_a_node.getText():
-                continue
+        # check port b
+        port_b_node = base.getChild(4)
+        port_b_matches = self._port_b == port_b_node.getText()
+        if self._port_b_negated:
+            port_b_matches = not port_b_matches
+        if self._port_b != '*' and not port_b_matches:
+            return []
 
-            # check port b
-            port_b_node = node.getChild(4)
-            if self._port_b != '*' and self._port_b != port_b_node.getText():
-                continue
-
-            filtered_nodes.append(node)
-
-        return filtered_nodes
+        return [base]
 
 
 class ElementListSelector(Selector):
     """ElementListSelector is a selector which returns the element list"""
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list'
 
-    def _select(self, root, parser):
-        return select(root, parser, 'element_list')
+    def _select(self, base, parser):
+        return [base]
 
 
 class ParentSelector(Selector):
     """ParentSelector selects the parent"""
 
-    def _select(self, root, parser):
-        if root.parentCtx:
-            return [root.parentCtx]
+    def _select(self, base, parser):
+        if base.parentCtx:
+            return [base.parentCtx]
         return []
 
 
@@ -333,18 +277,36 @@ class NthChildSelector(Selector):
         self._idx = n
         super().__init__()
 
-    def _select(self, root, parser):
+    def _select(self, base, parser):
         idx = self._idx
         if self._idx < 0:
             # get last child's index
-            idx = root.getChildCount() - 1
+            idx = base.getChildCount() - 1
 
-        child = root.getChild(idx)
+        child = base.getChild(idx)
         if child is None:
             return []
         return [child]
 
 
 class EquationSectionSelector(Selector):
-    def _select(self, root, parser):
-        return select(root, parser, 'equation_section')
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/equation_section'
+
+    def _select(self, base, parser):
+        return [base]
+
+
+class WithinSelector(Selector):
+    BASE_PATH = 'stored_definition/within_statement'
+
+    def _select(self, base, parser):
+        return [base]
+
+
+class ModelIdentifierSelector(Selector):
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier'
+
+    def _select(self, base, parser):
+        # return both identifiers
+        # (first is the initial declaration second is the 'end <modelname>')
+        return [base.IDENT()[0], base.IDENT()[1]]

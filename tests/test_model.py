@@ -28,6 +28,43 @@ class TestModel(TestCase, DiffAssertions):
             with open(os.path.join(self.output_dir, f'{test_name}__result.txt'), 'w') as f:
                 f.write(self.result)
 
+    def test_get_name(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        name = model.get_name()
+
+        # Assert
+        self.assertEqual('DCMotor', name)
+
+    def test_set_name(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.set_name('NewModelName')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['model NewModelName', 'end NewModelName'])
+        self.assertHasDeletions(source_file, self.result, ['model DCMotor', 'end DCMotor'])
+
+    def test_set_within_statement(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.set_within_statement('A.B.C')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['within A.B.C;'])
+        self.assertHasDeletions(source_file, self.result, ['within models;'])
+
     def test_model_add_connect(self):
         # Setup
         source_file = os.path.join(self.data_dir, 'DCMotor.mo')
@@ -100,6 +137,20 @@ class TestModel(TestCase, DiffAssertions):
         self.assertHasAdditions(source_file, self.result, ['connect(DC.p, PortB);'])
         self.assertHasDeletions(source_file, self.result, ['connect(DC.p, R.n);'])
 
+    def test_model_edit_connect_negated_match(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        # replace connections where port a is fake_port_a and port b is not fake_port_b
+        model.edit_connect('fake_port_a', '!fake_port_b', new_port_b='PortC')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['connect(fake_port_a, PortC);'])
+        self.assertHasDeletions(source_file, self.result, ['connect(fake_port_a, fake_port_c);'])
+
     def test_model_edit_connect_bad_edit(self):
         # Setup
         source_file = os.path.join(self.data_dir, 'DCMotor.mo')
@@ -116,11 +167,13 @@ class TestModel(TestCase, DiffAssertions):
         model = Model(source_file)
 
         # Act
-        model.insert_component(0, 'FancyClass', 'myInstance', {'arg1': '1234'}, ['my annotation'])
+        model.insert_component(0, 'FancyClass', 'myInstance',
+                               arguments={'arg1': '1234'}, string_comment='my comment',
+                               annotations=['my annotation'])
         self.result = model.execute()
 
         # Assert
-        self.assertHasAdditions(source_file, self.result, ['FancyClass myInstance(arg1=1234) annotation(my annotation);'])
+        self.assertHasAdditions(source_file, self.result, ['FancyClass myInstance(arg1=1234) "my comment" annotation(my annotation);'])
         self.assertNoDeletions(source_file, self.result)
 
     def test_model_remove_component(self):
@@ -148,3 +201,42 @@ class TestModel(TestCase, DiffAssertions):
         # Assert
         self.assertHasAdditions(source_file, self.result, ['Resistor R(R=54321);'])
         self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])
+
+    def test_model_update_component_argument_conditional_true(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.update_component_argument('Resistor', 'R', 'R', '54321', if_value='100')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['Resistor R(R=54321);'])
+        self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])
+
+    def test_model_update_component_argument_conditional_true_w_whitespace(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.update_component_argument('Resistor', 'R', 'R', '54321', if_value='  100\n')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['Resistor R(R=54321);'])
+        self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])
+
+    def test_model_update_component_argument_conditional_false(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.update_component_argument('Resistor', 'R', 'R', '54321', if_value='bogus_value')
+        self.result = model.execute()
+
+        # Assert
+        self.assertNoAdditions(source_file, self.result)
+        self.assertNoDeletions(source_file, self.result)

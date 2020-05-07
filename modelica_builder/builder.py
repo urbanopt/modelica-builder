@@ -130,11 +130,11 @@ class ConnectBuilder:
 
 class ParameterBuilder:
     def __init__(self, insert_index, type_, identifier):
-        """ComponentBuilder allows you to construct and insert a component
+        """ParameterBUilder allows you to construct and insert a parameter
 
-        :param insert_index: int, index to place the new component. if < 0, it will insert at the end
-        :param type_: string, type of the component
-        :param identifier: string, component identifier
+        :param insert_index: int, index to place the new parameter. if < 0, it will insert at the end
+        :param type_: string, type of the parameter
+        :param identifier: string, parameter identifier
         """
         self._arguments = {}
         self._value = None
@@ -145,7 +145,7 @@ class ParameterBuilder:
         self._identifier = identifier
 
     def set_argument(self, arg_name, arg_value):
-        """set_argument sets a component initialization argument
+        """set_argument sets a parameter initialization argument
 
         :param arg_name: string, name of the argument
         :param arg_value: string, value of the argument
@@ -163,7 +163,7 @@ class ParameterBuilder:
         self._string_comment = string_comment
 
     def add_annotation(self, annotation):
-        """add_annotation adds an annotation to the component
+        """add_annotation adds an annotation to the parameter
 
         :param annotation: string, annotation to add
         """
@@ -193,7 +193,7 @@ class ParameterBuilder:
         return Transformation(selector, edit)
 
     def build(self):
-        """build constructs the text for the component
+        """build constructs the text for the parameter
 
         :return: string
         """

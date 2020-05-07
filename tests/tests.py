@@ -29,11 +29,6 @@ class DiffAssertions:
         diffs = get_diffs(original, new)
         actual_diffs = diffs[type_]
 
-        n_expected = len(expected_diffs)
-        n_actual = len(actual_diffs)
-        if strict and n_expected != n_actual:
-            raise AssertionError(f'Expected {n_expected} {type_}, but found {n_actual}: {actual_diffs}')
-
         missing_diffs = []
         for expected_diff in expected_diffs:
             found = False
@@ -46,6 +41,11 @@ class DiffAssertions:
 
         if missing_diffs:
             raise AssertionError(f'Expected to find additions {missing_diffs} in {actual_diffs}')
+
+        n_expected = len(expected_diffs)
+        n_actual = len(actual_diffs)
+        if strict and n_expected != n_actual:
+            raise AssertionError(f'Expected {n_expected} {type_}, but found {n_actual}:\n  EXPECTED: {expected_diffs}\n  ACTUAL: {actual_diffs}')
 
     def assertHasDeletions(self, original_filename, new_content, deletions, strict=True):
         """Asserts that the new content has deleted lines from the original file
@@ -101,10 +101,15 @@ def clean_diff(line):
 
 
 def get_diffs(original, new):
+    # remove empty lines before comparing, allowing for a 'cleaner' diffing
+    original_compacted = [line.strip() for line in original if line.strip()]
+    new_compacted = [line.strip() for line in new if line.strip()]
+
+    # compare the arrays and group additions and deletions
     differ = difflib.Differ()
-    diffs = list(differ.compare(original, new))
+    diffs = list(differ.compare(original_compacted, new_compacted))
 
     return {
-        'additions': [clean_diff(d) for d in diffs if d.startswith('+') and not ignore_diff(d)],
-        'deletions': [clean_diff(d) for d in diffs if d.startswith('-') and not ignore_diff(d)]
+        'additions': [clean_diff(d) for d in diffs if d.startswith('+')],
+        'deletions': [clean_diff(d) for d in diffs if d.startswith('-')]
     }

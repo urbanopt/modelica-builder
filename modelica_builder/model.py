@@ -8,7 +8,7 @@ All rights reserved.
 
 import os
 
-from modelica_builder.builder import ComponentBuilder, ConnectBuilder
+from modelica_builder.builder import ComponentBuilder, ConnectBuilder, ParameterBuilder
 from modelica_builder.edit import Edit
 from modelica_builder.selector import (
     ComponentArgumentValueSelector,
@@ -114,6 +114,7 @@ class Model(Transformer):
         :param type_: string, type of the component
         :param identifier: string, component identifier
         :param arguments: dict {string: string}, component initialization arguments with arg name as the key and arg value as the value
+        :param string_comment: string
         :param annotations: list of strings, annotations to add to the component
         """
         component = ComponentBuilder(insert_index, type_, identifier)
@@ -164,6 +165,35 @@ class Model(Transformer):
                     .chain(ComponentArgumentValueSelector(argument_name, argument_value=if_value)))
 
         self.add(Transformation(selector, Edit.make_replace(new_value)))
+
+    def add_parameter(self, type_, identifier, arguments=None, assigned_value=None, string_comment=None, annotations=None):
+        """
+
+        :param insert_index: int, index to place the new component. if < 0, it will insert at the end
+        :param type_: string, type of the component
+        :param identifier: string, component identifier
+        :param arguments: dict {string: string}, component initialization arguments with arg name as the key and arg value as the value
+        :param assigned_value: string, value to assign to the parameter, e.g. Real myParam=10.0
+        :param string_comment: string, comment to add
+        :param annotations: list of strings, annotations to add to the component
+        """
+        parameter = ParameterBuilder(0, type_, identifier)
+
+        if arguments:
+            for arg_name, arg_value in arguments.items():
+                parameter.set_argument(arg_name, arg_value)
+
+        if string_comment:
+            parameter.set_string_comment(string_comment)
+
+        if annotations:
+            for annotation in annotations:
+                parameter.add_annotation(annotation)
+
+        if assigned_value:
+            parameter.set_value(assigned_value)
+
+        self.add(parameter.transformation())
 
     def save(self):
         """overwrite the source file with the processed result"""

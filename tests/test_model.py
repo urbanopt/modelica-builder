@@ -240,3 +240,16 @@ class TestModel(TestCase, DiffAssertions):
         # Assert
         self.assertNoAdditions(source_file, self.result)
         self.assertNoDeletions(source_file, self.result)
+
+    def test_model_add_param(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.add_parameter('Real', 'myParam', string_comment='a comment', assigned_value=1.25)
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['parameter Real myParam=1.25 "a comment"'])
+        self.assertNoDeletions(source_file, self.result)

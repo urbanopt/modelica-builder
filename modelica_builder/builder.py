@@ -153,9 +153,12 @@ class ParameterBuilder:
         self._arguments[arg_name] = arg_value
 
     def set_value(self, value):
-        """set_value sets the value of the parameter, e.g. Real myParam=10.0
+        """set_value sets the value of the parameter
 
-        :param value: string, value to set
+        E.g. if you created the parameter `Real myParam`, calling set_value with
+        10.0 would result in `Real myParam=10.0`
+
+        :param value: variant, value to set
         """
         self._value = value
 

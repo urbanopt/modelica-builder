@@ -171,8 +171,8 @@ class Model(Transformer):
 
         :param type_: string, type of the component
         :param identifier: string, component identifier
-        :param arguments: dict {string: string}, component initialization arguments with arg name as the key and arg value as the value
-        :param assigned_value: string, value to assign to the parameter, e.g. Real myParam=10.0
+        :param arguments: dict {string: variant}, component initialization arguments with arg name as the key and arg value as the value
+        :param assigned_value: variant, value to assign to the parameter
         :param string_comment: string, comment to add
         :param annotations: list of strings, annotations to add to the component
         """

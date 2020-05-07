@@ -241,7 +241,7 @@ class TestModel(TestCase, DiffAssertions):
         self.assertNoAdditions(source_file, self.result)
         self.assertNoDeletions(source_file, self.result)
 
-    def test_model_add_param(self):
+    def test_model_add_param_type_real(self):
         # Setup
         source_file = os.path.join(self.data_dir, 'DCMotor.mo')
         model = Model(source_file)
@@ -252,4 +252,17 @@ class TestModel(TestCase, DiffAssertions):
 
         # Assert
         self.assertHasAdditions(source_file, self.result, ['parameter Real myParam=1.25 "a comment"'])
+        self.assertNoDeletions(source_file, self.result)
+
+    def test_model_add_param_type_string(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.add_parameter('String', 'myParam', string_comment='a comment', assigned_value='"supercalifragilisticexpialidocious"')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['parameter String myParam="supercalifragilisticexpialidocious" "a comment"'])
         self.assertNoDeletions(source_file, self.result)

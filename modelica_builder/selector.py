@@ -256,7 +256,6 @@ class ElementListSelector(Selector):
     BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list'
 
     def _select(self, base, parser):
-        # import pdb; pdb.set_trace()
         return [base]
 
 

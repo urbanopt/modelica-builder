@@ -107,15 +107,15 @@ class Model(Transformer):
                         .chain(NthChildSelector(4)))
             self.add(Transformation(selector, Edit.make_replace(new_port_b)))
 
-    def insert_component(self, insert_index, type_, identifier, arguments=None, string_comment=None, annotations=None):
+    def insert_component(self, type_, identifier, arguments=None, string_comment=None, annotations=None, insert_index=-1):
         """insert_component constructs and inserts a component
 
-        :param insert_index: int, index to place the new component. if < 0, it will insert at the end
         :param type_: string, type of the component
         :param identifier: string, component identifier
         :param arguments: dict {string: string}, component initialization arguments with arg name as the key and arg value as the value
         :param string_comment: string
         :param annotations: list of strings, annotations to add to the component
+        :param insert_index: int, index to place the new component. if < 0, it will insert at the end
         """
         component = ComponentBuilder(insert_index, type_, identifier)
         if arguments is not None:
@@ -167,9 +167,8 @@ class Model(Transformer):
         self.add(Transformation(selector, Edit.make_replace(new_value)))
 
     def add_parameter(self, type_, identifier, arguments=None, assigned_value=None, string_comment=None, annotations=None):
-        """
+        """add_parameter inserts a new parameter at the top of the model's element list
 
-        :param insert_index: int, index to place the new component. if < 0, it will insert at the end
         :param type_: string, type of the component
         :param identifier: string, component identifier
         :param arguments: dict {string: string}, component initialization arguments with arg name as the key and arg value as the value

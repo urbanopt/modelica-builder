@@ -167,9 +167,9 @@ class TestModel(TestCase, DiffAssertions):
         model = Model(source_file)
 
         # Act
-        model.insert_component(0, 'FancyClass', 'myInstance',
+        model.insert_component('FancyClass', 'myInstance',
                                arguments={'arg1': '1234'}, string_comment='my comment',
-                               annotations=['my annotation'])
+                               annotations=['my annotation'], insert_index=0)
         self.result = model.execute()
 
         # Assert

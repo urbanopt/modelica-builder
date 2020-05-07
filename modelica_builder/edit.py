@@ -128,9 +128,15 @@ class Edit:
 
             # if edits have equal spans, priority is based on operation type
             if current_edit.start == last_edit.start and current_edit.stop == last_edit.stop:
-                # arbitrarily choose last_edit if the operations are the same
+                # check if operations are the same
                 if current_edit._operation == last_edit._operation:
-                    continue
+                    # if both are inserts, keep both edits
+                    if current_edit._operation == cls.INSERT:
+                        fixed_edits.append(current_edit)
+                        continue
+                    # else arbitrarily choose the last_edit by dropping the current
+                    else:
+                        continue
 
                 operations = [
                     current_edit._operation,

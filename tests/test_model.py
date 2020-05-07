@@ -176,6 +176,26 @@ class TestModel(TestCase, DiffAssertions):
         self.assertHasAdditions(source_file, self.result, ['FancyClass myInstance(arg1=1234) "my comment" annotation(my annotation);'])
         self.assertNoDeletions(source_file, self.result)
 
+    def test_model_insert_component_multiple(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.insert_component('FancyClass', 'myInstance',
+                               arguments={'arg1': '1234'}, string_comment='my comment',
+                               annotations=['my annotation'])
+        model.insert_component('AnotherClass', 'anotherInstance',
+                               arguments={'x': '"hello"'}, string_comment='this is another class',
+                               annotations=['abc'])
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'FancyClass myInstance(arg1=1234) "my comment" annotation(my annotation);',
+            'AnotherClass anotherInstance(x="hello") "this is another class" annotation(abc);'])
+        self.assertNoDeletions(source_file, self.result)
+
     def test_model_remove_component(self):
         # Setup
         source_file = os.path.join(self.data_dir, 'DCMotor.mo')

@@ -266,3 +266,20 @@ class TestModel(TestCase, DiffAssertions):
         # Assert
         self.assertHasAdditions(source_file, self.result, ['parameter String myParam="supercalifragilisticexpialidocious" "a comment"'])
         self.assertNoDeletions(source_file, self.result)
+
+    def test_model_remove_first_component_and_add_param(self):
+        """Tests that we can successfully resolve overlapping edits of a deletion
+        (removing first component) and an insert (adding new param)
+        """
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.remove_component('Resistor', 'R')
+        model.add_parameter('Real', 'myParam', string_comment='a comment', assigned_value='10.0')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['parameter Real myParam=10.0 "a comment"'])
+        self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])

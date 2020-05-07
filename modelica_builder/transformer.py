@@ -113,9 +113,6 @@ class Transformer:
                 selected_nodes = self.apply_selector(transformation.selector)
                 all_edits += [transformation.edit(node) for node in selected_nodes]
 
-        # sort the edits
-        all_edits.sort()
+        # apply the edits
         with open(self._source, 'r') as f:
-            return Edit.apply_edits(
-                reversed(all_edits),
-                f.read())
+            return Edit.apply_edits(all_edits, f.read())

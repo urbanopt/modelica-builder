@@ -6,6 +6,7 @@ All rights reserved.
 """
 
 
+import logging
 import os
 
 from modelica_builder.builder import ComponentBuilder, ConnectBuilder, ParameterBuilder
@@ -19,7 +20,7 @@ from modelica_builder.selector import (
     ParentSelector,
     WithinSelector
 )
-from modelica_builder.transformation import SimpleTransformation
+from modelica_builder.transformation import SimpleTransformation, ModelAnnotationTransformation
 from modelica_builder.transformer import Transformer
 
 
@@ -28,6 +29,8 @@ class Model(Transformer):
         if not os.path.exists(source):
             raise Exception(f'Modelica file does not exist: {source}')
         self._source = source
+
+        self._updated_model_annotation_modifications = False
 
         super().__init__(source)
 
@@ -193,6 +196,38 @@ class Model(Transformer):
             parameter.set_value(assigned_value)
 
         self.add(parameter.transformation())
+
+    def update_model_annotation(self, modifications):
+        """Updates the model annotation modifications. If a modification exists
+        then it is updated, if it doesn't then it is inserted. If this method is
+        called more than once, previous calls are IGNORED and only the last call
+        is used.
+
+        The modifications param is a dictionary. Each key represents a modification
+        argument name. Each value represents the modification value. If a value
+        in the dict is another dict, then the modification is interpreted as a
+        class modification. If the key 'OVERWRITE_MODIFICATIONS' is found in a dict,
+        then all existing modifications at that depth are overwritten with the
+        new modifications.
+
+        Refer to the tests in test_model.py for specific examples
+
+        :param modifications: dict
+        """
+        # if this method has been called before, remove our previous transformation
+        if self._updated_model_annotation_modifications:
+            logging.warning('Ignoring previous model annotations update')
+            self._transformations.pop(0)
+
+        # add the transformation to the FRONT, ensuring it ends up at the END of the model definition
+        #
+        # Explanation
+        # there's an edge case where this transformation might try to insert
+        # at the end of the model (when the model annotation doesn't exist already) and another
+        # transformation might try to insert at the end  as well (e.g. adding a connect caluse).
+        # Thus we want to make sure our insert operation (if it happens) happens first
+        self._updated_model_annotation_modifications = True
+        self._transformations.insert(0, ModelAnnotationTransformation(modifications))
 
     def save(self):
         """overwrite the source file with the processed result"""

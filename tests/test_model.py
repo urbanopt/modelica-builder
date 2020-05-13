@@ -7,6 +7,7 @@ All rights reserved.
 
 
 import os
+import tempfile
 from unittest import TestCase
 
 from modelica_builder.model import Model
@@ -22,11 +23,28 @@ class TestModel(TestCase, DiffAssertions):
         if not os.path.exists(self.output_dir):
             os.makedirs(self.output_dir)
 
+        self.tmp_file = None
+
     def tearDown(self):
         if self.result is not None:
             test_name = self.id().split('.')[-1]
             with open(os.path.join(self.output_dir, f'{test_name}__result.txt'), 'w') as f:
                 f.write(self.result)
+
+        # cleanup the temp file if one was created
+        if self.tmp_file is not None:
+            os.unlink(self.tmp_file)
+
+    def create_tmp_file(self, file_content):
+        if self.tmp_file is not None:
+            os.unlink(self.tmp_file)
+
+        tmp_fd, self.tmp_file = tempfile.mkstemp()
+        os.close(tmp_fd)
+        with open(self.tmp_file, 'w') as f:
+            f.write(file_content)
+
+        return self.tmp_file
 
     def test_get_name(self):
         # Setup
@@ -303,3 +321,168 @@ class TestModel(TestCase, DiffAssertions):
         # Assert
         self.assertHasAdditions(source_file, self.result, ['parameter Real myParam=10.0 "a comment"'])
         self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])
+
+    def test_model_update_annotation_when_no_model_annotation_exists(self):
+        # Setup
+        mo_file = '''
+model Test
+equation
+end Test;'''
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_model_annotation({'rootModification': 100})
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['annotation(rootModification=100);'])
+
+    def test_model_update_annotation_when_modification_exists_and_is_simple(self):
+        # Setup
+        mo_file = """
+model Test
+equation
+  annotation(rootModification=321);
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_model_annotation({'rootModification': 100})
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['annotation(rootModification=100);'])
+        self.assertHasDeletions(source_file, self.result, ['annotation(rootModification=321);'])
+
+    def test_model_update_annotation_when_modification_exists_and_has_own_modifications(self):
+        # Setup
+        mo_file = """
+model Test
+equation
+  annotation(rootModification(childModification=321));
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_model_annotation({'rootModification': {'childModification': 100}})
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['annotation(rootModification(childModification=100));'])
+        self.assertHasDeletions(source_file, self.result, ['annotation(rootModification(childModification=321));'])
+
+    def test_model_update_annotation_keeps_other_modifications_not_updated(self):
+        # Setup
+        mo_file = """
+model Test
+equation
+  annotation(rootModification=321);
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_model_annotation({'insertedModification': 555})
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['annotation(rootModification=321, insertedModification=555);'])
+        self.assertHasDeletions(source_file, self.result, ['annotation(rootModification=321);'])
+
+    def test_model_update_annotation_can_update_and_insert(self):
+        # Setup
+        mo_file = """
+model Test
+equation
+  annotation(rootModification=321, rootModification2(childA=0, childB=1));
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_model_annotation({
+            'rootModification': 100,
+            'insertedModification': 555,
+            'rootModification2': {'childB': 123, 'childC': 'abc'}})
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['annotation(rootModification=100, rootModification2(childA=0, childB=123, childC=abc), insertedModification=555);'])
+        self.assertHasDeletions(source_file, self.result, ['annotation(rootModification=321, rootModification2(childA=0, childB=1));'])
+
+    def test_model_update_annotation_and_add_connect(self):
+        """Model annotation should always the last statement for the model"""
+        # Setup
+        mo_file = """
+model Test
+equation
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        # make an insert before and after annotation
+        model.add_connect('port_a', 'port_b')
+        model.update_model_annotation({'rootModification': 100})
+        model.add_connect('port_c', 'port_d')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'annotation(rootModification=100)',
+            'connect(port_a, port_b)',
+            'connect(port_c, port_d)',
+        ])
+        self.assertNoDeletions(source_file, self.result)
+        # make sure the annotation was inserted at the end
+        self.assertIn('annotation(rootModification=100);\nend Test;', self.result, 'Annotation should be at the END of the model')
+
+    def test_model_update_annotation_can_overwrite_existing_modifications(self):
+        # Setup
+        mo_file = """
+model Test
+equation
+  annotation(rootModification=321);
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_model_annotation({'modA': 100, 'OVERWRITE_MODIFICATIONS': True})
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'annotation(modA=100)',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'annotation(rootModification=321);'
+        ])
+
+    def test_model_update_annotation_can_overwrite_existing_nested_modifications(self):
+        """Annotation should always be at the end of the model"""
+        # Setup
+        mo_file = """
+model Test
+equation
+  annotation(rootModification=321, modA(hello=100));
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_model_annotation({
+            'rootModification': 100,
+            'modA': {'world': 555, 'OVERWRITE_MODIFICATIONS': True}})
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'annotation(rootModification=100, modA(world=555))',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'annotation(rootModification=321, modA(hello=100));'
+        ])

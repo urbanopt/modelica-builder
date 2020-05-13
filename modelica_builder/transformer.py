@@ -37,8 +37,7 @@ class Transformer:
         all_edits = []
         # apply selectors and build edits
         for transformation in self._transformations:
-            selected_nodes = self.apply_selector(transformation.selector)
-            all_edits += [transformation.edit(node) for node in selected_nodes]
+            all_edits += transformation.build_edits(self._tree, self._parser)
 
         # apply the edits
         with open(self._source, 'r') as f:

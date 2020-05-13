@@ -19,7 +19,7 @@ from modelica_builder.selector import (
     ParentSelector,
     WithinSelector
 )
-from modelica_builder.transformation import Transformation
+from modelica_builder.transformation import SimpleTransformation
 from modelica_builder.transformer import Transformer
 
 
@@ -49,7 +49,7 @@ class Model(Transformer):
         :param name: string
         """
         selector = ModelIdentifierSelector()
-        self.add(Transformation(selector, Edit.make_replace(name)))
+        self.add(SimpleTransformation(selector, Edit.make_replace(name)))
 
     def set_within_statement(self, within_string):
         """changes 'within <string>;' at the beginning of
@@ -59,7 +59,7 @@ class Model(Transformer):
         """
         selector = (WithinSelector()
                     .assert_count(1, 'A single within statement must already exist'))
-        self.add(Transformation(selector, Edit.make_replace(f'within {within_string};')))
+        self.add(SimpleTransformation(selector, Edit.make_replace(f'within {within_string};')))
 
     def add_connect(self, port_a, port_b, annotations=None):
         """add_connect creates a new connect clause in the equation section
@@ -80,7 +80,7 @@ class Model(Transformer):
         # select the parent of the component to also select the semicolon and comments
         selector = (ConnectClauseSelector(port_a, port_b)
                     .chain(ParentSelector()))
-        self.add(Transformation(selector, Edit.make_delete()))
+        self.add(SimpleTransformation(selector, Edit.make_delete()))
 
     def edit_connect(self, port_a, port_b, new_port_a=None, new_port_b=None):
         """edit_connect finds all connect clauses that match the pattern
@@ -100,12 +100,12 @@ class Model(Transformer):
         if new_port_a is not None:
             selector = (ConnectClauseSelector(port_a, port_b)
                         .chain(NthChildSelector(2)))
-            self.add(Transformation(selector, Edit.make_replace(new_port_a)))
+            self.add(SimpleTransformation(selector, Edit.make_replace(new_port_a)))
 
         if new_port_b is not None:
             selector = (ConnectClauseSelector(port_a, port_b)
                         .chain(NthChildSelector(4)))
-            self.add(Transformation(selector, Edit.make_replace(new_port_b)))
+            self.add(SimpleTransformation(selector, Edit.make_replace(new_port_b)))
 
     def insert_component(self, type_, identifier, arguments=None, string_comment=None, annotations=None, insert_index=-1):
         """insert_component constructs and inserts a component
@@ -148,7 +148,7 @@ class Model(Transformer):
                     .chain(ParentSelector())  # component_clause
                     .chain(ParentSelector()))  # element
 
-        self.add(Transformation(selector, Edit.make_delete()))
+        self.add(SimpleTransformation(selector, Edit.make_delete()))
 
     def update_component_argument(self, type_, identifier, argument_name, new_value, if_value=None):
         """update_component_argument changes the value of an _existing_ component
@@ -164,7 +164,7 @@ class Model(Transformer):
         selector = (ComponentDeclarationSelector(type_, identifier)
                     .chain(ComponentArgumentValueSelector(argument_name, argument_value=if_value)))
 
-        self.add(Transformation(selector, Edit.make_replace(new_value)))
+        self.add(SimpleTransformation(selector, Edit.make_replace(new_value)))
 
     def add_parameter(self, type_, identifier, arguments=None, assigned_value=None, string_comment=None, annotations=None):
         """add_parameter inserts a new parameter at the top of the model's element list

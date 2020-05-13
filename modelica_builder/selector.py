@@ -49,9 +49,6 @@ class Selector(ABC):
 
         Note that this is different from the apply() method because that one has an expected
         rule context to be passed as the base node, whereas you just need the tree root for this method
-
-        Both apply_to_root and apply exist to allow using an xpath for a selector
-        and to allow using a listener which walks the tree (respectively)
         """
         bases = XPath.XPath.findAll(tree_root, self.BASE_PATH, parser)
         result = []

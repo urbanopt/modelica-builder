@@ -710,6 +710,15 @@ class modelicaListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by modelicaParser#model_annotation.
+    def enterModel_annotation(self, ctx:modelicaParser.Model_annotationContext):
+        pass
+
+    # Exit a parse tree produced by modelicaParser#model_annotation.
+    def exitModel_annotation(self, ctx:modelicaParser.Model_annotationContext):
+        pass
+
+
     # Enter a parse tree produced by modelicaParser#annotation.
     def enterAnnotation(self, ctx:modelicaParser.AnnotationContext):
         pass

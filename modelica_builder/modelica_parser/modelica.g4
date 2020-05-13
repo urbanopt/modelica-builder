@@ -75,7 +75,7 @@ enumeration_literal
    ;
 
 composition
-   : element_list ('public' element_list | 'protected' element_list | equation_section | algorithm_section)* ('external' (language_specification)? (external_function_call)? (annotation)? ';')? (annotation ';')?
+   : element_list ('public' element_list | 'protected' element_list | equation_section | algorithm_section)* ('external' (language_specification)? (external_function_call)? (annotation)? ';')? (model_annotation ';')?
    ;
 
 language_specification
@@ -370,6 +370,10 @@ comment
 
 string_comment
    : (STRING ('+' STRING)*)?
+   ;
+
+model_annotation
+   : annotation
    ;
 
 annotation

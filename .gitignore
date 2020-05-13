@@ -52,3 +52,6 @@ MANIFEST
 
 # Test outputs
 tests/output/
+
+# Antlr
+.antlr/

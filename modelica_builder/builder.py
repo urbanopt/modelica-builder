@@ -12,7 +12,7 @@ from modelica_builder.selector import (
     EquationSectionSelector,
     NthChildSelector
 )
-from modelica_builder.transformation import Transformation
+from modelica_builder.transformation import SimpleTransformation
 
 
 class ComponentBuilder:
@@ -69,7 +69,7 @@ class ComponentBuilder:
             insert_after = True
 
         edit = Edit.make_insert(self.build(), insert_after=insert_after)
-        return Transformation(selector, edit)
+        return SimpleTransformation(selector, edit)
 
     def build(self):
         """build constructs the text for the component
@@ -114,7 +114,7 @@ class ConnectBuilder:
                     .chain(NthChildSelector(-1))
                     .assert_count(1, 'Failed to find end of the equation section'))
         edit = Edit.make_insert(self.build(), insert_after=True)
-        return Transformation(selector, edit)
+        return SimpleTransformation(selector, edit)
 
     def build(self):
         """build constructs the text for the connect clause
@@ -193,7 +193,7 @@ class ParameterBuilder:
             insert_after = True
 
         edit = Edit.make_insert(self.build(), insert_after=insert_after)
-        return Transformation(selector, edit)
+        return SimpleTransformation(selector, edit)
 
     def build(self):
         """build constructs the text for the parameter

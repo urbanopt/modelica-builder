@@ -206,8 +206,8 @@ class Model(Transformer):
         The modifications param is a dictionary. Each key represents a modification
         argument name. Each value represents the modification value. If a value
         in the dict is another dict, then the modification is interpreted as a
-        class modification. If the key 'OVERWRITE_MODIFICATIONS' is found in a dict,
-        then all existing modifications at that depth are overwritten with the
+        class modification. If the key 'OVERWRITE_MODIFICATIONS' is found in a dict
+        and is True, then all existing modifications at that depth are overwritten with the
         new modifications.
 
         Refer to the tests in test_model.py for specific examples

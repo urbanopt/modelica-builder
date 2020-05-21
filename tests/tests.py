@@ -8,9 +8,13 @@ All rights reserved.
 
 import difflib
 
+from modelica_builder.modelica_parser.modelicaParser import modelicaParser
+
 
 class ASTAssertions:
     def assertIsRule(self, element, expected_rule, parser):
+        if parser is None:
+            parser = modelicaParser
         element_rule = parser.ruleNames[element.getRuleIndex()]
         if element_rule != expected_rule:
             raise AssertionError(f'Element does not match expected rule. Expected {expected_rule} but was {element_rule}')

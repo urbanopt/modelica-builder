@@ -22,6 +22,11 @@ def parse(source, use_cpp=True):
     :param source: string, file to parse
     :return: tree, parser, the tree and parser used to construct the tree
     """
+    # allow tests to set the environment variable to determine the parser version
+    if 'TEST_USE_PYTHON_PARSER' in os.environ:
+        use_cpp = False
+        print('INFO: overriding `use_cpp` to False because env var TEST_USE_PYTHON_PARSER was found')
+
     fs = FileStream(source)
     if use_cpp:
         if not sa_modelica.USE_CPP_IMPLEMENTATION:
@@ -57,21 +62,11 @@ def get_span(node):
         return node.symbol.start, node.symbol.stop
 
     # when using the C++ parser, there are some cases where the node's start or
-    # stop property is None. I'm not sure if this is do the parser itself or the
-    # C++ parser interface.
-    try:
-        start = node.start.start
-    except AttributeError:
-        start = None
-    try:
-        stop = node.stop.stop
-    except AttributeError:
-        stop = None
+    # stop property is None, so this might raise an attribute error
+    # When this happens, it means there's a rule that matches an empty string, and
+    # the grammar should be updated s.t. that's not possible
+    # Issue here: https://github.com/amykyta3/speedy-antlr-tool/issues/3
+    start = node.start.start
+    stop = node.stop.stop
 
-    if start is None and stop is None:
-        raise Exception('Unable to determine the start and stop of the node. If using the C++ parser, consider using the python parser instead')
-    if start is None:
-        start = stop - len(node.getText())
-    if stop is None:
-        stop = start + len(node.getText())
     return start, stop

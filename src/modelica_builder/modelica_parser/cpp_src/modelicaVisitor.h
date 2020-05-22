@@ -61,7 +61,11 @@ public:
 
     virtual antlrcpp::Any visitComponent_clause(modelicaParser::Component_clauseContext *context) = 0;
 
-    virtual antlrcpp::Any visitType_prefix(modelicaParser::Type_prefixContext *context) = 0;
+    virtual antlrcpp::Any visitType_prefix_connector(modelicaParser::Type_prefix_connectorContext *context) = 0;
+
+    virtual antlrcpp::Any visitType_prefix_variability(modelicaParser::Type_prefix_variabilityContext *context) = 0;
+
+    virtual antlrcpp::Any visitType_prefix_io(modelicaParser::Type_prefix_ioContext *context) = 0;
 
     virtual antlrcpp::Any visitType_specifier(modelicaParser::Type_specifierContext *context) = 0;
 

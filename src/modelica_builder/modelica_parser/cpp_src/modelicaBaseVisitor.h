@@ -99,7 +99,15 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitType_prefix(modelicaParser::Type_prefixContext *ctx) override {
+  virtual antlrcpp::Any visitType_prefix_connector(modelicaParser::Type_prefix_connectorContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitType_prefix_variability(modelicaParser::Type_prefix_variabilityContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitType_prefix_io(modelicaParser::Type_prefix_ioContext *ctx) override {
     return visitChildren(ctx);
   }
 

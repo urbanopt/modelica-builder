@@ -33,7 +33,9 @@ class SA_modelicaTranslator : public modelicaBaseVisitor {
     PyObject *Extends_clauseContext_cls = NULL;
     PyObject *Constraining_clauseContext_cls = NULL;
     PyObject *Component_clauseContext_cls = NULL;
-    PyObject *Type_prefixContext_cls = NULL;
+    PyObject *Type_prefix_connectorContext_cls = NULL;
+    PyObject *Type_prefix_variabilityContext_cls = NULL;
+    PyObject *Type_prefix_ioContext_cls = NULL;
     PyObject *Type_specifierContext_cls = NULL;
     PyObject *Component_listContext_cls = NULL;
     PyObject *Component_declarationContext_cls = NULL;
@@ -138,7 +140,11 @@ class SA_modelicaTranslator : public modelicaBaseVisitor {
 
     antlrcpp::Any visitComponent_clause(modelicaParser::Component_clauseContext *ctx);
 
-    antlrcpp::Any visitType_prefix(modelicaParser::Type_prefixContext *ctx);
+    antlrcpp::Any visitType_prefix_connector(modelicaParser::Type_prefix_connectorContext *ctx);
+
+    antlrcpp::Any visitType_prefix_variability(modelicaParser::Type_prefix_variabilityContext *ctx);
+
+    antlrcpp::Any visitType_prefix_io(modelicaParser::Type_prefix_ioContext *ctx);
 
     antlrcpp::Any visitType_specifier(modelicaParser::Type_specifierContext *ctx);
 

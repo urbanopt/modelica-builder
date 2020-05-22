@@ -32,7 +32,9 @@ SA_modelicaTranslator::~SA_modelicaTranslator() {
     Py_XDECREF(Extends_clauseContext_cls);
     Py_XDECREF(Constraining_clauseContext_cls);
     Py_XDECREF(Component_clauseContext_cls);
-    Py_XDECREF(Type_prefixContext_cls);
+    Py_XDECREF(Type_prefix_connectorContext_cls);
+    Py_XDECREF(Type_prefix_variabilityContext_cls);
+    Py_XDECREF(Type_prefix_ioContext_cls);
     Py_XDECREF(Type_specifierContext_cls);
     Py_XDECREF(Component_listContext_cls);
     Py_XDECREF(Component_declarationContext_cls);
@@ -220,9 +222,21 @@ antlrcpp::Any SA_modelicaTranslator::visitComponent_clause(modelicaParser::Compo
     return py_ctx;
 }
 
-antlrcpp::Any SA_modelicaTranslator::visitType_prefix(modelicaParser::Type_prefixContext *ctx){
-    if(!Type_prefixContext_cls) Type_prefixContext_cls = PyObject_GetAttrString(translator->parser_cls, "Type_prefixContext");
-    PyObject *py_ctx = translator->convert_ctx(this, ctx, Type_prefixContext_cls);
+antlrcpp::Any SA_modelicaTranslator::visitType_prefix_connector(modelicaParser::Type_prefix_connectorContext *ctx){
+    if(!Type_prefix_connectorContext_cls) Type_prefix_connectorContext_cls = PyObject_GetAttrString(translator->parser_cls, "Type_prefix_connectorContext");
+    PyObject *py_ctx = translator->convert_ctx(this, ctx, Type_prefix_connectorContext_cls);
+    return py_ctx;
+}
+
+antlrcpp::Any SA_modelicaTranslator::visitType_prefix_variability(modelicaParser::Type_prefix_variabilityContext *ctx){
+    if(!Type_prefix_variabilityContext_cls) Type_prefix_variabilityContext_cls = PyObject_GetAttrString(translator->parser_cls, "Type_prefix_variabilityContext");
+    PyObject *py_ctx = translator->convert_ctx(this, ctx, Type_prefix_variabilityContext_cls);
+    return py_ctx;
+}
+
+antlrcpp::Any SA_modelicaTranslator::visitType_prefix_io(modelicaParser::Type_prefix_ioContext *ctx){
+    if(!Type_prefix_ioContext_cls) Type_prefix_ioContext_cls = PyObject_GetAttrString(translator->parser_cls, "Type_prefix_ioContext");
+    PyObject *py_ctx = translator->convert_ctx(this, ctx, Type_prefix_ioContext_cls);
     return py_ctx;
 }
 

@@ -197,12 +197,30 @@ class modelicaListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by modelicaParser#type_prefix.
-    def enterType_prefix(self, ctx:modelicaParser.Type_prefixContext):
+    # Enter a parse tree produced by modelicaParser#type_prefix_connector.
+    def enterType_prefix_connector(self, ctx:modelicaParser.Type_prefix_connectorContext):
         pass
 
-    # Exit a parse tree produced by modelicaParser#type_prefix.
-    def exitType_prefix(self, ctx:modelicaParser.Type_prefixContext):
+    # Exit a parse tree produced by modelicaParser#type_prefix_connector.
+    def exitType_prefix_connector(self, ctx:modelicaParser.Type_prefix_connectorContext):
+        pass
+
+
+    # Enter a parse tree produced by modelicaParser#type_prefix_variability.
+    def enterType_prefix_variability(self, ctx:modelicaParser.Type_prefix_variabilityContext):
+        pass
+
+    # Exit a parse tree produced by modelicaParser#type_prefix_variability.
+    def exitType_prefix_variability(self, ctx:modelicaParser.Type_prefix_variabilityContext):
+        pass
+
+
+    # Enter a parse tree produced by modelicaParser#type_prefix_io.
+    def enterType_prefix_io(self, ctx:modelicaParser.Type_prefix_ioContext):
+        pass
+
+    # Exit a parse tree produced by modelicaParser#type_prefix_io.
+    def exitType_prefix_io(self, ctx:modelicaParser.Type_prefix_ioContext):
         pass
 
 

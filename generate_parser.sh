@@ -5,13 +5,13 @@ docker build -t antlr4:latest -f antlr/Dockerfile .
 # Generate C++ target with visitor
 docker run -v "$(pwd)/src/modelica_builder/modelica_parser":/var/antlrResult \
         antlr4:latest \
-        -Dlanguage=Cpp -o /var/antlrResult/cpp_src /var/antlrResult/modelica.g4
+        -Dlanguage=Cpp -visitor -listener -o /var/antlrResult/cpp_src /var/antlrResult/modelica.g4
         # -Dlanguage=Cpp  -o /var/antlrResult/cpp_src /var/antlrResult/modelica.g4
 
 # Generate Python target
 docker run -v "$(pwd)/src/modelica_builder/modelica_parser":/var/antlrResult \
         antlr4:latest \
-        -Dlanguage=Python3 -o /var/antlrResult /var/antlrResult/modelica.g4
+        -Dlanguage=Python3 -no-visitor -listener -o /var/antlrResult /var/antlrResult/modelica.g4
         # -Dlanguage=Python3 -o /var/antlrResult /var/antlrResult/modelica.g4
 
 # Run antlr tool to generate the accelerator files

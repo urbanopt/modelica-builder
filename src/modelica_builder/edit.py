@@ -9,6 +9,10 @@ All rights reserved.
 from modelica_builder import modelica_parser
 
 
+def newSpanException(node):
+    return Exception(f'Failed to get span for node, consider using the Python parser or refactoring the grammar file; at context: {node}')
+
+
 class Edit:
     DELETE = 'delete'
     REPLACE = 'replace'
@@ -39,7 +43,10 @@ class Edit:
         :return: function, edit function for delete
         """
         def delete(node):
-            start, stop = modelica_parser.get_span(node)
+            try:
+                start, stop = modelica_parser.get_span(node)
+            except AttributeError:
+                raise newSpanException(node)
             return cls(start, stop, None, cls.DELETE)
 
         return delete
@@ -52,8 +59,10 @@ class Edit:
         :return: function, edit function for replace
         """
         def replace(node):
-            start, stop = modelica_parser.get_span(node)
-
+            try:
+                start, stop = modelica_parser.get_span(node)
+            except AttributeError:
+                raise newSpanException(node)
             return cls(start, stop, data, cls.REPLACE)
 
         return replace
@@ -67,7 +76,10 @@ class Edit:
         :return: function, edit function for insert
         """
         def insert(node):
-            start, stop = modelica_parser.get_span(node)
+            try:
+                start, stop = modelica_parser.get_span(node)
+            except AttributeError:
+                raise newSpanException(node)
             if insert_after:
                 start = stop + 1
 

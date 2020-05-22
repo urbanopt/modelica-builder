@@ -49,21 +49,21 @@ class_prefixes
    ;
 
 long_class_specifier
-   : IDENT string_comment composition 'end' IDENT
-   | 'extends' IDENT (class_modification)? string_comment composition 'end' IDENT
+   : IDENT (string_comment)? composition 'end' IDENT
+   | 'extends' IDENT (class_modification)? (string_comment)? composition 'end' IDENT
    ;
 
 short_class_specifier
-   : IDENT '=' base_prefix name (array_subscripts)? (class_modification)? comment
-   | IDENT '=' 'enumeration' '(' ((enum_list)? | ':') ')' comment
+   : IDENT '=' base_prefix name (array_subscripts)? (class_modification)? (comment)?
+   | IDENT '=' 'enumeration' '(' ((enum_list)? | ':') ')' (comment)?
    ;
 
 der_class_specifier
-   : IDENT '=' 'der' '(' name ',' IDENT (',' IDENT)* ')' comment
+   : IDENT '=' 'der' '(' name ',' IDENT (',' IDENT)* ')' (comment)?
    ;
 
 base_prefix
-   : type_prefix
+   : (type_prefix_connector)? (type_prefix_variability)? (type_prefix_io)?
    ;
 
 enum_list
@@ -71,7 +71,7 @@ enum_list
    ;
 
 enumeration_literal
-   : IDENT comment
+   : IDENT (comment)?
    ;
 
 composition
@@ -98,7 +98,7 @@ element
    ;
 
 import_clause
-   : 'import' (IDENT '=' name | name '.*' | name '.{' import_list '}' | name ) comment
+   : 'import' (IDENT '=' name | name '.*' | name '.{' import_list '}' | name ) (comment)?
    ;
 
 import_list
@@ -114,11 +114,27 @@ constraining_clause
    ;
 
 component_clause
-   : type_prefix type_specifier (array_subscripts)? component_list
+   : (type_prefix_connector)? (type_prefix_variability)? (type_prefix_io)? type_specifier (array_subscripts)? component_list
    ;
 
-type_prefix
-   : ('flow' | 'stream')? ('discrete' | 'parameter' | 'constant')? ('input' | 'output')?
+// type_prefix
+//    : (type_prefix_connector)? (type_prefix_variability)? (type_prefix_io)?
+//    ;
+
+type_prefix_connector
+   : 'flow'
+   | 'stream'
+   ;
+
+type_prefix_variability
+   : 'discrete'
+   | 'parameter'
+   | 'constant'
+   ;
+
+type_prefix_io
+   : 'input'
+   | 'output'
    ;
 
 type_specifier
@@ -130,7 +146,7 @@ component_list
    ;
 
 component_declaration
-   : declaration (condition_attribute)? comment
+   : declaration (condition_attribute)? (comment)?
    ;
 
 condition_attribute
@@ -165,7 +181,7 @@ element_modification_or_replaceable
    ;
 
 element_modification
-   : name (modification)? string_comment
+   : name (modification)? (string_comment)?
    ;
 
 element_redeclaration
@@ -177,7 +193,7 @@ element_replaceable
    ;
 
 component_clause1
-   : type_prefix type_specifier component_declaration1
+   : (type_prefix_connector)? (type_prefix_variability)? (type_prefix_io)? type_specifier component_declaration1
    ;
 
 component_declaration1
@@ -197,11 +213,11 @@ algorithm_section
    ;
 
 equation
-   : (simple_expression '=' expression | if_equation | for_equation | connect_clause | when_equation | name function_call_args) comment ';'
+   : (simple_expression '=' expression | if_equation | for_equation | connect_clause | when_equation | name function_call_args) (comment)? ';'
    ;
 
 statement
-   : (component_reference (':=' expression | function_call_args) | '(' output_expression_list ')' ':=' component_reference function_call_args | 'break' | 'return' | if_statement | for_statement | while_statement | when_statement) comment
+   : (component_reference (':=' expression | function_call_args) | '(' output_expression_list ')' ':=' component_reference function_call_args | 'break' | 'return' | if_statement | for_statement | while_statement | when_statement) (comment)?
    ;
 
 if_equation
@@ -369,7 +385,7 @@ comment
    ;
 
 string_comment
-   : (STRING ('+' STRING)*)?
+   : STRING ('+' STRING)*
    ;
 
 model_annotation

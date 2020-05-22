@@ -34,7 +34,6 @@ class TestSelectors(TestCase, ASTAssertions):
             """NoneSelector selects nothing"""
             def _select(self, root, parser):
                 return []
-
         tree, parser = parse(os.path.join(self.data_dir, 'DCMotor.mo'))
 
         # Act, Assert

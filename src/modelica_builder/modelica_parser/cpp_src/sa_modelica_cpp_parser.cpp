@@ -138,8 +138,14 @@ PyObject* do_parse(PyObject *self, PyObject *args) {
         } else if(!strcmp(entry_rule_name, "component_clause")){
             parse_tree = parser.component_clause();
 
-        } else if(!strcmp(entry_rule_name, "type_prefix")){
-            parse_tree = parser.type_prefix();
+        } else if(!strcmp(entry_rule_name, "type_prefix_connector")){
+            parse_tree = parser.type_prefix_connector();
+
+        } else if(!strcmp(entry_rule_name, "type_prefix_variability")){
+            parse_tree = parser.type_prefix_variability();
+
+        } else if(!strcmp(entry_rule_name, "type_prefix_io")){
+            parse_tree = parser.type_prefix_io();
 
         } else if(!strcmp(entry_rule_name, "type_specifier")){
             parse_tree = parser.type_specifier();

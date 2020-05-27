@@ -25,6 +25,7 @@ class ComponentBuilder:
         """
         self._arguments = {}
         self._annotations = []
+        self._conditional = None
         self._string_comment = None
         self._insert_index = insert_index
         self._type = type_
@@ -37,6 +38,9 @@ class ComponentBuilder:
         :param arg_value: string, value of the argument
         """
         self._arguments[arg_name] = arg_value
+
+    def set_conditional(self, conditional):
+        self._conditional = conditional
 
     def set_string_comment(self, string_comment):
         self._string_comment = string_comment
@@ -80,6 +84,10 @@ class ComponentBuilder:
         if self._arguments:
             arguments = f"({', '.join([f'{k}={v}' for k, v in self._arguments.items()])})"
 
+        conditional = ''
+        if self._conditional:
+            conditional = f" {self._conditional}"
+
         string_comment = ''
         if self._string_comment:
             string_comment = f' "{self._string_comment}"'
@@ -88,7 +96,7 @@ class ComponentBuilder:
         if self._annotations:
             annotations = f" annotation({', '.join(self._annotations)})"
 
-        return f'\n\t{self._type} {self._identifier}{arguments}{string_comment}{annotations};\n\t'
+        return f'\n\t{self._type} {self._identifier}{arguments}{conditional}{string_comment}{annotations};\n\t'
 
 
 class ConnectBuilder:
@@ -205,7 +213,7 @@ class ParameterBuilder:
             arguments = f"({', '.join([f'{k}={v}' for k, v in self._arguments.items()])})"
 
         value_assignment = ''
-        if self._value:
+        if self._value is not None:
             value_assignment = f"={self._value}"
 
         string_comment = ''

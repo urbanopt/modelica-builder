@@ -20,7 +20,10 @@ from modelica_builder.selector import (
     ParentSelector,
     WithinSelector
 )
-from modelica_builder.transformation import SimpleTransformation, ModelAnnotationTransformation
+from modelica_builder.transformation import (
+    ModelAnnotationTransformation,
+    SimpleTransformation
+)
 from modelica_builder.transformer import Transformer
 
 
@@ -110,12 +113,13 @@ class Model(Transformer):
                         .chain(NthChildSelector(4)))
             self.add(SimpleTransformation(selector, Edit.make_replace(new_port_b)))
 
-    def insert_component(self, type_, identifier, arguments=None, string_comment=None, annotations=None, insert_index=-1):
+    def insert_component(self, type_, identifier, arguments=None, conditional=None, string_comment=None, annotations=None, insert_index=-1):
         """insert_component constructs and inserts a component
 
         :param type_: string, type of the component
         :param identifier: string, component identifier
         :param arguments: dict {string: string}, component initialization arguments with arg name as the key and arg value as the value
+        :param conditional: string, conditional applied to the modelica component
         :param string_comment: string
         :param annotations: list of strings, annotations to add to the component
         :param insert_index: int, index to place the new component. if < 0, it will insert at the end
@@ -124,6 +128,9 @@ class Model(Transformer):
         if arguments is not None:
             for arg_name, arg_value in arguments.items():
                 component.set_argument(arg_name, arg_value)
+
+        if conditional is not None:
+            component.set_conditional(conditional)
 
         if string_comment is not None:
             component.set_string_comment(string_comment)
@@ -192,7 +199,8 @@ class Model(Transformer):
             for annotation in annotations:
                 parameter.add_annotation(annotation)
 
-        if assigned_value:
+        # Make sure that 0 is an allowed value (i.e., check for not None instead of truthy)
+        if assigned_value is not None:
             parameter.set_value(assigned_value)
 
         self.add(parameter.transformation())

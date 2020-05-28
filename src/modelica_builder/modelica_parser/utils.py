@@ -6,6 +6,7 @@ All rights reserved.
 """
 
 import os
+import logging
 
 
 from antlr4 import FileStream, CommonTokenStream
@@ -16,26 +17,33 @@ from modelica_builder.modelica_parser.modelicaParser import modelicaParser
 from modelica_builder.modelica_parser import sa_modelica
 
 
-def parse(source, use_cpp=True):
+logger = logging.getLogger(__name__)
+
+
+def parse(source, use_cpp=False):
     """parse creates an AST from the given file
 
     :param source: string, file to parse
+    :param use_cpp: bool, determines if the C++ parser should be used, which is slightly faster
     :return: tree, parser, the tree and parser used to construct the tree
     """
     # allow tests to set the environment variable to determine the parser version
-    if 'TEST_USE_PYTHON_PARSER' in os.environ:
-        use_cpp = False
-        print('INFO: overriding `use_cpp` to False because env var TEST_USE_PYTHON_PARSER was found')
+    if 'TEST_USE_CPP_PARSER' in os.environ:
+        if not sa_modelica.USE_CPP_IMPLEMENTATION:
+            raise Exception('sa_modelica could not use C++ implementation')
+        use_cpp = True
+        logger.warning('overriding `use_cpp` to True because env var TEST_USE_CPP_PARSER was found')
 
     fs = FileStream(source)
     if use_cpp:
         if not sa_modelica.USE_CPP_IMPLEMENTATION:
-            raise Exception('sa_modelica could not use C++ implementation')
-        print("INFO: using C++ parser")
-        tree = sa_modelica.parse(fs, 'stored_definition')
-        return tree, None
+            logger.warning('sa_modelica could not use C++ implementation')
+        else:
+            logger.debug("using C++ parser")
+            tree = sa_modelica.parse(fs, 'stored_definition')
+            return tree, None
 
-    print("INFO: using python parser")
+    logger.debug("using python parser")
     lexer = modelicaLexer(fs)
     stream = CommonTokenStream(lexer)
     parser = modelicaParser(stream)

@@ -52,11 +52,9 @@ def run_setup(with_binary):
         # Define an Extension object that describes the Antlr accelerator
         parser_ext = setuptools.Extension(
             # Extension name shall be at the same level as the sa_mygrammar_parser.py module
-            # name='spam.parser.sa_mygrammar_cpp_parser',
             name='modelica_builder.modelica_parser.sa_modelica_cpp_parser',
 
             # Add the Antlr runtime source directory to the include search path
-            # include_dirs=["src/spam/parser/cpp_src/antlr4-cpp-runtime"],
             include_dirs=["src/modelica_builder/modelica_parser/cpp_src/antlr4-cpp-runtime"],
 
             # Rather than listing each C++ file (Antlr has a lot!), discover them automatically
@@ -138,8 +136,8 @@ if not using_fallback:
     try:
         run_setup(with_binary=True)
     except BuildFailed:
-        if 'SPAM_EXAMPLE_REQUIRE_CI_BINARY_BUILD' in os.environ:
-            # Require build to pass if running in travis-ci
+        if 'TRAVIS' in os.environ:
+            # Require build to pass if running in travis-ci or tox
             raise
         else:
             using_fallback = True

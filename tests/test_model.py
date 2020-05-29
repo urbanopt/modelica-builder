@@ -486,3 +486,158 @@ end Test;"""
         self.assertHasDeletions(source_file, self.result, [
             'annotation(rootModification=321, modA(hello=100));'
         ])
+
+    def test_model_update_component_modifications_simple(self):
+        # Setup
+        mo_file = """
+model Test
+    Resistor R(R=100);
+equation
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_component_modifications(
+            'Resistor', 'R', {'R': 123}
+        )
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'Resistor R(R=123);',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'Resistor R(R=100);'
+        ])
+
+    def test_model_update_component_modifications_when_modification_is_nested(self):
+        # Setup
+        mo_file = """
+model Test
+    Resistor R(root(child=100));
+equation
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_component_modifications(
+            'Resistor', 'R', {'root': {'child': 123}}
+        )
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'Resistor R(root(child=123));',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'Resistor R(root(child=100));'
+        ])
+
+    def test_model_update_component_modifications_keeps_modifications_not_updated(self):
+        # Setup
+        mo_file = """
+model Test
+    Resistor R(modA=100, modB=200);
+equation
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_component_modifications(
+            'Resistor', 'R', {'modA': 123}
+        )
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'Resistor R(modA=123, modB=200);',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'Resistor R(modA=100, modB=200);'
+        ])
+
+    def test_model_update_component_modifications_can_update_and_insert(self):
+        # Setup
+        mo_file = """
+model Test
+    Resistor R(modA=100, modB(modC=200));
+equation
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_component_modifications(
+            'Resistor', 'R', {
+                'modA': 123,
+                'modB': {
+                    'modD': 321,
+                },
+                'modZ': 555
+            }
+        )
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'Resistor R(modA=123, modB(modC=200, modD=321), modZ=555);',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'Resistor R(modA=100, modB(modC=200));'
+        ])
+
+    def test_model_update_component_modifications_can_overwrite_existing_modifications(self):
+        # Setup
+        mo_file = """
+model Test
+    Resistor R(modA=100, modB=200);
+equation
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_component_modifications(
+            'Resistor', 'R', {'modA': 123, 'OVERWRITE_MODIFICATIONS': True}
+        )
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'Resistor R(modA=123);',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'Resistor R(modA=100, modB=200);'
+        ])
+
+    def test_model_update_component_modifications_can_overwrite_nested_modifications(self):
+        # Setup
+        mo_file = """
+model Test
+    Resistor R(modA=100, modB(modC=200, modD=300));
+equation
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_component_modifications(
+            'Resistor', 'R', {
+                'modB': {
+                    'modZ': 555,
+                    'OVERWRITE_MODIFICATIONS': True
+                },
+            },
+        )
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'Resistor R(modA=100, modB(modZ=555));',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'Resistor R(modA=100, modB(modC=200, modD=300));'
+        ])

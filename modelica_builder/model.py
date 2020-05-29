@@ -21,10 +21,14 @@ from modelica_builder.selector import (
     WithinSelector
 )
 from modelica_builder.transformation import (
+    ComponentModificationsTransformation,
     ModelAnnotationTransformation,
     SimpleTransformation
 )
 from modelica_builder.transformer import Transformer
+
+
+logger = logging.getLogger(__name__)
 
 
 class Model(Transformer):
@@ -176,6 +180,25 @@ class Model(Transformer):
 
         self.add(SimpleTransformation(selector, Edit.make_replace(new_value)))
 
+    def update_component_modifications(self, type_, identifier, modifications):
+        """update_component_modifications updates or creates modifications for
+        specific components.
+
+        :param type_: string, component type
+        :param identifier: string, component identifier
+        :param modifications: dict, see comment below about its structure
+
+        The modifications param is a dictionary. Each key represents a modification
+        argument name. Each value represents the modification value. If a value
+        in the dict is another dict, then the modification is interpreted as a
+        class modification. If the key 'OVERWRITE_MODIFICATIONS' is found in a dict
+        and is True, then all existing modifications at that depth are overwritten with the
+        new modifications.
+
+        Refer to the tests in test_model.py for specific examples
+        """
+        self.add(ComponentModificationsTransformation(type_, identifier, modifications))
+
     def add_parameter(self, type_, identifier, arguments=None, assigned_value=None, string_comment=None, annotations=None):
         """add_parameter inserts a new parameter at the top of the model's element list
 
@@ -224,7 +247,7 @@ class Model(Transformer):
         """
         # if this method has been called before, remove our previous transformation
         if self._updated_model_annotation_modifications:
-            logging.warning('Ignoring previous model annotations update')
+            logger.warning('Ignoring previous model annotations update')
             self._transformations.pop(0)
 
         # add the transformation to the FRONT, ensuring it ends up at the END of the model definition

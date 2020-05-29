@@ -14,7 +14,7 @@ from modelica_builder.modelica_parser.modelicaParser import modelicaParser
 class Transformer:
     """Transformer collects transformations and applies them to files"""
 
-    def __init__(self, source, use_cpp=True):
+    def __init__(self, source, use_cpp=False):
         self._source = source
         self._tree, self._parser = parse(source, use_cpp)
         self._transformations = []

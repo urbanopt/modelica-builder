@@ -25,14 +25,14 @@ from modelica_builder.transformer import Transformer
 
 
 class Model(Transformer):
-    def __init__(self, source):
+    def __init__(self, source, *args, **kwargs):
         if not os.path.exists(source):
             raise Exception(f'Modelica file does not exist: {source}')
         self._source = source
 
         self._updated_model_annotation_modifications = False
 
-        super().__init__(source)
+        super().__init__(source, *args, **kwargs)
 
     def get_name(self):
         """returns the model's name

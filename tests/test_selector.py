@@ -12,11 +12,7 @@ import os
 from unittest import TestCase
 
 from modelica_builder.modelica_parser import parse
-from modelica_builder.selector import (
-    ElementListSelector,
-    NthChildSelector,
-    Selector,
-)
+from modelica_builder.selector import ElementListSelector, NthChildSelector, Selector
 
 from .tests import ASTAssertions
 

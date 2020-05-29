@@ -1,15 +1,15 @@
- 
+
 within teaser_rc_default.Loads.B5a6b99ec37f4de7f94020090;
 model Office
   "This is the simulation model of Office within building B5a6b99ec37f4de7f94020090 with traceable ID None"
 
-  
+
 	parameter Integer nPorts=0 "Number of fluid ports." annotation(connectorSizing=true);
-	
+
 	parameter Boolean use_moisture_balance=false "If true, input connector QLat_flow is enabled and room air computes moisture balance.";
-	
+
 	parameter Real fraLat=1.25 "Fraction latent of sensible persons load = 0.8 for home, 1.25 for office.";
-	
+
   Buildings.BoundaryConditions.SolarIrradiation.DiffusePerez HDifTil[6](    each outSkyCon=true,
     each outGroCon=true,
     til={1.5707963267948966, 0.0, 1.5707963267948966, 1.5707963267948966, 0.0, 1.5707963267948966},
@@ -121,17 +121,17 @@ model Office
       "Table with profiles for persons (radiative and convective) and machines (convective)"
       annotation (Placement(transformation(extent={{6,-60},{22,-44}})));
 	Buildings.Controls.OBC.CDL.Interfaces.RealOutput TRad(quantity="ThermodynamicTemperature", unit="K", displayUnit="degC") "Mean indoor radiation temperature" annotation(Placement(transformation(extent={{100,-10},{120,10}})));
-	
+
 	Buildings.Controls.OBC.CDL.Interfaces.RealOutput TAir(quantity="ThermodynamicTemperature", unit="K", displayUnit="degC") "Room air temperature" annotation(Placement(transformation(extent={{100,38},{120,58}})));
-	
+
 	Modelica.Blocks.Sources.RealExpression perLatLoa(y=internalGains.y[2]*fraLat) if use_moisture_balance "Latent person loads" annotation(Placement(transformation(extent={{-80,-60},{-60,-40}})));
-	
+
 	Modelica.Fluid.Vessels.BaseClasses.VesselFluidPorts_b ports[nPorts](redeclare each final package Medium=Buildings.Media.Air) "Auxiliary fluid inlets and outlets to indoor air volume." annotation(Placement(transformation(extent={{-30, -8}, {30, 8}},origin={0, -100}), iconTransformation(extent={{-23.25, -7.25}, {23.25, 7.25}},origin={-0.75, -98.75})));
-	
+
 	Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a port_b "Heat port for radiative heat flow." annotation(Placement(transformation(extent={{30,-110},{50,-90}}, iconTransformation(extent={{40,-112},{60,-92}}))));
-	
+
 	Modelica.Thermal.HeatTransfer.Interfaces.HeatPort_a port_a annotation(Placement(transformation(extent={{-10,90},{10,110}}), iconTransformation(extent={{-10,90},{10,110}})));
-	
+
 equation
   connect(eqAirTemp.TEqAirWin, prescribedTemperature1.T)
     annotation (Line(
@@ -139,7 +139,7 @@ equation
   connect(eqAirTemp.TEqAir, prescribedTemperature.T)
     annotation (Line(points={{-3,-4},{4,-4},{4,0},{6.8,0}},
     color={0,0,127}));
-  
+
   connect(weaBus.TDryBul, eqAirTemp.TDryBul)
     annotation (Line(
     points={{-83,6},{-83,-2},{-38,-2},{-38,-10},{-26,-10}},
@@ -276,17 +276,17 @@ equation
     annotation (Line(points={{27,64},{34,64},{40,64},{40,31},{43,31}}, color={0,
     0,127}));
 	connect(thermalZoneTwoElements.ports, ports) annotation(Line(points={{83, -1.95}, {83, -84}, {0, -84}, {0, -100}},color={0, 127, 255}));
-	
+
 	connect(thermalZoneTwoElements.intGainsRad, port_b) annotation(Line(points={{92, 24}, {98, 24}, {98, -100}, {40, -100}}, color={191, 0, 0}));
-	
+
 	connect(thermalZoneTwoElements.QLat_flow, perLatLoa.y) annotation(Line(points={{43,4},{40,4},{40,-28},{-40,-28},{-40,-50},{-59,-50}}, color={0, 0,127}));
-	
+
 	connect(thermalZoneTwoElements.TRad, TRad) annotation(Line(points={{93,28},{98,28},{98,-20},{110,-20}}, color={0,0,127}));
-	
+
 	connect(thermalZoneTwoElements.TAir, TAir) annotation(Line(points={{93,32},{98,32},{98,48},{110,48}}, color={0,0,127}));
-	
+
 	connect(port_a, thermalZoneTwoElements.intGainsConv) annotation(Line(points={{0,100},{96,100},{96,20},{92,20}}, color={191,0,0}));
-	
+
   annotation (experiment(
   StartTime=0,
   StopTime=31536000,

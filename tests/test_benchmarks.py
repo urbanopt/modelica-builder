@@ -14,7 +14,6 @@ import pytest
 
 from modelica_builder.model import Model
 
-
 large_file = os.path.join(os.path.join(os.path.dirname(__file__), 'data'), 'Office.mo')
 small_file = os.path.join(os.path.join(os.path.dirname(__file__), 'data'), 'DCMotor.mo')
 

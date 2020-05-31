@@ -6,8 +6,8 @@ All rights reserved.
 """
 
 
-from abc import ABC, abstractmethod
 import re
+from abc import ABC, abstractmethod
 
 from antlr4.xpath import XPath
 

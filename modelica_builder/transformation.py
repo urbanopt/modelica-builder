@@ -11,10 +11,7 @@ from copy import deepcopy
 from antlr4.xpath import XPath
 
 from modelica_builder.edit import Edit
-from modelica_builder.selector import (
-    EquationSectionSelector,
-    NthChildSelector,
-)
+from modelica_builder.selector import EquationSectionSelector, NthChildSelector
 
 
 class SimpleTransformation:

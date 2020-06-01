@@ -186,7 +186,7 @@ class TestModel(TestCase, DiffAssertions):
 
         # Act
         model.insert_component('FancyClass', 'myInstance',
-                               arguments={'arg1': '1234'}, string_comment='my comment',
+                               modifications={'arg1': '1234'}, string_comment='my comment',
                                annotations=['my annotation'], insert_index=0)
         self.result = model.execute()
 
@@ -201,10 +201,10 @@ class TestModel(TestCase, DiffAssertions):
 
         # Act
         model.insert_component('FancyClass', 'myInstance',
-                               arguments={'arg1': '1234'}, string_comment='my comment',
+                               modifications={'arg1': '1234'}, string_comment='my comment',
                                annotations=['my annotation'])
         model.insert_component('AnotherClass', 'anotherInstance',
-                               arguments={'x': '"hello"'}, string_comment='this is another class',
+                               modifications={'x': '"hello"'}, string_comment='this is another class',
                                annotations=['abc'])
         self.result = model.execute()
 

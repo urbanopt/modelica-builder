@@ -116,21 +116,21 @@ class Model(Transformer):
                         .chain(NthChildSelector(4)))
             self.add(SimpleTransformation(selector, Edit.make_replace(new_port_b)))
 
-    def insert_component(self, type_, identifier, arguments=None, conditional=None, string_comment=None, annotations=None, insert_index=-1):
+    def insert_component(self, type_, identifier, modifications=None, conditional=None, string_comment=None, annotations=None, insert_index=-1):
         """insert_component constructs and inserts a component
 
         :param type_: string, type of the component
         :param identifier: string, component identifier
-        :param arguments: dict {string: string}, component initialization arguments with arg name as the key and arg value as the value
+        :param modifications: dict {string: string}, component initialization modifications with arg name as the key and arg value as the value
         :param conditional: string, conditional applied to the modelica component
         :param string_comment: string
         :param annotations: list of strings, annotations to add to the component
         :param insert_index: int, index to place the new component. if < 0, it will insert at the end
         """
         component = ComponentBuilder(insert_index, type_, identifier)
-        if arguments is not None:
-            for arg_name, arg_value in arguments.items():
-                component.set_argument(arg_name, arg_value)
+        if modifications is not None:
+            for arg_name, arg_value in modifications.items():
+                component.set_modification(arg_name, arg_value)
 
         if conditional is not None:
             component.set_conditional(conditional)
@@ -200,21 +200,21 @@ class Model(Transformer):
         """
         self.add(ComponentModificationsTransformation(type_, identifier, modifications))
 
-    def add_parameter(self, type_, identifier, arguments=None, assigned_value=None, string_comment=None, annotations=None):
+    def add_parameter(self, type_, identifier, modifications=None, assigned_value=None, string_comment=None, annotations=None):
         """add_parameter inserts a new parameter at the top of the model's element list
 
         :param type_: string, type of the component
         :param identifier: string, component identifier
-        :param arguments: dict {string: variant}, component initialization arguments with arg name as the key and arg value as the value
+        :param modifications: dict {string: variant}, component initialization modifications with arg name as the key and arg value as the value
         :param assigned_value: variant, value to assign to the parameter
         :param string_comment: string, comment to add
         :param annotations: list of strings, annotations to add to the component
         """
         parameter = ParameterBuilder(0, type_, identifier)
 
-        if arguments:
-            for arg_name, arg_value in arguments.items():
-                parameter.set_argument(arg_name, arg_value)
+        if modifications:
+            for arg_name, arg_value in modifications.items():
+                parameter.set_modification(arg_name, arg_value)
 
         if string_comment:
             parameter.set_string_comment(string_comment)

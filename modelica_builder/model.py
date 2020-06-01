@@ -12,8 +12,8 @@ import os
 from modelica_builder.builder import ComponentBuilder, ConnectBuilder, ParameterBuilder
 from modelica_builder.edit import Edit
 from modelica_builder.selector import (
-    ComponentArgumentValueSelector,
     ComponentDeclarationSelector,
+    ComponentModificationValueSelector,
     ConnectClauseSelector,
     ModelIdentifierSelector,
     NthChildSelector,
@@ -26,7 +26,6 @@ from modelica_builder.transformation import (
     SimpleTransformation
 )
 from modelica_builder.transformer import Transformer
-
 
 logger = logging.getLogger(__name__)
 
@@ -164,19 +163,21 @@ class Model(Transformer):
 
         self.add(SimpleTransformation(selector, Edit.make_delete()))
 
-    def update_component_argument(self, type_, identifier, argument_name, new_value, if_value=None):
-        """update_component_argument changes the value of an _existing_ component
-        initialization argument value. ie this won't work if the argument isn't
-        already used
+    def update_component_modification(self, type_, identifier, modification_name, new_value, if_value=None):
+        """update_component_modification changes the value of an _existing_ component
+        modification value. ie this won't work if the argument isn't already used
 
         :param type_: string, component type
         :param identifier: string, component identifier
-        :param argument_name: string, argument to update
-        :param new_value: string, new argument value
+        :param modification_name: string, modification to update
+        :param new_value: string, new modification value
         :param if_value: string, if provided it will only update the value if the existing value matches this
         """
         selector = (ComponentDeclarationSelector(type_, identifier)
-                    .chain(ComponentArgumentValueSelector(argument_name, argument_value=if_value)))
+                    .chain(
+                        ComponentModificationValueSelector(
+                            modification_name,
+                            modification_value=if_value)))
 
         self.add(SimpleTransformation(selector, Edit.make_replace(new_value)))
 

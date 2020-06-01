@@ -227,52 +227,52 @@ class TestModel(TestCase, DiffAssertions):
         self.assertNoAdditions(source_file, self.result)
         self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])
 
-    def test_model_update_component_argument(self):
+    def test_model_update_component_modification(self):
         # Setup
         source_file = os.path.join(self.data_dir, 'DCMotor.mo')
         model = Model(source_file)
 
         # Act
-        model.update_component_argument('Resistor', 'R', 'R', '54321')
+        model.update_component_modification('Resistor', 'R', 'R', '54321')
         self.result = model.execute()
 
         # Assert
         self.assertHasAdditions(source_file, self.result, ['Resistor R(R=54321);'])
         self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])
 
-    def test_model_update_component_argument_conditional_true(self):
+    def test_model_update_component_modification_conditional_true(self):
         # Setup
         source_file = os.path.join(self.data_dir, 'DCMotor.mo')
         model = Model(source_file)
 
         # Act
-        model.update_component_argument('Resistor', 'R', 'R', '54321', if_value='100')
+        model.update_component_modification('Resistor', 'R', 'R', '54321', if_value='100')
         self.result = model.execute()
 
         # Assert
         self.assertHasAdditions(source_file, self.result, ['Resistor R(R=54321);'])
         self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])
 
-    def test_model_update_component_argument_conditional_true_w_whitespace(self):
+    def test_model_update_component_modification_conditional_true_w_whitespace(self):
         # Setup
         source_file = os.path.join(self.data_dir, 'DCMotor.mo')
         model = Model(source_file)
 
         # Act
-        model.update_component_argument('Resistor', 'R', 'R', '54321', if_value='  100\n')
+        model.update_component_modification('Resistor', 'R', 'R', '54321', if_value='  100\n')
         self.result = model.execute()
 
         # Assert
         self.assertHasAdditions(source_file, self.result, ['Resistor R(R=54321);'])
         self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])
 
-    def test_model_update_component_argument_conditional_false(self):
+    def test_model_update_component_modification_conditional_false(self):
         # Setup
         source_file = os.path.join(self.data_dir, 'DCMotor.mo')
         model = Model(source_file)
 
         # Act
-        model.update_component_argument('Resistor', 'R', 'R', '54321', if_value='bogus_value')
+        model.update_component_modification('Resistor', 'R', 'R', '54321', if_value='bogus_value')
         self.result = model.execute()
 
         # Assert

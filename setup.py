@@ -23,5 +23,8 @@ except VersionConflict:
 if __name__ == "__main__":
     setup(
         use_pyscaffold=True,
-        cmdclass={"update_licenses": UpdateLicenses}
+        cmdclass={"update_licenses": UpdateLicenses},
+        install_requires=[
+            "antlr4-python3-runtime==4.8"
+        ],
     )

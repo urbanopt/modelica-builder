@@ -23,7 +23,7 @@ class ComponentBuilder:
         :param type_: string, type of the component
         :param identifier: string, component identifier
         """
-        self._arguments = {}
+        self._modifications = {}
         self._annotations = []
         self._conditional = None
         self._string_comment = None
@@ -31,13 +31,13 @@ class ComponentBuilder:
         self._type = type_
         self._identifier = identifier
 
-    def set_argument(self, arg_name, arg_value):
-        """set_argument sets a component initialization argument
+    def set_modification(self, arg_name, arg_value):
+        """set_modification sets a component initialization modification
 
-        :param arg_name: string, name of the argument
-        :param arg_value: string, value of the argument
+        :param arg_name: string, name of the modification
+        :param arg_value: string, value of the modification
         """
-        self._arguments[arg_name] = arg_value
+        self._modifications[arg_name] = arg_value
 
     def set_conditional(self, conditional):
         self._conditional = conditional
@@ -80,9 +80,9 @@ class ComponentBuilder:
 
         :return: string
         """
-        arguments = ''
-        if self._arguments:
-            arguments = f"({', '.join([f'{k}={v}' for k, v in self._arguments.items()])})"
+        modifications = ''
+        if self._modifications:
+            modifications = f"({', '.join([f'{k}={v}' for k, v in self._modifications.items()])})"
 
         conditional = ''
         if self._conditional:
@@ -96,7 +96,7 @@ class ComponentBuilder:
         if self._annotations:
             annotations = f" annotation({', '.join(self._annotations)})"
 
-        return f'\n\t{self._type} {self._identifier}{arguments}{conditional}{string_comment}{annotations};\n\t'
+        return f'\n\t{self._type} {self._identifier}{modifications}{conditional}{string_comment}{annotations};\n\t'
 
 
 class ConnectBuilder:
@@ -144,7 +144,7 @@ class ParameterBuilder:
         :param type_: string, type of the parameter
         :param identifier: string, parameter identifier
         """
-        self._arguments = {}
+        self._modifications = {}
         self._value = None
         self._annotations = []
         self._string_comment = None
@@ -152,13 +152,13 @@ class ParameterBuilder:
         self._type = type_
         self._identifier = identifier
 
-    def set_argument(self, arg_name, arg_value):
-        """set_argument sets a parameter initialization argument
+    def set_modification(self, arg_name, arg_value):
+        """set_modification sets a parameter initialization modification
 
-        :param arg_name: string, name of the argument
-        :param arg_value: string, value of the argument
+        :param arg_name: string, name of the modification
+        :param arg_value: string, value of the modification
         """
-        self._arguments[arg_name] = arg_value
+        self._modifications[arg_name] = arg_value
 
     def set_value(self, value):
         """set_value sets the value of the parameter
@@ -208,9 +208,9 @@ class ParameterBuilder:
 
         :return: string
         """
-        arguments = ''
-        if self._arguments:
-            arguments = f"({', '.join([f'{k}={v}' for k, v in self._arguments.items()])})"
+        modifications = ''
+        if self._modifications:
+            modifications = f"({', '.join([f'{k}={v}' for k, v in self._modifications.items()])})"
 
         value_assignment = ''
         if self._value is not None:
@@ -224,4 +224,4 @@ class ParameterBuilder:
         if self._annotations:
             annotations = f" annotation({', '.join(self._annotations)})"
 
-        return f'\n\tparameter {self._type} {self._identifier}{arguments}{value_assignment}{string_comment}{annotations};\n\t'
+        return f'\n\tparameter {self._type} {self._identifier}{modifications}{value_assignment}{string_comment}{annotations};\n\t'

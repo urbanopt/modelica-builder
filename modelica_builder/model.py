@@ -12,8 +12,8 @@ import os
 from modelica_builder.builder import ComponentBuilder, ConnectBuilder, ParameterBuilder
 from modelica_builder.edit import Edit
 from modelica_builder.selector import (
-    ComponentArgumentValueSelector,
     ComponentDeclarationSelector,
+    ComponentModificationValueSelector,
     ConnectClauseSelector,
     ModelIdentifierSelector,
     NthChildSelector,
@@ -21,10 +21,13 @@ from modelica_builder.selector import (
     WithinSelector
 )
 from modelica_builder.transformation import (
+    ComponentModificationsTransformation,
     ModelAnnotationTransformation,
     SimpleTransformation
 )
 from modelica_builder.transformer import Transformer
+
+logger = logging.getLogger(__name__)
 
 
 class Model(Transformer):
@@ -113,21 +116,21 @@ class Model(Transformer):
                         .chain(NthChildSelector(4)))
             self.add(SimpleTransformation(selector, Edit.make_replace(new_port_b)))
 
-    def insert_component(self, type_, identifier, arguments=None, conditional=None, string_comment=None, annotations=None, insert_index=-1):
+    def insert_component(self, type_, identifier, modifications=None, conditional=None, string_comment=None, annotations=None, insert_index=-1):
         """insert_component constructs and inserts a component
 
         :param type_: string, type of the component
         :param identifier: string, component identifier
-        :param arguments: dict {string: string}, component initialization arguments with arg name as the key and arg value as the value
+        :param modifications: dict {string: string}, component initialization modifications with arg name as the key and arg value as the value
         :param conditional: string, conditional applied to the modelica component
         :param string_comment: string
         :param annotations: list of strings, annotations to add to the component
         :param insert_index: int, index to place the new component. if < 0, it will insert at the end
         """
         component = ComponentBuilder(insert_index, type_, identifier)
-        if arguments is not None:
-            for arg_name, arg_value in arguments.items():
-                component.set_argument(arg_name, arg_value)
+        if modifications is not None:
+            for arg_name, arg_value in modifications.items():
+                component.set_modification(arg_name, arg_value)
 
         if conditional is not None:
             component.set_conditional(conditional)
@@ -160,37 +163,58 @@ class Model(Transformer):
 
         self.add(SimpleTransformation(selector, Edit.make_delete()))
 
-    def update_component_argument(self, type_, identifier, argument_name, new_value, if_value=None):
-        """update_component_argument changes the value of an _existing_ component
-        initialization argument value. ie this won't work if the argument isn't
-        already used
+    def update_component_modification(self, type_, identifier, modification_name, new_value, if_value=None):
+        """update_component_modification changes the value of an _existing_ component
+        modification value. ie this won't work if the argument isn't already used
 
         :param type_: string, component type
         :param identifier: string, component identifier
-        :param argument_name: string, argument to update
-        :param new_value: string, new argument value
+        :param modification_name: string, modification to update
+        :param new_value: string, new modification value
         :param if_value: string, if provided it will only update the value if the existing value matches this
         """
         selector = (ComponentDeclarationSelector(type_, identifier)
-                    .chain(ComponentArgumentValueSelector(argument_name, argument_value=if_value)))
+                    .chain(
+                        ComponentModificationValueSelector(
+                            modification_name,
+                            modification_value=if_value)))
 
         self.add(SimpleTransformation(selector, Edit.make_replace(new_value)))
 
-    def add_parameter(self, type_, identifier, arguments=None, assigned_value=None, string_comment=None, annotations=None):
+    def update_component_modifications(self, type_, identifier, modifications):
+        """update_component_modifications updates or creates modifications for
+        specific components.
+
+        :param type_: string, component type
+        :param identifier: string, component identifier
+        :param modifications: dict, see comment below about its structure
+
+        The modifications param is a dictionary. Each key represents a modification
+        argument name. Each value represents the modification value. If a value
+        in the dict is another dict, then the modification is interpreted as a
+        class modification. If the key 'OVERWRITE_MODIFICATIONS' is found in a dict
+        and is True, then all existing modifications at that depth are overwritten with the
+        new modifications.
+
+        Refer to the tests in test_model.py for specific examples
+        """
+        self.add(ComponentModificationsTransformation(type_, identifier, modifications))
+
+    def add_parameter(self, type_, identifier, modifications=None, assigned_value=None, string_comment=None, annotations=None):
         """add_parameter inserts a new parameter at the top of the model's element list
 
         :param type_: string, type of the component
         :param identifier: string, component identifier
-        :param arguments: dict {string: variant}, component initialization arguments with arg name as the key and arg value as the value
+        :param modifications: dict {string: variant}, component initialization modifications with arg name as the key and arg value as the value
         :param assigned_value: variant, value to assign to the parameter
         :param string_comment: string, comment to add
         :param annotations: list of strings, annotations to add to the component
         """
         parameter = ParameterBuilder(0, type_, identifier)
 
-        if arguments:
-            for arg_name, arg_value in arguments.items():
-                parameter.set_argument(arg_name, arg_value)
+        if modifications:
+            for arg_name, arg_value in modifications.items():
+                parameter.set_modification(arg_name, arg_value)
 
         if string_comment:
             parameter.set_string_comment(string_comment)
@@ -224,7 +248,7 @@ class Model(Transformer):
         """
         # if this method has been called before, remove our previous transformation
         if self._updated_model_annotation_modifications:
-            logging.warning('Ignoring previous model annotations update')
+            logger.warning('Ignoring previous model annotations update')
             self._transformations.pop(0)
 
         # add the transformation to the FRONT, ensuring it ends up at the END of the model definition

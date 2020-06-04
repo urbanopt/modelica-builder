@@ -158,15 +158,20 @@ class ComponentDeclarationSelector(Selector):
             if node.declaration().IDENT().getText() == self._identifier]
 
 
-class ComponentArgumentValueSelector(Selector):
-    """ComponentArgumentSelector returns arguments to component
+class ComponentModificationValueSelector(Selector):
+    """ComponentModificationSelector returns modifications to component
     declarations
     """
     BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause/component_list/component_declaration'
 
-    def __init__(self, argument_name, argument_value=None):
-        self._argument_name = argument_name
-        self._argument_value = argument_value
+    def __init__(self, modification_name, modification_value=None):
+        """
+        :param modification_name: str, mane of the modification to select
+        :param modification_value: None | str, if not None, it only selects modifications with this value
+        """
+
+        self._modification_name = modification_name
+        self._modification_value = modification_value
         super().__init__()
 
     def _select(self, base, parser):
@@ -176,8 +181,8 @@ class ComponentArgumentValueSelector(Selector):
         # filter modifications (ie arguments) to those that match our name
         filtered_modifications = []
         for element_modification in element_modifications:
-            argument_name_text = element_modification.name().getText()
-            if argument_name_text == self._argument_name:
+            modification_name_text = element_modification.name().getText()
+            if modification_name_text == self._modification_name:
                 filtered_modifications.append(element_modification)
 
         # get the argument expressions (ie argument values)
@@ -186,12 +191,12 @@ class ComponentArgumentValueSelector(Selector):
             xpath = '//expression'
             results.extend(XPath.XPath.findAll(element_modification, xpath, parser))
 
-        # filter out non-matching values if argument_value is specified
-        if self._argument_value is not None:
+        # filter out non-matching values if modification_value is specified
+        if self._modification_value is not None:
             filtered_results = []
             for result in results:
                 a = result.getText()
-                b = self._argument_value
+                b = self._modification_value
                 if re.sub(r"\s*", "", a) == re.sub(r"\s*", "", b):
                     filtered_results.append(result)
             results = filtered_results

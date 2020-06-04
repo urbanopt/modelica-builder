@@ -30,7 +30,7 @@ class TestComponentBuilder(TestCase):
 
         # Act
         component_builder = ComponentBuilder(insert_index=insert_index, type_='CustomType', identifier='MyComponent')
-        component_builder.set_argument('k', 10)
+        component_builder.set_modification('k', 10)
         component_builder.add_annotation('Placement(transformation(extent{{10, 16}, {0, 26}}))')
 
         transformer = Transformer(os.path.join(self.data_dir, 'DCMotor.mo'))
@@ -57,7 +57,7 @@ class TestComponentBuilder(TestCase):
 
         # Act
         component_builder = ComponentBuilder(insert_index=insert_index, type_='CustomType', identifier='MyComponent')
-        component_builder.set_argument('k', 10)
+        component_builder.set_modification('k', 10)
         component_builder.add_annotation('Placement(transformation(extent{{10, 16}, {0, 26}}))')
 
         transformer = Transformer(os.path.join(self.data_dir, 'DCMotor.mo'))
@@ -84,7 +84,7 @@ class TestComponentBuilder(TestCase):
 
         # Act
         component_builder = ComponentBuilder(insert_index=insert_index, type_='CustomType', identifier='MyComponent')
-        component_builder.set_argument('k', 10)
+        component_builder.set_modification('k', 10)
         component_builder.add_annotation('Placement(transformation(extent{{10, 16}, {0, 26}}))')
 
         transformer = Transformer(os.path.join(self.data_dir, 'DCMotor.mo'))

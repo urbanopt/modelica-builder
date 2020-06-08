@@ -1,0 +1,11 @@
+"""
+****************************************************************************************************
+:copyright (c) 2020, Alliance for Sustainable Energy, LLC.
+All rights reserved.
+****************************************************************************************************
+"""
+
+# global config variables
+# If true, then each inserted component/annotation argument will be indented on a new line
+INDENT_INSERTED_COMPONENT_ARGS = False
+INDENT_INSERTED_ANNOTATION_ARGS = False

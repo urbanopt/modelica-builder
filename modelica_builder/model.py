@@ -9,7 +9,12 @@ All rights reserved.
 import logging
 import os
 
-from modelica_builder.builder import ComponentBuilder, ConnectBuilder, ParameterBuilder
+from modelica_builder.builder import (
+    ComponentBuilder,
+    ConnectBuilder,
+    EquationForLoopBuilder,
+    ParameterBuilder
+)
 from modelica_builder.edit import Edit
 from modelica_builder.selector import (
     ComponentDeclarationSelector,
@@ -115,6 +120,18 @@ class Model(Transformer):
             selector = (ConnectClauseSelector(port_a, port_b)
                         .chain(NthChildSelector(4)))
             self.add(SimpleTransformation(selector, Edit.make_replace(new_port_b)))
+
+    def insert_equation_for_loop(self, index_identifier, expression_raw, loop_body_raw_list):
+        """constructs and inserts a for loop in the equation section
+
+        :param index_identifier: string, identifier for the index variable
+        :param expression_raw: string, the expression for iteration, e.g. range(x)
+        :param loop_body_raw: list, list of loop body lines, each of which is valid modelica code
+        """
+        self.add(
+            EquationForLoopBuilder(
+                index_identifier, expression_raw, loop_body_raw_list
+            ).transformation())
 
     def insert_component(self, type_, identifier, modifications=None, conditional=None, string_comment=None, annotations=None, insert_index=-1):
         """insert_component constructs and inserts a component

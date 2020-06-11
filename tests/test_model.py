@@ -680,3 +680,63 @@ end Test;"""
         self.assertHasDeletions(source_file, self.result, [
             'Resistor R(R=1);'
         ])
+
+    def test_model_insert_equation_for_loop_simple(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        identifier = 'i'
+        expression = 'range(n_ports)'
+        loop_body_list = ['connect(conArr[i], conArr[i+1]);']
+        model.insert_equation_for_loop(
+            index_identifier=identifier,
+            expression_raw=expression,
+            loop_body_raw_list=loop_body_list,
+        )
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(
+            source_file,
+            self.result,
+            loop_body_list + [
+                f'for {identifier} in {expression} loop',
+                'end for;'
+            ])
+        self.assertNoDeletions(source_file, self.result)
+
+    def test_model_insert_equation_for_loop_multiline_body(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        identifier = 'i'
+        expression = 'range(n_ports)'
+        loop_body_list = [
+            'if i == 1 then',
+            '\tconnect(conArr[i], conArr[i-1]);',
+            'end if;',
+        ]
+        model.insert_equation_for_loop(
+            index_identifier=identifier,
+            expression_raw=expression,
+            loop_body_raw_list=loop_body_list,
+        )
+        self.result = model.execute()
+
+        # Assert
+        # Remove the leading/training whitespace of the body lines for comparison
+        # If we didn't the assert would fail (expectations are strict about whitespace)
+        expected_body_additions = [line.strip() for line in loop_body_list]
+        self.assertHasAdditions(
+            source_file,
+            self.result,
+            expected_body_additions
+            + [
+                f'for {identifier} in {expression} loop',
+                'end for;'
+            ])
+        self.assertNoDeletions(source_file, self.result)

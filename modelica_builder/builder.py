@@ -225,3 +225,37 @@ class ParameterBuilder:
             annotations = f" annotation({', '.join(self._annotations)})"
 
         return f'\n\tparameter {self._type} {self._identifier}{modifications}{value_assignment}{string_comment}{annotations};\n\t'
+
+
+class EquationForLoopBuilder:
+    def __init__(self, index_identifier, expression_raw, loop_body_raw_list):
+        """EquationForLoopBuilder creates a for loop for the equation section
+
+        :param index_identifier: string
+        :param expression_raw: string
+        :param loop_body_raw_list: list
+        """
+        self._index_identifier = index_identifier
+        self._expression_raw = expression_raw
+        self._loop_body_raw_list = loop_body_raw_list
+
+    def transformation(self):
+        """transformation creates the transformation required for inserting the
+        built for loop
+
+        :return: Transformation
+        """
+        # select the last child of the equation section and insert after it
+        selector = (EquationSectionSelector()
+                    .chain(NthChildSelector(-1))
+                    .assert_count(1, 'Failed to find end of the equation section'))
+        edit = Edit.make_insert(self.build(), insert_after=True)
+        return SimpleTransformation(selector, edit)
+
+    def build(self):
+        """build constructs the text for the for loop
+
+        :return: string
+        """
+        loop_body_raw = '\n\t\t'.join(self._loop_body_raw_list)
+        return f'\n\tfor {self._index_identifier} in {self._expression_raw} loop\n\t\t{loop_body_raw}\n\tend for;'

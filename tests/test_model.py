@@ -10,6 +10,7 @@ import os
 import tempfile
 from unittest import TestCase
 
+from modelica_builder import config
 from modelica_builder.model import Model
 
 from .tests import DiffAssertions
@@ -17,6 +18,10 @@ from .tests import DiffAssertions
 
 class TestModel(TestCase, DiffAssertions):
     def setUp(self):
+        # simplify indentation to make diffing simpler
+        config.INDENT_INSERTED_COMPONENT_ARGS = False
+        config.INDENT_INSERTED_ANNOTATION_ARGS = False
+
         self.result = None
         self.data_dir = os.path.join(os.path.dirname(__file__), 'data')
         self.output_dir = os.path.join(os.path.dirname(__file__), 'output')
@@ -640,6 +645,40 @@ end Test;"""
         ])
         self.assertHasDeletions(source_file, self.result, [
             'Resistor R(modA=100, modB(modC=200, modD=300));'
+        ])
+
+    def test_model_update_component_modifications_adds_newlines_correctly(self):
+        # Setup
+        # NOTE: changing the indentation settings
+        config.INDENT_INSERTED_COMPONENT_ARGS = True
+        mo_file = """
+model Test
+    Resistor R(R=1);
+equation
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        # Act
+        model.update_component_modifications(
+            'Resistor', 'R', {
+                'modB': {
+                    'modZ': 555,
+                },
+                'inserted': '321'
+            },
+        )
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'Resistor R(R=1,',
+            'modB(',
+            'modZ=555),',
+            'inserted=321);',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'Resistor R(R=1);'
         ])
 
     def test_model_insert_equation_for_loop_simple(self):

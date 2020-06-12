@@ -496,7 +496,7 @@ end Test;"""
         # Setup
         mo_file = """
 model Test
-    Resistor R(R=100);
+  Resistor R(R=100);
 equation
 end Test;"""
         source_file = self.create_tmp_file(mo_file)
@@ -520,7 +520,7 @@ end Test;"""
         # Setup
         mo_file = """
 model Test
-    Resistor R(root(child=100));
+  Resistor R(root(child=100));
 equation
 end Test;"""
         source_file = self.create_tmp_file(mo_file)
@@ -544,7 +544,7 @@ end Test;"""
         # Setup
         mo_file = """
 model Test
-    Resistor R(modA=100, modB=200);
+  Resistor R(modA=100, modB=200);
 equation
 end Test;"""
         source_file = self.create_tmp_file(mo_file)
@@ -568,7 +568,7 @@ end Test;"""
         # Setup
         mo_file = """
 model Test
-    Resistor R(modA=100, modB(modC=200));
+  Resistor R(modA=100, modB(modC=200));
 equation
 end Test;"""
         source_file = self.create_tmp_file(mo_file)
@@ -598,7 +598,7 @@ end Test;"""
         # Setup
         mo_file = """
 model Test
-    Resistor R(modA=100, modB=200);
+  Resistor R(modA=100, modB=200);
 equation
 end Test;"""
         source_file = self.create_tmp_file(mo_file)
@@ -622,7 +622,7 @@ end Test;"""
         # Setup
         mo_file = """
 model Test
-    Resistor R(modA=100, modB(modC=200, modD=300));
+  Resistor R(modA=100, modB(modC=200, modD=300));
 equation
 end Test;"""
         source_file = self.create_tmp_file(mo_file)
@@ -653,7 +653,7 @@ end Test;"""
         config.INDENT_INSERTED_COMPONENT_ARGS = True
         mo_file = """
 model Test
-    Resistor R(R=1);
+  Resistor R(R=1);
 equation
 end Test;"""
         source_file = self.create_tmp_file(mo_file)
@@ -717,7 +717,7 @@ end Test;"""
         expression = 'range(n_ports)'
         loop_body_list = [
             'if i == 1 then',
-            '\tconnect(conArr[i], conArr[i-1]);',
+            '  connect(conArr[i], conArr[i-1]);',
             'end if;',
         ]
         model.insert_equation_for_loop(

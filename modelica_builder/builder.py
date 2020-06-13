@@ -6,6 +6,7 @@ All rights reserved.
 """
 
 
+from modelica_builder import config
 from modelica_builder.edit import Edit
 from modelica_builder.selector import (
     ElementListSelector,
@@ -96,7 +97,7 @@ class ComponentBuilder:
         if self._annotations:
             annotations = f" annotation({', '.join(self._annotations)})"
 
-        return f'\n\t{self._type} {self._identifier}{modifications}{conditional}{string_comment}{annotations};\n\t'
+        return f'\n{config.INDENTATION}{self._type} {self._identifier}{modifications}{conditional}{string_comment}{annotations};\n{config.INDENTATION}'
 
 
 class ConnectBuilder:
@@ -133,7 +134,7 @@ class ConnectBuilder:
         if self._annotations:
             annotations = f" annotation({', '.join(self._annotations)})"
 
-        return f'\n\tconnect({self._a}, {self._b}){annotations};\n\t'
+        return f'\n{config.INDENTATION}connect({self._a}, {self._b}){annotations};\n{config.INDENTATION}'
 
 
 class ParameterBuilder:
@@ -224,7 +225,7 @@ class ParameterBuilder:
         if self._annotations:
             annotations = f" annotation({', '.join(self._annotations)})"
 
-        return f'\n\tparameter {self._type} {self._identifier}{modifications}{value_assignment}{string_comment}{annotations};\n\t'
+        return f'\n{config.INDENTATION}parameter {self._type} {self._identifier}{modifications}{value_assignment}{string_comment}{annotations};\n{config.INDENTATION}'
 
 
 class EquationForLoopBuilder:
@@ -257,5 +258,5 @@ class EquationForLoopBuilder:
 
         :return: string
         """
-        loop_body_raw = '\n\t\t'.join(self._loop_body_raw_list)
-        return f'\n\tfor {self._index_identifier} in {self._expression_raw} loop\n\t\t{loop_body_raw}\n\tend for;'
+        loop_body_raw = f'\n{config.INDENTATION * 2}'.join(self._loop_body_raw_list)
+        return f'\n{config.INDENTATION}for {self._index_identifier} in {self._expression_raw} loop\n{config.INDENTATION * 2}{loop_body_raw}\n{config.INDENTATION}end for;'

@@ -54,7 +54,7 @@ def build_modifications(modifications, depth=1, indented=True):
         # modelica code is already indented once
         # e.g. a component declaration is usually indented once
         indent_depth = depth + 1
-        indentation = '\n' + '\t' * indent_depth
+        indentation = '\n' + config.INDENTATION * indent_depth
     else:
         indentation = ''
 
@@ -135,7 +135,7 @@ class ModelAnnotationTransformation:
                         .chain(NthChildSelector(-1))
                         .assert_count(1, 'Failed to find end of the equation section'))
 
-            edit = Edit.make_insert(f'\n\tannotation({build_modifications(self.modifications, indented=False)});')
+            edit = Edit.make_insert(f'\n{config.INDENTATION}annotation({build_modifications(self.modifications, indented=False)});')
             return SimpleTransformation(selector, edit).build_edits(tree, parser)
 
         # model annotation exists, recursively update or insert the modifications

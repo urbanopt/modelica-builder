@@ -5,12 +5,23 @@ All rights reserved.
 ****************************************************************************************************
 """
 
+import sys
 
 from antlr4 import FileStream, CommonTokenStream
+from antlr4.error.ErrorListener import ErrorListener
 from antlr4.tree.Tree import TerminalNodeImpl
 
 from modelica_builder.modelica_parser.modelicaLexer import modelicaLexer
 from modelica_builder.modelica_parser.modelicaParser import modelicaParser
+
+
+class ModelicaErrorListener(ErrorListener):
+    def __init__(self, filepath, *args, **kwargs):
+        self._filepath = filepath
+        super().__init__(*args, **kwargs)
+
+    def syntaxError(self, recognizer, offending_symbol, line, column, msg, e):
+        print(f"{self._filepath}:{line}:{column}: {msg}", file=sys.stderr)
 
 
 def parse(source):
@@ -23,6 +34,8 @@ def parse(source):
     lexer = modelicaLexer(fs)
     stream = CommonTokenStream(lexer)
     parser = modelicaParser(stream)
+    parser.removeErrorListeners()
+    parser.addErrorListener(ModelicaErrorListener(source))
     tree = parser.stored_definition()
 
     return tree, parser

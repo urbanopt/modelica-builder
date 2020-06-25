@@ -205,7 +205,7 @@ statement
    ;
 
 if_equation
-   : 'if' expression 'then' (equation ';')* ('elseif' expression 'then' (equation ';')*)* ('else' (equation ';')*)? 'end' 'if'
+   : 'if' expression 'then' (equation)* ('elseif' expression 'then' (equation)*)* ('else' (equation)*)? 'end' 'if'
    ;
 
 if_statement
@@ -213,7 +213,7 @@ if_statement
    ;
 
 for_equation
-   : 'for' for_indices 'loop' (equation ';')* 'end' 'for'
+   : 'for' for_indices 'loop' (equation)* 'end' 'for'
    ;
 
 for_statement
@@ -233,7 +233,7 @@ while_statement
    ;
 
 when_equation
-   : 'when' expression 'then' (equation ';')* ('elsewhen' expression 'then' (equation ';')*)* 'end' 'when'
+   : 'when' expression 'then' (equation)* ('elsewhen' expression 'then' (equation)*)* 'end' 'when'
    ;
 
 when_statement

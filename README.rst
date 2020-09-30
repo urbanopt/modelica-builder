@@ -106,15 +106,22 @@ cause errors, but can be slow when parsing really large modelica files.
 Release Instructions
 --------------------
 
-* Bump version in setup.cfg (use semantic versioning as much as possible).
+* Bump version to <NEW_VERSION> in setup.cfg (use semantic versioning as much as possible).
 * Run `autopep8` to nicely format the code (or run `pre-commit --all-files`).
 * Create a PR against develop into main.
-* After main branch passes, then merge and run the release command from the main branch.
+* After main branch passes, then merge and checkout the main branch. Build the distribution using the following code:
+
+.. code-block:: bash
+
+    python setup.py sdist
+
+* Run `git tag <NEW_VERSION>`. (Note that `python setup.py --version` pulls from the latest tag`.)
+* Verify that the files in the dist/* folder have the correct version (no dirty, no sha)
+* Run the following to release
 
 .. code-block:: bash
 
     pip install twine
-    python setup.py sdist
     twine upload dist/*
 
-* Tag the release on GitHub and add in the CHANGELOG.rst notes into the tagged release.
+* Push the tag to GitHub, then go to GitHub and add in the CHANGELOG.rst notes into the tagged release and officially release.

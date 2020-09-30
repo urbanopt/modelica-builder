@@ -113,6 +113,8 @@ Release Instructions
 
 .. code-block:: bash
 
+    # Remove old dist packages
+    rm -rf dist/*
     python setup.py sdist
 
 * Run `git tag <NEW_VERSION>`. (Note that `python setup.py --version` pulls from the latest tag`.)
@@ -124,4 +126,8 @@ Release Instructions
     pip install twine
     twine upload dist/*
 
-* Push the tag to GitHub, then go to GitHub and add in the CHANGELOG.rst notes into the tagged release and officially release.
+* Push the tag to GitHub after everything is published to PyPi, then go to GitHub and add in the CHANGELOG.rst notes into the tagged release and officially release.
+
+.. code-block:: bash
+
+    git push origin <NEW_VERSION>

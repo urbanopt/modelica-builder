@@ -8,34 +8,62 @@ The Modelica Builder  project aims to make in-place modifcations to Modelica lan
 The principal use case is to load, modify using higher level abstracted methods, and then save the
 resulting file. The user has access to the entire Abstract Syntax Tree of the entire Modelica grammar.
 
-
-.. code-block:: python
-
-    transformation = ReplaceComponentArgumentValueByType("ElectroMechanicalElement", "k", "8")
-    transformer = Transformer()
-    transformer.add(transformation)
-
-    result = transformer.execute('DCMotor.mo')
-
-    # new file (as a string) will be in the result variable
-    print(result)
-
-
 The Modelica Builder project does not:
 
 * Compile nor check for syntax validity
 
+Install
+-------
 
-Setup
------
+:code:`pip install modelica-builder`
 
-.. code-block:: bash
-
-    # install
-    pip install -r requirements.txt
 
 Usage
 -----
+
+ModBuild provides specific methods for reading and modifying files.
+
+.. code-block:: python
+
+    from modelica_builder.model import Model
+
+    # parse the model file
+    source_file = 'DCMotor.mo'
+    model = Model(source_file)
+
+    # do read and modify the model
+    # refer to modelica_builder.model.Model class methods to see what's available
+    name = model.get_name()
+    model.set_name('New' + name)
+    model.add_connect('some.component.port_a', 'another.component.port_b')
+    model.insert_component('MyComponentType', 'myInst',
+                            modifications={'arg1': '1234'}, string_comment='my comment',
+                            annotations=['my annotation'], insert_index=0)
+
+    # save the result
+    model.save_as('NewDCMotor.mo')
+
+You can also define your own classes for editing the file
+
+.. code-block:: python
+
+    from modelica_builder.edit import Edit
+    from modelica_builder.selector import Selector
+    from modelica_builder.transformation import SimpleTransformation
+
+    class MySelector(Selector):
+        # implement class for selecting AST nodes
+
+    # define the edit to make to the node's text and combine it with the selector
+    edit = Edit.make_replace('FOOBAR')
+    selector = MySelector()
+    transformation = SimpleTransformation(selector, edit)
+
+    model = Model('my_modelica_file.mo')
+    # add your custom transformation
+    model.add(transformation)
+    model.save_as('result.mo')
+
 Transformations specify what nodes to change and how to change them. This is done by combining
 Selectors and Edits. Selectors specify how to select nodes in the AST, and edits are modifications
 (insert, replace, delete) to the text of selected nodes.
@@ -47,6 +75,11 @@ See the tests for more examples and information.
 
 Development
 -----------
+
+.. code-block:: bash
+
+    # install after cloning repo
+    pip install -r requirements.txt
 
 If you change the source grammar file you need to regenerate the parser and lexer.
 

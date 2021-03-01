@@ -105,7 +105,7 @@ def make_edits_for_modifications(class_modification_node, modifications, parser,
                     depth=depth + 1,
                     indented=indented)
             else:
-                edit = Edit.make_replace(f'={requested_modification_value}')
+                edit = Edit.make_replace(f'{requested_modification_value}')
                 # replace the modification node with our value
                 all_edits.append(edit(element_modification_node.modification()))
 

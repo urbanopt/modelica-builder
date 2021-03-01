@@ -28,6 +28,7 @@ class TestSelectors(TestCase, ASTAssertions):
         # Setup
         class NoneSelector(Selector):
             """NoneSelector selects nothing"""
+
             def _select(self, root, parser):
                 return []
 
@@ -43,6 +44,7 @@ class TestSelectors(TestCase, ASTAssertions):
         # Setup
         class OneSelector(Selector):
             """OneSelector selects one node"""
+
             def _select(self, root, parser):
                 # note that we aren't really using a node from tree
                 # it shouldn't matter for this test

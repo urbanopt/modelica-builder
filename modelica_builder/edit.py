@@ -92,8 +92,13 @@ class Edit:
         # entire document for every edit
         # O(m*n), m = bytes in document, n = number of edits
         for edit in ordered_edits:
-            # remove edit span
-            if edit.start != edit.stop:
+            # catch the case where the name is to replaced which is only one character. The `get_span` method
+            # will set the edit.stop to None if the length is only one.
+            if edit.stop is None:
+                # only removing the document that 1 character.
+                document = document[:edit.start] + document[edit.start + 1:]
+            elif edit.start != edit.stop:
+                # remove edit span
                 document = document[:edit.start] + document[edit.stop + 1:]
 
             # insert data at the start of span

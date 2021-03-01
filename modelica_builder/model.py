@@ -5,7 +5,6 @@ All rights reserved.
 ****************************************************************************************************
 """
 
-
 import logging
 import os
 
@@ -18,6 +17,7 @@ from modelica_builder.builder import (
 from modelica_builder.edit import Edit
 from modelica_builder.selector import (
     ComponentDeclarationSelector,
+    ComponentModificationNameSelector,
     ComponentModificationValueSelector,
     ConnectClauseSelector,
     ModelIdentifierSelector,
@@ -108,7 +108,8 @@ class Model(Transformer):
         """
         # verify the paramaters are sensible
         if (port_a == '*' and new_port_a is not None) or (port_b == '*' and new_port_b is not None):
-            raise Exception('Invalid to have a port match a wildcard and replace it (might result in duplicate clauses)')
+            raise Exception(
+                'Invalid to have a port match a wildcard and replace it (might result in duplicate clauses)')
 
         # make up to two transformations (one for each replacement)
         if new_port_a is not None:
@@ -133,7 +134,8 @@ class Model(Transformer):
                 index_identifier, expression_raw, loop_body_raw_list
             ).transformation())
 
-    def insert_component(self, type_, identifier, modifications=None, conditional=None, string_comment=None, annotations=None, insert_index=-1):
+    def insert_component(self, type_, identifier, modifications=None, conditional=None, string_comment=None,
+                         annotations=None, insert_index=-1):
         """insert_component constructs and inserts a component
 
         :param type_: string, type of the component
@@ -160,6 +162,22 @@ class Model(Transformer):
                 component.add_annotation(annotation)
 
         self.add(component.transformation())
+
+    def rename_component_argument(self, type_, identifier, old_argument_name, new_argument_name):
+        """Rename the argument name of a component
+
+        :param type_: string, type of the component
+        :param identifier: string, component identifier
+        :param old_argument_name: string, name of the argument that will be replaced
+        :param new_argument_name: string, name of the new argument name
+        """
+        selector = (ComponentDeclarationSelector(type_, identifier)
+                    .chain(
+            ComponentModificationNameSelector(
+                old_argument_name
+            )))
+
+        self.add(SimpleTransformation(selector, Edit.make_replace(f'{new_argument_name}')))
 
     def remove_component(self, type_=None, identifier=None):
         """remove_component removes a component declaration.
@@ -192,9 +210,9 @@ class Model(Transformer):
         """
         selector = (ComponentDeclarationSelector(type_, identifier)
                     .chain(
-                        ComponentModificationValueSelector(
-                            modification_name,
-                            modification_value=if_value)))
+            ComponentModificationValueSelector(
+                modification_name,
+                modification_value=if_value)))
 
         self.add(SimpleTransformation(selector, Edit.make_replace(new_value)))
 
@@ -217,7 +235,8 @@ class Model(Transformer):
         """
         self.add(ComponentModificationsTransformation(type_, identifier, modifications))
 
-    def add_parameter(self, type_, identifier, modifications=None, assigned_value=None, string_comment=None, annotations=None):
+    def add_parameter(self, type_, identifier, modifications=None, assigned_value=None, string_comment=None,
+                      annotations=None):
         """add_parameter inserts a new parameter at the top of the model's element list
 
         :param type_: string, type of the component

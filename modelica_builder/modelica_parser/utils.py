@@ -58,4 +58,14 @@ def get_span(node):
     if is_terminal_node(node):
         return node.symbol.start, node.symbol.stop
 
+    if type(node) is modelicaParser.ModificationContext:
+        return node.stop.start, node.stop.stop
+
+    # The name context is whened when replacing the name of an argument. If the
+    if type(node) is modelicaParser.NameContext:
+        if node.start.start == node.stop.stop:
+            return node.start.start, None
+        else:
+            raise Exception("This case has not been handled.")
+
     return node.start.start, node.stop.stop

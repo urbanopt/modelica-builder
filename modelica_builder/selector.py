@@ -230,7 +230,7 @@ class ComponentModificationNameSelector(Selector):
             if modification_name_text == self._modification_name:
                 filtered_modifications.append(element_modification)
 
-        # get the argument expressions (ie argument values)
+        # get the argument names
         results = []
         for element_modification in filtered_modifications:
             xpath = '//name'

@@ -61,7 +61,8 @@ def get_span(node):
     if type(node) is modelicaParser.ModificationContext:
         return node.stop.start, node.stop.stop
 
-    # The name context is whened when replacing the name of an argument. If the
+    # The name context is whened when replacing the name of an argument. If the length of the string is only
+    # one character, then set the end to None.
     if type(node) is modelicaParser.NameContext:
         if node.start.start == node.stop.stop:
             return node.start.start, None

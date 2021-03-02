@@ -95,7 +95,7 @@ class Edit:
             # catch the case where the name is to replaced which is only one character. The `get_span` method
             # will set the edit.stop to None if the length is only one.
             if edit.stop is None:
-                # only removing the document that 1 character.
+                # if the length was 0 then, return the document removing only the one 1 character.
                 document = document[:edit.start] + document[edit.start + 1:]
             elif edit.start != edit.stop:
                 # remove edit span

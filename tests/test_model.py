@@ -539,6 +539,28 @@ end Test;"""
             'k=10'
         ])
 
+    def test_model_rename_argument_more_than_one_char(self):
+        mo_file = """
+model Test
+  Resistor R(Resistance=100);
+equation
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        model.rename_component_argument(
+            'Resistor', 'R', 'Resistance', 'R'
+        )
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'R=100',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'Resistance=10'
+        ])
+
     def test_model_update_component_modifications_when_modification_is_nested(self):
         # Setup
         mo_file = """

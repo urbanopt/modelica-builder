@@ -67,6 +67,6 @@ def get_span(node):
         if node.start.start == node.stop.stop:
             return node.start.start, None
         else:
-            raise Exception("This case has not been handled.")
+            return node.start.start, node.stop.stop
 
     return node.start.start, node.stop.stop

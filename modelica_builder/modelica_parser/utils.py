@@ -46,27 +46,19 @@ def is_terminal_node(node):
 
 
 def get_span(node):
-    """get the character start and end of a node
+    """get the character start and end of a node. The start and stop follows python's
+    slice notation, ie the node ends at stop-1. In other words:
+    Start is the index of the first character
+    Stop is the index of the first character after the end of the node.
 
     :param node: object or dict, node to get span
     :return: start, stop, character indices for start and stop of node
     """
     # allow dicts for easy mocking
     if type(node) is dict:
-        return node['start'], node['stop']
+        return node['start'], node['stop'] + 1
 
     if is_terminal_node(node):
-        return node.symbol.start, node.symbol.stop
+        return node.symbol.start, node.symbol.stop + 1
 
-    if type(node) is modelicaParser.ModificationContext:
-        return node.stop.start, node.stop.stop
-
-    # The name context is whened when replacing the name of an argument. If the length of the string is only
-    # one character, then set the end to None.
-    if type(node) is modelicaParser.NameContext:
-        if node.start.start == node.stop.stop:
-            return node.start.start, None
-        else:
-            return node.start.start, node.stop.stop
-
-    return node.start.start, node.stop.stop
+    return node.start.start, node.stop.stop + 1

@@ -69,7 +69,7 @@ class Edit:
         def insert(node):
             start, stop = modelica_parser.get_span(node)
             if insert_after:
-                start = stop + 1
+                start = stop
 
             # set stop to start, we aren't removing any data
             stop = start
@@ -92,14 +92,9 @@ class Edit:
         # entire document for every edit
         # O(m*n), m = bytes in document, n = number of edits
         for edit in ordered_edits:
-            # catch the case where the name is to replaced which is only one character. The `get_span` method
-            # will set the edit.stop to None if the length is only one.
-            if edit.stop is None:
-                # if the length was 0 then, return the document removing only the one 1 character.
-                document = document[:edit.start] + document[edit.start + 1:]
-            elif edit.start != edit.stop:
-                # remove edit span
-                document = document[:edit.start] + document[edit.stop + 1:]
+            # remove edit span
+            if edit.start != edit.stop:
+                document = document[:edit.start] + document[edit.stop:]
 
             # insert data at the start of span
             if edit.data is not None:

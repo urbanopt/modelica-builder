@@ -133,8 +133,7 @@ To run the tests, simply run the following:
 Known Issues
 ------------
 
-* The transformations occur on strings which are immutable. Need to investigate using byte arrays. This does not
-cause errors, but can be slow when parsing really large modelica files.
+* The transformations occur on strings which are immutable. Need to investigate using byte arrays. This does not cause errors, but can be slow when parsing really large modelica files.
 
 Release Instructions
 --------------------

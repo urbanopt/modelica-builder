@@ -1,10 +1,9 @@
 """
 ****************************************************************************************************
-:copyright (c) 2020, Alliance for Sustainable Energy, LLC.
+:copyright (c) 2020-2021, Alliance for Sustainable Energy, LLC.
 All rights reserved.
 ****************************************************************************************************
 """
-
 
 import os
 import tempfile
@@ -196,7 +195,8 @@ class TestModel(TestCase, DiffAssertions):
         self.result = model.execute()
 
         # Assert
-        self.assertHasAdditions(source_file, self.result, ['FancyClass myInstance(arg1=1234) "my comment" annotation(my annotation);'])
+        self.assertHasAdditions(source_file, self.result,
+                                ['FancyClass myInstance(arg1=1234) "my comment" annotation(my annotation);'])
         self.assertNoDeletions(source_file, self.result)
 
     def test_model_insert_component_multiple(self):
@@ -303,11 +303,13 @@ class TestModel(TestCase, DiffAssertions):
         model = Model(source_file)
 
         # Act
-        model.add_parameter('String', 'myParam', string_comment='a comment', assigned_value='"supercalifragilisticexpialidocious"')
+        model.add_parameter('String', 'myParam', string_comment='a comment',
+                            assigned_value='"supercalifragilisticexpialidocious"')
         self.result = model.execute()
 
         # Assert
-        self.assertHasAdditions(source_file, self.result, ['parameter String myParam="supercalifragilisticexpialidocious" "a comment"'])
+        self.assertHasAdditions(source_file, self.result,
+                                ['parameter String myParam="supercalifragilisticexpialidocious" "a comment"'])
         self.assertNoDeletions(source_file, self.result)
 
     def test_model_remove_first_component_and_add_param(self):
@@ -394,7 +396,8 @@ end Test;"""
         self.result = model.execute()
 
         # Assert
-        self.assertHasAdditions(source_file, self.result, ['annotation(rootModification=321, insertedModification=555);'])
+        self.assertHasAdditions(source_file, self.result,
+                                ['annotation(rootModification=321, insertedModification=555);'])
         self.assertHasDeletions(source_file, self.result, ['annotation(rootModification=321);'])
 
     def test_model_update_annotation_can_update_and_insert(self):
@@ -415,8 +418,10 @@ end Test;"""
         self.result = model.execute()
 
         # Assert
-        self.assertHasAdditions(source_file, self.result, ['annotation(rootModification=100, rootModification2(childA=0, childB=123, childC=abc), insertedModification=555);'])
-        self.assertHasDeletions(source_file, self.result, ['annotation(rootModification=321, rootModification2(childA=0, childB=1));'])
+        self.assertHasAdditions(source_file, self.result, [
+            'annotation(rootModification=100, rootModification2(childA=0, childB=123, childC=abc), insertedModification=555);'])
+        self.assertHasDeletions(source_file, self.result,
+                                ['annotation(rootModification=321, rootModification2(childA=0, childB=1));'])
 
     def test_model_update_annotation_and_add_connect(self):
         """Model annotation should always the last statement for the model"""
@@ -443,7 +448,8 @@ end Test;"""
         ])
         self.assertNoDeletions(source_file, self.result)
         # make sure the annotation was inserted at the end
-        self.assertIn('annotation(rootModification=100);\nend Test;', self.result, 'Annotation should be at the END of the model')
+        self.assertIn('annotation(rootModification=100);\nend Test;', self.result,
+                      'Annotation should be at the END of the model')
 
     def test_model_update_annotation_can_overwrite_existing_modifications(self):
         # Setup
@@ -514,6 +520,45 @@ end Test;"""
         ])
         self.assertHasDeletions(source_file, self.result, [
             'Resistor R(R=100);'
+        ])
+
+    def test_model_rename_argument(self):
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        model.rename_component_argument(
+            'ElectroMechanicalElement', 'EM', 'k', 'new_arg_name'
+        )
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'new_arg_name=10',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'k=10'
+        ])
+
+    def test_model_rename_argument_more_than_one_char(self):
+        mo_file = """
+model Test
+  Resistor R(Resistance=100);
+equation
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        model.rename_component_argument(
+            'Resistor', 'R', 'Resistance', 'R'
+        )
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'R=100',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'Resistance=10'
         ])
 
     def test_model_update_component_modifications_when_modification_is_nested(self):

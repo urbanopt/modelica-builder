@@ -1,6 +1,6 @@
 """
 ****************************************************************************************************
-:copyright (c) 2020, Alliance for Sustainable Energy, LLC.
+:copyright (c) 2020-2021, Alliance for Sustainable Energy, LLC.
 All rights reserved.
 ****************************************************************************************************
 """
@@ -46,16 +46,19 @@ def is_terminal_node(node):
 
 
 def get_span(node):
-    """get the character start and end of a node
+    """get the character start and end of a node. The start and stop follows python's
+    slice notation, ie the node ends at stop-1. In other words:
+    Start is the index of the first character
+    Stop is the index of the first character after the end of the node.
 
     :param node: object or dict, node to get span
     :return: start, stop, character indices for start and stop of node
     """
     # allow dicts for easy mocking
     if type(node) is dict:
-        return node['start'], node['stop']
+        return node['start'], node['stop'] + 1
 
     if is_terminal_node(node):
-        return node.symbol.start, node.symbol.stop
+        return node.symbol.start, node.symbol.stop + 1
 
-    return node.start.start, node.stop.stop
+    return node.start.start, node.stop.stop + 1

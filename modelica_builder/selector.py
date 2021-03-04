@@ -1,6 +1,6 @@
 """
 ****************************************************************************************************
-:copyright (c) 2020, Alliance for Sustainable Energy, LLC.
+:copyright (c) 2020-2021, Alliance for Sustainable Energy, LLC.
 All rights reserved.
 ****************************************************************************************************
 """
@@ -21,6 +21,7 @@ class Selector(ABC):
     BASE_PATH = DEFAULT_BASE_PATH
 
     """Selector is the base class for all selectors"""
+
     def __init__(self):
         self._chained_selector = None
         self._assert_count = None
@@ -200,6 +201,40 @@ class ComponentModificationValueSelector(Selector):
                 if re.sub(r"\s*", "", a) == re.sub(r"\s*", "", b):
                     filtered_results.append(result)
             results = filtered_results
+
+        return results
+
+
+class ComponentModificationNameSelector(Selector):
+    """ComponentModificationSelector returns modifications to component
+    declarations
+    """
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause/component_list/component_declaration'
+
+    def __init__(self, modification_name):
+        """
+        :param modification_name: str, mane of the modification to select
+        """
+
+        self._modification_name = modification_name
+        super().__init__()
+
+    def _select(self, base, parser):
+        xpath = 'component_declaration/declaration/modification/class_modification/argument_list/argument/element_modification_or_replaceable/element_modification'
+        element_modifications = XPath.XPath.findAll(base, xpath, parser)
+
+        # filter modifications (ie arguments) to those that match our name
+        filtered_modifications = []
+        for element_modification in element_modifications:
+            modification_name_text = element_modification.name().getText()
+            if modification_name_text == self._modification_name:
+                filtered_modifications.append(element_modification)
+
+        # get the argument names
+        results = []
+        for element_modification in filtered_modifications:
+            xpath = '//name'
+            results.extend(XPath.XPath.findAll(element_modification, xpath, parser))
 
         return results
 

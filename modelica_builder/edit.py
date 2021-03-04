@@ -1,6 +1,6 @@
 """
 ****************************************************************************************************
-:copyright (c) 2020, Alliance for Sustainable Energy, LLC.
+:copyright (c) 2020-2021, Alliance for Sustainable Energy, LLC.
 All rights reserved.
 ****************************************************************************************************
 """
@@ -69,7 +69,7 @@ class Edit:
         def insert(node):
             start, stop = modelica_parser.get_span(node)
             if insert_after:
-                start = stop + 1
+                start = stop
 
             # set stop to start, we aren't removing any data
             stop = start
@@ -94,7 +94,7 @@ class Edit:
         for edit in ordered_edits:
             # remove edit span
             if edit.start != edit.stop:
-                document = document[:edit.start] + document[edit.stop + 1:]
+                document = document[:edit.start] + document[edit.stop:]
 
             # insert data at the start of span
             if edit.data is not None:

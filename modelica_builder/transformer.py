@@ -40,5 +40,7 @@ class Transformer:
             all_edits += transformation.build_edits(self._tree, self._parser)
 
         # apply the edits
-        with open(self._source, 'r') as f:
+        # Reading with newline='' lets us retain the original newline characters
+        # allowing us to handle files made on Windows with \r\n
+        with open(self._source, 'rt', newline='') as f:
             return Edit.apply_edits(all_edits, f.read())

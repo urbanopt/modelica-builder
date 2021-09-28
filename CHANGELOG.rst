@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 0.2.0
+=============
+
+- Fix compatibility with files containing '\r\n', which is typically used on Windows
+
 Version 0.1.1
 =============
 

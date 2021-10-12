@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 0.2.1
+=============
+
+- Fix import issue when installing package for a poetry-managed projects
+
 Version 0.2.0
 =============
 

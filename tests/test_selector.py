@@ -1,6 +1,6 @@
 """
 ****************************************************************************************************
-:copyright (c) 2020-2021, Alliance for Sustainable Energy, LLC.
+:copyright (c) 2020-2022, Alliance for Sustainable Energy, LLC.
 All rights reserved.
 ****************************************************************************************************
 """
@@ -74,7 +74,7 @@ class TestSelectors(TestCase, ASTAssertions):
         tree, parser = parse(os.path.join(self.data_dir, 'DCMotor.mo'))
 
         # Act
-        selector = (ElementListSelector().chain(NthChildSelector(1)))
+        selector = (ElementListSelector().chain(NthChildSelector(2)))
         element = selector.apply_to_root(tree, parser)
 
         # Assert

@@ -248,7 +248,7 @@ class ComponentArgumentSelector(Selector):
 
     def __init__(self, argument_name):
         """
-        :param modification_name: str, mane of the modification to select
+        :param argument_name: str, name of the argument to select
         """
 
         self._argument_name = argument_name

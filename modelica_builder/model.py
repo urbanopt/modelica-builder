@@ -211,11 +211,10 @@ class Model(Transformer):
 
         selector = (
             ComponentDeclarationSelector(type_, identifier)
-                    .chain(ComponentArgumentSelector(argument_name))
+            .chain(ComponentArgumentSelector(argument_name))
         )
 
         self.add(SimpleTransformation(selector, Edit.make_delete()))
-
 
     def update_component_modification(self, type_, identifier, modification_name, new_value, if_value=None):
         """update_component_modification changes the value of an _existing_ component

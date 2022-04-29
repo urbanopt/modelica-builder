@@ -238,6 +238,7 @@ class ComponentModificationNameSelector(Selector):
 
         return results
 
+
 class ComponentArgumentSelector(Selector):
     """ComponentArgumentSelector returns the parameter/arugment of a component out of the list
     including the trailing or leading comma (terminal node impl). This works only for deletion!
@@ -254,7 +255,7 @@ class ComponentArgumentSelector(Selector):
         super().__init__()
 
     def _select(self, base, parser):
-        xpath = 'component_declaration/declaration/modification/class_modification/argument_list' # argument/element_modification_or_replaceable/element_modification
+        xpath = 'component_declaration/declaration/modification/class_modification/argument_list'  # argument/element_modification_or_replaceable/element_modification
         element_modifications = XPath.XPath.findAll(base, xpath, parser)
 
         # filter modifications (ie arguments) to those that match our name
@@ -270,9 +271,9 @@ class ComponentArgumentSelector(Selector):
                         filtered_modifications.append(child)
                         if index == 0:
                             # grab the next comma / terminal node
-                            filtered_modifications.append(element_modification.children[index+1])
+                            filtered_modifications.append(element_modification.children[index + 1])
                         else:
-                            filtered_modifications.append(element_modification.children[index-1])
+                            filtered_modifications.append(element_modification.children[index - 1])
 
         return filtered_modifications
 

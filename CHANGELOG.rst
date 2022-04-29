@@ -6,6 +6,7 @@ Version 0.2.2
 =============
 
 - Add component argument/parameter deletion, remove_component_argument
+- Add test for deleting a "constant Ingeger x=5" component
 - Update testing dependencies
 
 Version 0.2.1

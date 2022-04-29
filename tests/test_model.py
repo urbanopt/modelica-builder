@@ -312,6 +312,20 @@ class TestModel(TestCase, DiffAssertions):
                                 ['parameter String myParam="supercalifragilisticexpialidocious" "a comment"'])
         self.assertNoDeletions(source_file, self.result)
 
+    # TODO; this should probably become remove declaration
+    def test_model_remove_constant(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.remove_component('Integer', 'notUsed')
+        self.result = model.execute()
+
+        # Assert
+        self.assertNoAdditions(source_file, self.result)
+        self.assertHasDeletions(source_file, self.result, ['constant Integer notUsed=5 "unused constant that needs to be deleted";'])
+
     def test_model_remove_first_component_and_add_param(self):
         """Tests that we can successfully resolve overlapping edits of a deletion
         (removing first component) and an insert (adding new param)

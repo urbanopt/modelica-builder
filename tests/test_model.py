@@ -385,6 +385,20 @@ class TestModel(TestCase, DiffAssertions):
         self.assertHasAdditions(source_file, self.result, ['parameter Real myParam=10.0 "a comment"'])
         self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])
 
+    def test_model_remove_constant(self):
+        """Test to remove an entire component that is flagged as a constant type"""
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.remove_component('Integer', 'notUsed')
+        self.result = model.execute()
+
+        # Assert
+        self.assertNoAdditions(source_file, self.result)
+        self.assertHasDeletions(source_file, self.result, ['constant Integer notUsed=5 "unused constant that needs to be deleted";'])
+
     def test_model_update_annotation_when_no_model_annotation_exists(self):
         # Setup
         mo_file = '''

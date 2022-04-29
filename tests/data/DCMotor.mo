@@ -1,6 +1,7 @@
 within models;
 
 model DCMotor
+  constant Integer notUsed=5 "unused constant that needs to be deleted";
   Resistor R(R=100);
   Inductor L(L=100);
   VsourceDC DC(f=10);

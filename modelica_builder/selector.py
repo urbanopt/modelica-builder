@@ -269,11 +269,12 @@ class ComponentArgumentSelector(Selector):
                 if len(argument_name_texts) == 1:
                     if argument_name_texts[0].name().getText() == self._argument_name:
                         filtered_modifications.append(child)
-                        if index == 0:
-                            # grab the next comma / terminal node
-                            filtered_modifications.append(element_modification.children[index + 1])
-                        else:
-                            filtered_modifications.append(element_modification.children[index - 1])
+                        if len(element_modification.children) > 1:
+                            if index == 0:
+                                # grab the next comma / terminal node
+                                filtered_modifications.append(element_modification.children[index + 1])
+                            else:
+                                filtered_modifications.append(element_modification.children[index - 1])
 
         return filtered_modifications
 

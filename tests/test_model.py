@@ -354,6 +354,20 @@ class TestModel(TestCase, DiffAssertions):
         self.assertHasAdditions(source_file, self.result, ['ElectroMechanicalElement EM(k=10, J=10 );'])
         self.assertHasDeletions(source_file, self.result, ['b=2'])
 
+    def test_model_remove_component_argument_all(self):
+        """Should remove an argument in an existing component."""
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.remove_component_argument('VsourceDC', 'DC', 'f')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [' VsourceDC DC();'])
+        self.assertHasDeletions(source_file, self.result, ['f=10'])
+
     def test_model_remove_first_component_and_add_param(self):
         """Tests that we can successfully resolve overlapping edits of a deletion
         (removing first component) and an insert (adding new param)

@@ -211,12 +211,12 @@ class ComponentModificationNameSelector(Selector):
     """
     BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause/component_list/component_declaration'
 
-    def __init__(self, modification_name):
+    def __init__(self, argument_name):
         """
         :param modification_name: str, mane of the modification to select
         """
 
-        self._modification_name = modification_name
+        self.argument_name = argument_name
         super().__init__()
 
     def _select(self, base, parser):
@@ -226,8 +226,8 @@ class ComponentModificationNameSelector(Selector):
         # filter modifications (ie arguments) to those that match our name
         filtered_modifications = []
         for element_modification in element_modifications:
-            modification_name_text = element_modification.name().getText()
-            if modification_name_text == self._modification_name:
+            argument_name_text = element_modification.name().getText()
+            if argument_name_text == self.argument_name:
                 filtered_modifications.append(element_modification)
 
         # get the argument names
@@ -237,6 +237,44 @@ class ComponentModificationNameSelector(Selector):
             results.extend(XPath.XPath.findAll(element_modification, xpath, parser))
 
         return results
+
+class ComponentArgumentSelector(Selector):
+    """ComponentArgumentSelector returns the parameter/arugment of a component out of the list
+    including the trailing or leading comma (terminal node impl). This works only for deletion!
+    """
+
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause/component_list/component_declaration'
+
+    def __init__(self, argument_name):
+        """
+        :param modification_name: str, mane of the modification to select
+        """
+
+        self._argument_name = argument_name
+        super().__init__()
+
+    def _select(self, base, parser):
+        xpath = 'component_declaration/declaration/modification/class_modification/argument_list' # argument/element_modification_or_replaceable/element_modification
+        element_modifications = XPath.XPath.findAll(base, xpath, parser)
+
+        # filter modifications (ie arguments) to those that match our name
+        # check if the first child node is the argument of interest
+        xpath = 'argument/element_modification_or_replaceable/element_modification'
+        filtered_modifications = []
+        for element_modification in element_modifications:
+            for index, child in enumerate(element_modification.children):
+                argument_name_texts = XPath.XPath.findAll(child, xpath, parser)
+                # should only be one, if there isn't one, then skip, otherwise error
+                if len(argument_name_texts) == 1:
+                    if argument_name_texts[0].name().getText() == self._argument_name:
+                        filtered_modifications.append(child)
+                        if index == 0:
+                            # grab the next comma / terminal node
+                            filtered_modifications.append(element_modification.children[index+1])
+                        else:
+                            filtered_modifications.append(element_modification.children[index-1])
+
+        return filtered_modifications
 
 
 class ConnectClauseSelector(Selector):

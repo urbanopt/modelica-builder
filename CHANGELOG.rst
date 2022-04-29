@@ -2,6 +2,12 @@
 Changelog
 =========
 
+Version 0.2.2
+=============
+
+- Add component argument/parameter deletion, remove_component_argument
+- Update testing dependencies
+
 Version 0.2.1
 =============
 

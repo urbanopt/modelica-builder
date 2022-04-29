@@ -312,7 +312,6 @@ class TestModel(TestCase, DiffAssertions):
                                 ['parameter String myParam="supercalifragilisticexpialidocious" "a comment"'])
         self.assertNoDeletions(source_file, self.result)
 
-    # TODO; this should probably become remove declaration
     def test_model_remove_constant(self):
         # Setup
         source_file = os.path.join(self.data_dir, 'DCMotor.mo')

@@ -16,6 +16,7 @@ from modelica_builder.builder import (
 )
 from modelica_builder.edit import Edit
 from modelica_builder.selector import (
+    ComponentArgumentSelector,
     ComponentDeclarationSelector,
     ComponentModificationNameSelector,
     ComponentModificationValueSelector,
@@ -195,6 +196,23 @@ class Model(Transformer):
                     .chain(ParentSelector())  # component_list
                     .chain(ParentSelector())  # component_clause
                     .chain(ParentSelector()))  # element
+
+        self.add(SimpleTransformation(selector, Edit.make_delete()))
+
+    def remove_component_argument(self, type_, identifier, argument_name):
+        """Remove the argument from a component
+
+        :param type_: string, type of the component
+        :param identifier: string, component identifier
+        :param argument_name: string, name of the argument that will be removed
+        """
+        if type_ is None and identifier is None:
+            raise Exception('At least one of the parameters must not be None')
+
+        selector = (
+            ComponentDeclarationSelector(type_, identifier)
+            .chain(ComponentArgumentSelector(argument_name))
+        )
 
         self.add(SimpleTransformation(selector, Edit.make_delete()))
 

@@ -312,18 +312,61 @@ class TestModel(TestCase, DiffAssertions):
                                 ['parameter String myParam="supercalifragilisticexpialidocious" "a comment"'])
         self.assertNoDeletions(source_file, self.result)
 
-    def test_model_remove_constant(self):
+    def test_model_remove_component_argument(self):
+        """Should remove an argument in an existing component."""
         # Setup
         source_file = os.path.join(self.data_dir, 'DCMotor.mo')
         model = Model(source_file)
 
         # Act
-        model.remove_component('Integer', 'notUsed')
+        model.remove_component_argument('ElectroMechanicalElement', 'EM', 'J')
         self.result = model.execute()
 
         # Assert
-        self.assertNoAdditions(source_file, self.result)
-        self.assertHasDeletions(source_file, self.result, ['constant Integer notUsed=5 "unused constant that needs to be deleted";'])
+        self.assertHasAdditions(source_file, self.result, ['ElectroMechanicalElement EM(k=10 , b=2);'])
+        self.assertHasDeletions(source_file, self.result, ['J=10'])
+
+    def test_model_remove_component_argument_first(self):
+        """Should remove an argument in an existing component."""
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.remove_component_argument('ElectroMechanicalElement', 'EM', 'k')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['ElectroMechanicalElement EM( J=10, b=2);'])
+        self.assertHasDeletions(source_file, self.result, ['k=10'])
+
+    def test_model_remove_component_argument_last(self):
+        """Should remove an argument in an existing component."""
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.remove_component_argument('ElectroMechanicalElement', 'EM', 'b')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['ElectroMechanicalElement EM(k=10, J=10 );'])
+        self.assertHasDeletions(source_file, self.result, ['b=2'])
+
+    def test_model_remove_component_argument_all(self):
+        """Should remove an argument in an existing component."""
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.remove_component_argument('VsourceDC', 'DC', 'f')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [' VsourceDC DC();'])
+        self.assertHasDeletions(source_file, self.result, ['f=10'])
 
     def test_model_remove_first_component_and_add_param(self):
         """Tests that we can successfully resolve overlapping edits of a deletion
@@ -341,6 +384,20 @@ class TestModel(TestCase, DiffAssertions):
         # Assert
         self.assertHasAdditions(source_file, self.result, ['parameter Real myParam=10.0 "a comment"'])
         self.assertHasDeletions(source_file, self.result, ['Resistor R(R=100);'])
+
+    def test_model_remove_constant(self):
+        """Test to remove an entire component that is flagged as a constant type"""
+        # Setup
+        source_file = os.path.join(self.data_dir, 'DCMotor.mo')
+        model = Model(source_file)
+
+        # Act
+        model.remove_component('Integer', 'notUsed')
+        self.result = model.execute()
+
+        # Assert
+        self.assertNoAdditions(source_file, self.result)
+        self.assertHasDeletions(source_file, self.result, ['constant Integer notUsed=5 "unused constant that needs to be deleted";'])
 
     def test_model_update_annotation_when_no_model_annotation_exists(self):
         # Setup

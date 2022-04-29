@@ -255,7 +255,7 @@ class ComponentArgumentSelector(Selector):
         super().__init__()
 
     def _select(self, base, parser):
-        xpath = 'component_declaration/declaration/modification/class_modification/argument_list'  # argument/element_modification_or_replaceable/element_modification
+        xpath = 'component_declaration/declaration/modification/class_modification/argument_list'
         element_modifications = XPath.XPath.findAll(base, xpath, parser)
 
         # filter modifications (ie arguments) to those that match our name

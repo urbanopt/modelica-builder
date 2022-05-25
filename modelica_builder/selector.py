@@ -387,3 +387,24 @@ class ModelIdentifierSelector(Selector):
         # return both identifiers
         # (first is the initial declaration second is the 'end <modelname>')
         return [base.IDENT()[0], base.IDENT()[1]]
+
+
+class ComponentRedeclarationSelector(Selector):
+    """ComponentRedeclarationSelector selects a component's redeclare package string
+    """
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause/component_list/component_declaration'
+
+    def __init__(self):
+        """
+        :param modification_name: str, mane of the modification to select
+        :param modification_value: None | str, if not None, it only selects modifications with this value
+        """
+
+        super().__init__()
+
+    def _select(self, base, parser):
+        # select the element_reclaration's short_class_specifier
+        xpath = 'component_declaration/declaration/modification/class_modification/argument_list/argument/element_redeclaration/short_class_definition/short_class_specifier'
+        element_modifications = XPath.XPath.findAll(base, xpath, parser)
+
+        return element_modifications

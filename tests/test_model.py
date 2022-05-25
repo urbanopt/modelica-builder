@@ -312,6 +312,24 @@ class TestModel(TestCase, DiffAssertions):
                                 ['parameter String myParam="supercalifragilisticexpialidocious" "a comment"'])
         self.assertNoDeletions(source_file, self.result)
 
+    def test_model_reclaration_string_replacement(self):
+        """Should update redeclaration of a component"""
+        # Setup
+        source_file = os.path.join(self.data_dir, 'Office.mo')
+        model = Model(source_file)
+
+        # Act
+
+        model.overwrite_component_redeclaration(
+            'Buildings.ThermalZones.ReducedOrder.RC.TwoElements',
+            'thermalZoneTwoElements',
+            'Medium = Buildings.Media.Air')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['redeclare package Medium = Buildings.Media.Air'])
+        self.assertHasDeletions(source_file, self.result, ['Modelica.Media.Air.DryAirNasa'])
+
     def test_model_remove_component_argument(self):
         """Should remove an argument in an existing component."""
         # Setup

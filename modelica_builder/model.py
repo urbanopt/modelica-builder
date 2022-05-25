@@ -20,6 +20,7 @@ from modelica_builder.selector import (
     ComponentDeclarationSelector,
     ComponentModificationNameSelector,
     ComponentModificationValueSelector,
+    ComponentRedeclarationSelector,
     ConnectClauseSelector,
     ModelIdentifierSelector,
     NthChildSelector,
@@ -179,6 +180,19 @@ class Model(Transformer):
             )))
 
         self.add(SimpleTransformation(selector, Edit.make_replace(f'{new_argument_name}')))
+
+    def overwrite_component_redeclaration(self, type_, identifier, new_declaration):
+        """
+        Overwrite the component redeclaration with a new string
+
+        :param type_: string, type of the component
+        :param identifier: string, component identifier
+        :param new_declaration: string, new component redeclaration string. It is the entire string, i.e., argument=value
+        """
+        selector = (ComponentDeclarationSelector(type_, identifier)
+                    .chain(ComponentRedeclarationSelector()))
+
+        self.add(SimpleTransformation(selector, Edit.make_replace(f'{new_declaration}')))
 
     def remove_component(self, type_=None, identifier=None):
         """remove_component removes a component declaration.

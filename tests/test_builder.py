@@ -8,9 +8,9 @@ All rights reserved.
 
 # -*- coding: utf-8 -*-
 
-import os
-
 import pytest
+
+import os
 
 from modelica_builder.builder import ComponentBuilder
 from modelica_builder.transformer import Transformer

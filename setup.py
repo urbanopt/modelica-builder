@@ -3,14 +3,15 @@
     Setup file for modelica_builder.
     Use setup.cfg to configure your project.
 """
+from pkg_resources import VersionConflict, require
+from setuptools import setup
+
 import distutils.cmd
 import distutils.log
 import glob
 import os
 import re
 import sys
-from pkg_resources import VersionConflict, require
-from setuptools import setup
 
 PYTHON_REGEX = re.compile(r'^""".\*{100}.*:copyright.*\*{100}."""$', re.MULTILINE | re.DOTALL)
 PYTHON_LICENSE = '''"""

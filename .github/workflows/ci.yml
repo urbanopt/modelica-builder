@@ -3,33 +3,28 @@ name: CI
 on:
   push:
   pull_request:
-    branches: 'develop'
+    branches: "develop"
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      -
-        name: Set up Python
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
-      -
-        name: Set up package
+      - name: Set up package
         run: |
           pip install -U pip setuptools
           pip install tox coveralls
           pip install -r requirements.txt
           pre-commit install
-      -
-        name: Run tox
+      - name: Run tox
         run: tox
-      -
-        name: Run pre-commit
+      - name: Run pre-commit
         run: pre-commit run --all-files
-      -
-        name: Coveralls
+      - name: Coveralls
         if: ${{ success() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

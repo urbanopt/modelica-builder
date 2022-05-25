@@ -8,9 +8,9 @@ All rights reserved.
 
 # -*- coding: utf-8 -*-
 
-import os
-
 import pytest
+
+import os
 
 from modelica_builder.model import Model
 

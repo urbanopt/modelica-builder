@@ -8,7 +8,6 @@ All rights reserved.
 
 import re
 from abc import ABC, abstractmethod
-
 from antlr4.xpath import XPath
 
 DEFAULT_BASE_PATH = 'stored_definition'
@@ -35,7 +34,6 @@ class Selector(ABC):
         :param parser: object, parser that built the tree
         :return: list, list of nodes that were selected
         """
-        pass
 
     def get_base_rule(self):
         return self.BASE_PATH.split('/')[-1]

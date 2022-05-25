@@ -7,9 +7,8 @@ All rights reserved.
 
 
 import logging
-from copy import deepcopy
-
 from antlr4.xpath import XPath
+from copy import deepcopy
 
 from modelica_builder import config
 from modelica_builder.edit import Edit

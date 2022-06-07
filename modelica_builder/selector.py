@@ -1,6 +1,6 @@
 """
 ****************************************************************************************************
-:copyright (c) 2020-2021, Alliance for Sustainable Energy, LLC.
+:copyright (c) 2020-2022, Alliance for Sustainable Energy, LLC.
 All rights reserved.
 ****************************************************************************************************
 """
@@ -8,7 +8,6 @@ All rights reserved.
 
 import re
 from abc import ABC, abstractmethod
-
 from antlr4.xpath import XPath
 
 DEFAULT_BASE_PATH = 'stored_definition'
@@ -35,7 +34,6 @@ class Selector(ABC):
         :param parser: object, parser that built the tree
         :return: list, list of nodes that were selected
         """
-        pass
 
     def get_base_rule(self):
         return self.BASE_PATH.split('/')[-1]
@@ -211,12 +209,12 @@ class ComponentModificationNameSelector(Selector):
     """
     BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause/component_list/component_declaration'
 
-    def __init__(self, modification_name):
+    def __init__(self, argument_name):
         """
         :param modification_name: str, mane of the modification to select
         """
 
-        self._modification_name = modification_name
+        self.argument_name = argument_name
         super().__init__()
 
     def _select(self, base, parser):
@@ -226,8 +224,8 @@ class ComponentModificationNameSelector(Selector):
         # filter modifications (ie arguments) to those that match our name
         filtered_modifications = []
         for element_modification in element_modifications:
-            modification_name_text = element_modification.name().getText()
-            if modification_name_text == self._modification_name:
+            argument_name_text = element_modification.name().getText()
+            if argument_name_text == self.argument_name:
                 filtered_modifications.append(element_modification)
 
         # get the argument names
@@ -237,6 +235,46 @@ class ComponentModificationNameSelector(Selector):
             results.extend(XPath.XPath.findAll(element_modification, xpath, parser))
 
         return results
+
+
+class ComponentArgumentSelector(Selector):
+    """ComponentArgumentSelector returns the parameter/arugment of a component out of the list
+    including the trailing or leading comma (terminal node impl). This works only for deletion!
+    """
+
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause/component_list/component_declaration'
+
+    def __init__(self, argument_name):
+        """
+        :param argument_name: str, name of the argument to select
+        """
+
+        self._argument_name = argument_name
+        super().__init__()
+
+    def _select(self, base, parser):
+        xpath = 'component_declaration/declaration/modification/class_modification/argument_list'
+        element_modifications = XPath.XPath.findAll(base, xpath, parser)
+
+        # filter modifications (ie arguments) to those that match our name
+        # check if the first child node is the argument of interest
+        xpath = 'argument/element_modification_or_replaceable/element_modification'
+        filtered_modifications = []
+        for element_modification in element_modifications:
+            for index, child in enumerate(element_modification.children):
+                argument_name_texts = XPath.XPath.findAll(child, xpath, parser)
+                # should only be one, if there isn't one, then skip, otherwise error
+                if len(argument_name_texts) == 1:
+                    if argument_name_texts[0].name().getText() == self._argument_name:
+                        filtered_modifications.append(child)
+                        if len(element_modification.children) > 1:
+                            if index == 0:
+                                # grab the next comma / terminal node
+                                filtered_modifications.append(element_modification.children[index + 1])
+                            else:
+                                filtered_modifications.append(element_modification.children[index - 1])
+
+        return filtered_modifications
 
 
 class ConnectClauseSelector(Selector):
@@ -347,3 +385,24 @@ class ModelIdentifierSelector(Selector):
         # return both identifiers
         # (first is the initial declaration second is the 'end <modelname>')
         return [base.IDENT()[0], base.IDENT()[1]]
+
+
+class ComponentRedeclarationSelector(Selector):
+    """ComponentRedeclarationSelector selects a component's redeclare package string
+    """
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause/component_list/component_declaration'
+
+    def __init__(self):
+        """
+        :param modification_name: str, mane of the modification to select
+        :param modification_value: None | str, if not None, it only selects modifications with this value
+        """
+
+        super().__init__()
+
+    def _select(self, base, parser):
+        # select the element_reclaration's short_class_specifier
+        xpath = 'component_declaration/declaration/modification/class_modification/argument_list/argument/element_redeclaration/short_class_definition/short_class_specifier'
+        element_modifications = XPath.XPath.findAll(base, xpath, parser)
+
+        return element_modifications

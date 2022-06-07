@@ -1,15 +1,14 @@
 """
 ****************************************************************************************************
-:copyright (c) 2020-2021, Alliance for Sustainable Energy, LLC.
+:copyright (c) 2020-2022, Alliance for Sustainable Energy, LLC.
 All rights reserved.
 ****************************************************************************************************
 """
 
 
 import logging
-from copy import deepcopy
-
 from antlr4.xpath import XPath
+from copy import deepcopy
 
 from modelica_builder import config
 from modelica_builder.edit import Edit

@@ -2,24 +2,21 @@
 """
     Setup file for modelica_builder.
     Use setup.cfg to configure your project.
-
-    This file was generated with PyScaffold 3.2.3.
-    PyScaffold helps you to put up the scaffold of your new Python project.
-    Learn more under: https://pyscaffold.org/
 """
+from pkg_resources import VersionConflict, require
+from setuptools import setup
+
 import distutils.cmd
 import distutils.log
 import glob
 import os
 import re
 import sys
-from pkg_resources import VersionConflict, require
-from setuptools import setup
 
 PYTHON_REGEX = re.compile(r'^""".\*{100}.*:copyright.*\*{100}."""$', re.MULTILINE | re.DOTALL)
 PYTHON_LICENSE = '''"""
 ****************************************************************************************************
-:copyright (c) 2020-2021, Alliance for Sustainable Energy, LLC.
+:copyright (c) 2020-2022, Alliance for Sustainable Energy, LLC.
 All rights reserved.
 ****************************************************************************************************
 """'''
@@ -90,6 +87,5 @@ except VersionConflict:
 
 if __name__ == "__main__":
     setup(
-        use_pyscaffold=True,
         cmdclass={"update_licenses": UpdateLicenses},
     )

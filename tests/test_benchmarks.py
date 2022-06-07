@@ -1,6 +1,6 @@
 """
 ****************************************************************************************************
-:copyright (c) 2020-2021, Alliance for Sustainable Energy, LLC.
+:copyright (c) 2020-2022, Alliance for Sustainable Energy, LLC.
 All rights reserved.
 ****************************************************************************************************
 """
@@ -8,9 +8,9 @@ All rights reserved.
 
 # -*- coding: utf-8 -*-
 
-import os
-
 import pytest
+
+import os
 
 from modelica_builder.model import Model
 

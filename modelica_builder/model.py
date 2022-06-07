@@ -1,6 +1,6 @@
 """
 ****************************************************************************************************
-:copyright (c) 2020-2021, Alliance for Sustainable Energy, LLC.
+:copyright (c) 2020-2022, Alliance for Sustainable Energy, LLC.
 All rights reserved.
 ****************************************************************************************************
 """
@@ -16,9 +16,11 @@ from modelica_builder.builder import (
 )
 from modelica_builder.edit import Edit
 from modelica_builder.selector import (
+    ComponentArgumentSelector,
     ComponentDeclarationSelector,
     ComponentModificationNameSelector,
     ComponentModificationValueSelector,
+    ComponentRedeclarationSelector,
     ConnectClauseSelector,
     ModelIdentifierSelector,
     NthChildSelector,
@@ -179,6 +181,19 @@ class Model(Transformer):
 
         self.add(SimpleTransformation(selector, Edit.make_replace(f'{new_argument_name}')))
 
+    def overwrite_component_redeclaration(self, type_, identifier, new_declaration):
+        """
+        Overwrite the component redeclaration with a new string
+
+        :param type_: string, type of the component
+        :param identifier: string, component identifier
+        :param new_declaration: string, new component redeclaration string. It is the entire string, i.e., argument=value
+        """
+        selector = (ComponentDeclarationSelector(type_, identifier)
+                    .chain(ComponentRedeclarationSelector()))
+
+        self.add(SimpleTransformation(selector, Edit.make_replace(f'{new_declaration}')))
+
     def remove_component(self, type_=None, identifier=None):
         """remove_component removes a component declaration.
         Note that if the component is part of a list of declarations, e.g.
@@ -195,6 +210,23 @@ class Model(Transformer):
                     .chain(ParentSelector())  # component_list
                     .chain(ParentSelector())  # component_clause
                     .chain(ParentSelector()))  # element
+
+        self.add(SimpleTransformation(selector, Edit.make_delete()))
+
+    def remove_component_argument(self, type_, identifier, argument_name):
+        """Remove the argument from a component
+
+        :param type_: string, type of the component
+        :param identifier: string, component identifier
+        :param argument_name: string, name of the argument that will be removed
+        """
+        if type_ is None and identifier is None:
+            raise Exception('At least one of the parameters must not be None')
+
+        selector = (
+            ComponentDeclarationSelector(type_, identifier)
+            .chain(ComponentArgumentSelector(argument_name))
+        )
 
         self.add(SimpleTransformation(selector, Edit.make_delete()))
 

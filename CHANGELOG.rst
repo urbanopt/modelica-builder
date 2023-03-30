@@ -2,8 +2,8 @@
 Changelog
 =========
 
-Version 0.2.3-pr1
-=================
+Version 0.2.3
+=============
 * Update precommit and ci by @nllong in https://github.com/urbanopt/modelica-builder/pull/54
 * Update overwrite_component_redeclaration to handle the redeclare of args by @nllong in https://github.com/urbanopt/modelica-builder/pull/53
 

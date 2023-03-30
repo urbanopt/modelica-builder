@@ -139,7 +139,7 @@ Release Instructions
 --------------------
 
 * Bump version to <NEW_VERSION> in setup.cfg (use semantic versioning as much as possible).
-* Run `autopep8` to nicely format the code (or run `pre-commit --all-files`).
+* Run `pre-commit --all-files`
 * Create a PR against develop into main.
 * Run `git tag <NEW_VERSION>`. (Note that `python setup.py --version` pulls from the latest tag`.)
 * After main branch passes, then merge and checkout the main branch. Build the distribution using the following code:

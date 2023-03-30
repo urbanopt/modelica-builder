@@ -1,6 +1,6 @@
 """
 ****************************************************************************************************
-:copyright (c) 2020-2022, Alliance for Sustainable Energy, LLC.
+:copyright (c) 2020-2023, Alliance for Sustainable Energy, LLC.
 All rights reserved.
 ****************************************************************************************************
 """
@@ -181,18 +181,28 @@ class Model(Transformer):
 
         self.add(SimpleTransformation(selector, Edit.make_replace(f'{new_argument_name}')))
 
-    def overwrite_component_redeclaration(self, type_, identifier, new_declaration):
+    def overwrite_component_redeclaration(self, type_, identifier, new_redeclaration, existing_redeclaration=None):
         """
         Overwrite the component redeclaration with a new string
 
         :param type_: string, type of the component
         :param identifier: string, component identifier
-        :param new_declaration: string, new component redeclaration string. It is the entire string, i.e., argument=value
+        :param new_redeclaration: string, new component redeclaration string. It is the entire string, i.e., redeclare argument=value
+        :param existing_redeclaration: string, existing argument redeclaration string. Defaults to None.
         """
+        # In the case of `redeclare a.b.c update`, the existing declaration query is
+        # actually a combination of two objects that get concatenated. So remove
+        # the spaces in the existing_declaration if it is passed int.
+        prepend_redeclare = False
+        if existing_redeclaration:
+            existing_redeclaration = existing_redeclaration.replace(' ', '')
+            prepend_redeclare = True
         selector = (ComponentDeclarationSelector(type_, identifier)
-                    .chain(ComponentRedeclarationSelector()))
+                    .chain(ComponentRedeclarationSelector(existing_redeclaration)))
 
-        self.add(SimpleTransformation(selector, Edit.make_replace(f'{new_declaration}')))
+        if prepend_redeclare:
+            new_redeclaration = f'redeclare {new_redeclaration}'
+        self.add(SimpleTransformation(selector, Edit.make_replace(f'{new_redeclaration}')))
 
     def remove_component(self, type_=None, identifier=None):
         """remove_component removes a component declaration.

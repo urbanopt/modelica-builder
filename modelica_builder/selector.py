@@ -1,6 +1,6 @@
 """
 ****************************************************************************************************
-:copyright (c) 2020-2022, Alliance for Sustainable Energy, LLC.
+:copyright (c) 2020-2023, Alliance for Sustainable Energy, LLC.
 All rights reserved.
 ****************************************************************************************************
 """
@@ -392,17 +392,38 @@ class ComponentRedeclarationSelector(Selector):
     """
     BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/component_clause/component_list/component_declaration'
 
-    def __init__(self):
+    def __init__(self, argument_name):
         """
-        :param modification_name: str, mane of the modification to select
-        :param modification_value: None | str, if not None, it only selects modifications with this value
+        :param argument_name: str, name of the argument to select, if None, then it will look for `redeclare package`
         """
 
+        self._argument_name = argument_name
         super().__init__()
 
     def _select(self, base, parser):
-        # select the element_reclaration's short_class_specifier
-        xpath = 'component_declaration/declaration/modification/class_modification/argument_list/argument/element_redeclaration/short_class_definition/short_class_specifier'
+        xpath = 'component_declaration/declaration/modification/class_modification/argument_list'
+
+        # select the element_reclaration's short_class_specifier for component redeclarations
+        filtered_modifications = []
+        redeclare_package_xpath = xpath + '/argument/element_redeclaration/short_class_definition/short_class_specifier'
+        element_modifications = XPath.XPath.findAll(base, redeclare_package_xpath, parser)
+        if len(element_modifications) == 1:
+            filtered_modifications.append(element_modifications[0])
+
+        # now look for other redeclases in the argument list -- first get all the arguments
         element_modifications = XPath.XPath.findAll(base, xpath, parser)
 
-        return element_modifications
+        # setup the sub xpath to get the argument name and value
+        arg_xpath = '/argument/element_redeclaration/component_clause1'
+
+        # iterate over the arguments
+        for element_modification in element_modifications:
+            # filter modifications (ie arguments) to those that match our name
+            for index, child in enumerate(element_modification.children):
+                argument_name_texts = XPath.XPath.findAll(child, arg_xpath, parser)
+                # should only be one, if there isn't one, then skip, otherwise error
+                if len(argument_name_texts) == 1:
+                    if argument_name_texts[0].getText() == self._argument_name:
+                        filtered_modifications.append(child)
+
+        return filtered_modifications

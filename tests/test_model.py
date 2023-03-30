@@ -1,6 +1,6 @@
 """
 ****************************************************************************************************
-:copyright (c) 2020-2022, Alliance for Sustainable Energy, LLC.
+:copyright (c) 2020-2023, Alliance for Sustainable Energy, LLC.
 All rights reserved.
 ****************************************************************************************************
 """
@@ -323,12 +323,45 @@ class TestModel(TestCase, DiffAssertions):
         model.overwrite_component_redeclaration(
             'Buildings.ThermalZones.ReducedOrder.RC.TwoElements',
             'thermalZoneTwoElements',
-            'Medium = Buildings.Media.Air')
+            'Medium = Buildings.Media.Air',)
         self.result = model.execute()
 
         # Assert
         self.assertHasAdditions(source_file, self.result, ['redeclare package Medium = Buildings.Media.Air'])
         self.assertHasDeletions(source_file, self.result, ['Modelica.Media.Air.DryAirNasa'])
+
+    def test_model_reclaration_string_no_assign_replacement(self):
+        """Update a redeclare statement with a string. This is used when the
+        redeclare clause doesn't have a assignment
+        """
+        source_file = os.path.join(self.data_dir, 'Office.mo')
+        model = Model(source_file)
+
+        # Act
+        model.overwrite_component_redeclaration(
+            'IDEAS.Buildings.Components.Window',
+            'MMM_Fixed_3000_x_2000mm_3__WinRoom0BoQ',
+            'IDEAS.Buildings.Components.Shading.Screen shaType',
+            existing_redeclaration='IDEAS.Buildings.Components.Shading.None shaType',
+        )
+        model.overwrite_component_redeclaration(
+            'IDEAS.Buildings.Components.Window',
+            'MMM_Fixed_3000_x_2000mm_3__WinRoom0BoQ',
+            'Something.Else Fun',
+            existing_redeclaration='IDEAS.Buildings.Data.Frames.AluminiumInsulated fraType',
+        )
+        self.result = model.execute()
+
+        # Debug
+        # model.save_as(os.path.join(self.data_dir, 'Office2.mo'))
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result,
+                                ['IDEAS.Buildings.Components.Shading.Screen shaType',
+                                 'redeclare Something.Else Fun'])
+        self.assertHasDeletions(source_file, self.result,
+                                ['IDEAS.Buildings.Components.Shading.None shaType',
+                                 'redeclare IDEAS.Buildings.Data.Frames.AluminiumInsulated fraType'])
 
     def test_model_remove_component_argument(self):
         """Should remove an argument in an existing component."""

@@ -906,3 +906,32 @@ end Test;"""
                 'end for;'
             ])
         self.assertNoDeletions(source_file, self.result)
+
+    def test_model_get_argument_value(self):
+        mo_file = """
+model Test
+  AnInstanceOfObj Obj(
+    redeclare package Medium=Modelica.Media.Air.DryAirNasa,
+    Resist=100,
+    Desist=true,
+    redeclare IDEAS.Buildings.Components.Occupants.Fixed occNum(nOccFix=25.0)
+  );
+equation
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        value = model.get_component_argument_value(
+            'AnInstanceOfObj', 'Obj', 'Resist', type_cast=int
+        )
+        self.assertEqual(value, 100)
+
+        value = model.get_component_argument_value(
+            'AnInstanceOfObj', 'Obj', 'Resist'
+        )
+        self.assertEqual(value, '100')
+
+        value = model.get_component_argument_value(
+            'AnInstanceOfObj', 'Obj', 'Desist', type_cast=bool
+        )
+        self.assertEqual(value, True)

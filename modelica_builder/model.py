@@ -181,6 +181,30 @@ class Model(Transformer):
 
         self.add(SimpleTransformation(selector, Edit.make_replace(f'{new_argument_name}')))
 
+    def get_component_argument_value(self, type_, identifier, argument_name, type_cast=str):
+        """Get the argument value of a component
+
+        :param type_: string, type of the component
+        :param identifier: string, component identifier
+        :param argument_name: string, name of the new argument name
+        """
+
+        # selector = ModelIdentifierSelector()
+        # result = self.apply_selector(selector)
+        selector = (ComponentDeclarationSelector(type_, identifier)
+                    .chain(
+            ComponentModificationValueSelector(
+                argument_name
+            )))
+        result = self.apply_selector(selector)
+        if result:
+            result = result[0].getText()
+            # cast the result to the type specified, if possible
+            try:
+                return type_cast(result)
+            except ValueError:
+                raise ValueError(f"Unable to type cast the value {result} to a {type_cast}")
+
     def overwrite_component_redeclaration(self, type_, identifier, new_redeclaration, existing_redeclaration=None):
         """
         Overwrite the component redeclaration with a new string

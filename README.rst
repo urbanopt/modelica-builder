@@ -1,8 +1,6 @@
-===========================
-Modelica Builder (ModBuild)
-===========================
-
-*Note: this project is still in flux and the name/methods/namespaces may change*
+================
+Modelica Builder
+================
 
 The Modelica Builder  project aims to make in-place modifcations to Modelica language files easier.
 The principal use case is to load, modify using higher level abstracted methods, and then save the

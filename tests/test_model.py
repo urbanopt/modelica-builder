@@ -972,7 +972,7 @@ end Test;"""
             'datDes',
             'epsPla', '1.0', if_value='0.935'
         )
-        # self.result = model.execute()
+        self.result = model.execute()
         model.save_as(os.path.join(self.data_dir, 'district_updated2.mo'))
 
         # Assert

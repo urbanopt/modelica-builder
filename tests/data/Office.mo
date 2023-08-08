@@ -8,6 +8,8 @@ model Office
     "If true, input connector QLat_flow is enabled and room air computes moisture balance.";
   parameter Real fraLat=1.25
     "Fraction latent of sensible persons load = 0.8 for home, 1.25 for office.";
+  parameter String idfName="modelica://a_project/Loads/B123/input.idf"
+     "Path of the IDF file";
   Buildings.BoundaryConditions.SolarIrradiation.DiffusePerez HDifTil[6](
     each outSkyCon=true,
     each outGroCon=true,

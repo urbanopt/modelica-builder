@@ -2,8 +2,19 @@
 Changelog
 =========
 
+Version 0.3.0
+=============
+
+* bump version and copyright dates by @nllong in https://github.com/urbanopt/modelica-builder/pull/55
+* Add get method for a component's argument by @nllong in https://github.com/urbanopt/modelica-builder/pull/57
+* Update README.rst by @nllong in https://github.com/urbanopt/modelica-builder/pull/58
+* build(deps): bump pygments from 2.12.0 to 2.15.0 by @dependabot in https://github.com/urbanopt/modelica-builder/pull/60
+* Add extends redeclare update method by @nllong in https://github.com/urbanopt/modelica-builder/pull/59
+* Add method for getting and setting parameters by @nllong in https://github.com/urbanopt/modelica-builder/pull/61
+
 Version 0.2.3
 =============
+
 * Update precommit and ci by @nllong in https://github.com/urbanopt/modelica-builder/pull/54
 * Update overwrite_component_redeclaration to handle the redeclare of args by @nllong in https://github.com/urbanopt/modelica-builder/pull/53
 
@@ -11,7 +22,7 @@ Version 0.2.2
 =============
 
 * Add component argument/parameter deletion, remove_component_argument
-* Add test for deleting a "constant Ingeger x=5" component
+* Add test for deleting a "constant Integer x=5" component
 * Update testing dependencies
 * Add component redeclare package argument replacement
 

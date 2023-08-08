@@ -138,6 +138,10 @@ Release Instructions
 
 * Bump version to <NEW_VERSION> in setup.cfg (use semantic versioning as much as possible).
 * Run `pre-commit --all-files`
+* In a prep-release branch, push the changes to GitHub and draft a release against the latest branch.
+    * Run 'auto-generate changelog' and copy the contents to the CHANGELOG.rst. Cull any items that are repeated.
+    * Discard the draft release (you will create an official one off of the main branch)
+* Merge the prep-release branch into develop.
 * Create a PR against develop into main.
 * Run `git tag <NEW_VERSION>`. (Note that `python setup.py --version` pulls from the latest tag`.)
 * After main branch passes, then merge and checkout the main branch. Build the distribution using the following code:

@@ -935,3 +935,50 @@ end Test;"""
             'AnInstanceOfObj', 'Obj', 'Desist', type_cast=bool
         )
         self.assertEqual(value, True)
+
+    def test_model_get_argument_with_array(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'district.mo')
+        model = Model(source_file)
+
+        value = model.get_component_argument_value(
+            'Buildings.Controls.OBC.CDL.Continuous.Sources.Constant', 'THotWatSupSet', 'k', type_cast=str
+        )
+        self.assertEqual(value, 'fill(63+273.15,nBui)')
+
+        # try setting the argument value
+        model.update_component_modifications(
+            'Buildings.Controls.OBC.CDL.Continuous.Sources.Constant', 'THotWatSupSet',
+            {'k': 'fill(65 + 273.15, nBui)'}
+        )
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'fill(65 + 273.15, nBui)',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'fill(63 + 273.15, nBui)'
+        ])
+
+    def test_model_update_argument_with_extends_and_redeclare(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'district.mo')
+        model = Model(source_file)
+
+        model.update_extended_component_modification(
+            'Buildings.Experimental.DHC.Examples.Combined.BaseClasses.PartialSeries',
+            'Buildings.Experimental.DHC.Loads.Combined.BuildingTimeSeriesWithETS', 'bui',
+            'datDes',
+            'epsPla', '1.0', if_value='0.935'
+        )
+        self.result = model.execute()
+        model.save_as(os.path.join(self.data_dir, 'district_updated2.mo'))
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'epsPla=1.0',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'epsPla=0.935',
+        ])

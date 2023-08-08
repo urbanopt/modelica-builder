@@ -314,7 +314,7 @@ class TestModel(TestCase, DiffAssertions):
 
     def test_get_parameter_value(self):
         # Setup
-        source_file = os.path.join(self.data_dir, 'Office.mo')  
+        source_file = os.path.join(self.data_dir, 'Office.mo')
         model = Model(source_file)
 
         # Act
@@ -329,7 +329,6 @@ class TestModel(TestCase, DiffAssertions):
         self.assertEqual(result_real, 1.25)
         self.assertFalse(result_bool)
 
-        
     def test_model_update_param(self):
         # Setup
         source_file = os.path.join(self.data_dir, 'Office.mo')

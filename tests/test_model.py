@@ -312,7 +312,38 @@ class TestModel(TestCase, DiffAssertions):
                                 ['parameter String myParam="supercalifragilisticexpialidocious" "a comment"'])
         self.assertNoDeletions(source_file, self.result)
 
-    def test_model_reclaration_string_replacement(self):
+    def test_get_parameter_value(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'Office.mo')  
+        model = Model(source_file)
+
+        # Act
+        result = model.get_parameter_value('String', 'idfName')
+        result_int = model.get_parameter_value('Integer', 'nPorts')
+        result_real = model.get_parameter_value('Real', 'fraLat')
+        result_bool = model.get_parameter_value('Boolean', 'use_moisture_balance')
+
+        # Assert
+        self.assertEqual(result, '"modelica://a_project/Loads/B123/input.idf"')
+        self.assertEqual(result_int, 0)
+        self.assertEqual(result_real, 1.25)
+        self.assertFalse(result_bool)
+
+        
+    def test_model_update_param(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'Office.mo')
+        model = Model(source_file)
+
+        # Act
+        model.update_parameter('String', 'idfName', '"54321"')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['54321'])
+        self.assertHasDeletions(source_file, self.result, ['modelica://a_project/Loads/B123/input.idf'])
+
+    def test_model_redeclaration_string_replacement(self):
         """Should update redeclaration of a component"""
         # Setup
         source_file = os.path.join(self.data_dir, 'Office.mo')
@@ -330,7 +361,7 @@ class TestModel(TestCase, DiffAssertions):
         self.assertHasAdditions(source_file, self.result, ['redeclare package Medium = Buildings.Media.Air'])
         self.assertHasDeletions(source_file, self.result, ['Modelica.Media.Air.DryAirNasa'])
 
-    def test_model_reclaration_string_no_assign_replacement(self):
+    def test_model_redeclaration_string_no_assign_replacement(self):
         """Update a redeclare statement with a string. This is used when the
         redeclare clause doesn't have a assignment
         """

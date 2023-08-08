@@ -25,6 +25,7 @@ from modelica_builder.selector import (
     ExtendedComponentWithRedeclarationSelector,
     ModelIdentifierSelector,
     NthChildSelector,
+    ParameterSelector,
     ParentSelector,
     WithinSelector
 )
@@ -219,9 +220,6 @@ class Model(Transformer):
         :param identifier: string, component identifier
         :param argument_name: string, name of the new argument name
         """
-
-        # selector = ModelIdentifierSelector()
-        # result = self.apply_selector(selector)
         selector = (ComponentDeclarationSelector(type_, identifier)
                     .chain(
             ComponentModificationValueSelector(
@@ -360,6 +358,39 @@ class Model(Transformer):
             parameter.set_value(assigned_value)
 
         self.add(parameter.transformation())
+
+    def get_parameter_value(self, type_, identifier):
+        selector = (ParameterSelector(type_, identifier))
+        result = self.apply_selector(selector)
+        if result:
+            result = result[0].getText()
+
+            # cast the result to the type specified, if possible
+            if type_ == 'Real':
+                type_cast = float
+            elif type_ == 'Integer':
+                type_cast = int
+            elif type_ == 'String':
+                type_cast = str
+            elif type_ == 'Boolean':
+                return result.lower() == 'true'
+
+            try:
+                return type_cast(result)
+            except ValueError:
+                raise ValueError(f"Unable to type cast the value {result} to a {type_cast}")
+
+    def update_parameter(self, type_: str, identifier: str, new_value):
+        """Read in an existing parameter and update with the new_value
+
+        Args:
+            type_ (str): Type of the parameter to update
+            identifier (str): Object name of the parameter to update
+            new_value (any): New value
+        """
+        selector = (ParameterSelector(type_, identifier))
+
+        self.add(SimpleTransformation(selector, Edit.make_replace(new_value)))
 
     def update_model_annotation(self, modifications):
         """Updates the model annotation modifications. If a modification exists

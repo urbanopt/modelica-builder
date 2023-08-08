@@ -243,7 +243,7 @@ class ComponentModificationNameSelector(Selector):
 
 
 class ComponentArgumentSelector(Selector):
-    """ComponentArgumentSelector returns the parameter/arugment of a component out of the list
+    """ComponentArgumentSelector returns the parameter/argument of a component out of the list
     including the trailing or leading comma (terminal node impl). This works only for deletion!
     """
 
@@ -381,6 +381,41 @@ class WithinSelector(Selector):
 
     def _select(self, base, parser):
         return [base]
+
+
+class ParameterSelector(Selector):
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list'
+
+    def __init__(self, type_, identifier):
+        self._type = type_
+        self._identifier = identifier
+        super().__init__()
+
+    def _select(self, base, parser):
+        elements_xpath = "element_list/element/component_clause"
+        elements = XPath.XPath.findAll(base, elements_xpath, parser)
+
+        # iterate over the elements (not sure how to constrain the using type_prefix[text()='parameter']
+        for element in elements:
+            prefix_xpath = 'component_clause/type_prefix'
+            prefix_value = XPath.XPath.findAll(element, prefix_xpath, parser)
+            type_xpath = 'component_clause/type_specifier'
+            type_value = XPath.XPath.findAll(element, type_xpath, parser)
+
+            if len(prefix_value) == 1 and prefix_value[0].getText() == 'parameter' and \
+               len(type_value) == 1 and type_value[0].getText() == self._type:
+                # we are a parameter of the right type, now check the name
+                obj_name_xpath = 'component_clause/component_list/component_declaration/declaration/IDENT'
+                obj_name_value = XPath.XPath.findAll(element, obj_name_xpath, parser)
+
+                if len(obj_name_value) == 1 and obj_name_value[0].getText() == self._identifier:
+                    # There should only be one ever, since the name is unique
+                    # Now return the value of the declaration
+                    expression_xpath = 'component_clause/component_list/component_declaration/declaration/modification/expression'
+                    obj = XPath.XPath.findAll(element, expression_xpath, parser)
+                    return obj
+
+        return []
 
 
 class ModelIdentifierSelector(Selector):

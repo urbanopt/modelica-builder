@@ -31,7 +31,7 @@ PATHS = [
 
 
 class UpdateLicenses(distutils.cmd.Command):
-    """Custom comand for updating the license doc strings."""
+    """Custom command for updating the license doc strings."""
 
     description = "Update the license/copyright headers"
 

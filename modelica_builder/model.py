@@ -22,8 +22,10 @@ from modelica_builder.selector import (
     ComponentModificationValueSelector,
     ComponentRedeclarationSelector,
     ConnectClauseSelector,
+    ExtendedComponentWithRedeclarationSelector,
     ModelIdentifierSelector,
     NthChildSelector,
+    ParameterSelector,
     ParentSelector,
     WithinSelector
 )
@@ -181,9 +183,59 @@ class Model(Transformer):
 
         self.add(SimpleTransformation(selector, Edit.make_replace(f'{new_argument_name}')))
 
-    def overwrite_component_redeclaration(self, type_, identifier, new_redeclaration, existing_redeclaration=None):
+    def update_extended_component_modification(self, extended_type, type_, identifier, obj_name, arg_name, new_value, if_value=None):
+        """Update arguments that exist as part of the extended component modification. This is a very specific case to handle
+        this structure:
+
+            extends extended_type(
+                redeclare type_ identifier[X](final Y=Y),
+                obj_name(
+                    arg_1=8,
+                    arg_2=1029.114,
+                    arg_name=new_value (if_value)
+                )
+            );
+
+        :param extended_type: string, name of the type being extended
+        :param type_: string, instance type that is being redeclared in the extended type
+        :param identifier: string, object name that is being extended
+        :param obj_name: string, object name that is being updated
+        :param arg_name: string, name of the argument that will be updated
+        :param new_value: string, new argument value
+        :param if_value: string, if provided it will only update the value if the existing value matches this
         """
-        Overwrite the component redeclaration with a new string
+        selector = (ExtendedComponentWithRedeclarationSelector(extended_type, type_, identifier, obj_name).chain(
+            ComponentModificationValueSelector(
+                arg_name,
+                modification_value=if_value
+            )
+        ))
+
+        self.add(SimpleTransformation(selector, Edit.make_replace(new_value)))
+
+    def get_component_argument_value(self, type_, identifier, argument_name, type_cast=str):
+        """Get the argument value of a component
+
+        :param type_: string, type of the component
+        :param identifier: string, component identifier
+        :param argument_name: string, name of the new argument name
+        """
+        selector = (ComponentDeclarationSelector(type_, identifier)
+                    .chain(
+            ComponentModificationValueSelector(
+                argument_name
+            )))
+        result = self.apply_selector(selector)
+        if result:
+            result = result[0].getText()
+            # cast the result to the type specified, if possible
+            try:
+                return type_cast(result)
+            except ValueError:
+                raise ValueError(f"Unable to type cast the value {result} to a {type_cast}")
+
+    def overwrite_component_redeclaration(self, type_, identifier, new_redeclaration, existing_redeclaration=None):
+        """Overwrite the component redeclaration with a new string
 
         :param type_: string, type of the component
         :param identifier: string, component identifier
@@ -306,6 +358,39 @@ class Model(Transformer):
             parameter.set_value(assigned_value)
 
         self.add(parameter.transformation())
+
+    def get_parameter_value(self, type_, identifier):
+        selector = (ParameterSelector(type_, identifier))
+        result = self.apply_selector(selector)
+        if result:
+            result = result[0].getText()
+
+            # cast the result to the type specified, if possible
+            if type_ == 'Real':
+                type_cast = float
+            elif type_ == 'Integer':
+                type_cast = int
+            elif type_ == 'String':
+                type_cast = str
+            elif type_ == 'Boolean':
+                return result.lower() == 'true'
+
+            try:
+                return type_cast(result)
+            except ValueError:
+                raise ValueError(f"Unable to type cast the value {result} to a {type_cast}")
+
+    def update_parameter(self, type_: str, identifier: str, new_value):
+        """Read in an existing parameter and update with the new_value
+
+        Args:
+            type_ (str): Type of the parameter to update
+            identifier (str): Object name of the parameter to update
+            new_value (any): New value
+        """
+        selector = (ParameterSelector(type_, identifier))
+
+        self.add(SimpleTransformation(selector, Edit.make_replace(new_value)))
 
     def update_model_annotation(self, modifications):
         """Updates the model annotation modifications. If a modification exists

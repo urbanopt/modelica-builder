@@ -312,7 +312,37 @@ class TestModel(TestCase, DiffAssertions):
                                 ['parameter String myParam="supercalifragilisticexpialidocious" "a comment"'])
         self.assertNoDeletions(source_file, self.result)
 
-    def test_model_reclaration_string_replacement(self):
+    def test_get_parameter_value(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'Office.mo')
+        model = Model(source_file)
+
+        # Act
+        result = model.get_parameter_value('String', 'idfName')
+        result_int = model.get_parameter_value('Integer', 'nPorts')
+        result_real = model.get_parameter_value('Real', 'fraLat')
+        result_bool = model.get_parameter_value('Boolean', 'use_moisture_balance')
+
+        # Assert
+        self.assertEqual(result, '"modelica://a_project/Loads/B123/input.idf"')
+        self.assertEqual(result_int, 0)
+        self.assertEqual(result_real, 1.25)
+        self.assertFalse(result_bool)
+
+    def test_model_update_param(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'Office.mo')
+        model = Model(source_file)
+
+        # Act
+        model.update_parameter('String', 'idfName', '"54321"')
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, ['54321'])
+        self.assertHasDeletions(source_file, self.result, ['modelica://a_project/Loads/B123/input.idf'])
+
+    def test_model_redeclaration_string_replacement(self):
         """Should update redeclaration of a component"""
         # Setup
         source_file = os.path.join(self.data_dir, 'Office.mo')
@@ -330,7 +360,7 @@ class TestModel(TestCase, DiffAssertions):
         self.assertHasAdditions(source_file, self.result, ['redeclare package Medium = Buildings.Media.Air'])
         self.assertHasDeletions(source_file, self.result, ['Modelica.Media.Air.DryAirNasa'])
 
-    def test_model_reclaration_string_no_assign_replacement(self):
+    def test_model_redeclaration_string_no_assign_replacement(self):
         """Update a redeclare statement with a string. This is used when the
         redeclare clause doesn't have a assignment
         """
@@ -906,3 +936,79 @@ end Test;"""
                 'end for;'
             ])
         self.assertNoDeletions(source_file, self.result)
+
+    def test_model_get_argument_value(self):
+        mo_file = """
+model Test
+  AnInstanceOfObj Obj(
+    redeclare package Medium=Modelica.Media.Air.DryAirNasa,
+    Resist=100,
+    Desist=true,
+    redeclare IDEAS.Buildings.Components.Occupants.Fixed occNum(nOccFix=25.0)
+  );
+equation
+end Test;"""
+        source_file = self.create_tmp_file(mo_file)
+        model = Model(source_file)
+
+        value = model.get_component_argument_value(
+            'AnInstanceOfObj', 'Obj', 'Resist', type_cast=int
+        )
+        self.assertEqual(value, 100)
+
+        value = model.get_component_argument_value(
+            'AnInstanceOfObj', 'Obj', 'Resist'
+        )
+        self.assertEqual(value, '100')
+
+        value = model.get_component_argument_value(
+            'AnInstanceOfObj', 'Obj', 'Desist', type_cast=bool
+        )
+        self.assertEqual(value, True)
+
+    def test_model_get_argument_with_array(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'district.mo')
+        model = Model(source_file)
+
+        value = model.get_component_argument_value(
+            'Buildings.Controls.OBC.CDL.Continuous.Sources.Constant', 'THotWatSupSet', 'k', type_cast=str
+        )
+        self.assertEqual(value, 'fill(63+273.15,nBui)')
+
+        # try setting the argument value
+        model.update_component_modifications(
+            'Buildings.Controls.OBC.CDL.Continuous.Sources.Constant', 'THotWatSupSet',
+            {'k': 'fill(65 + 273.15, nBui)'}
+        )
+        self.result = model.execute()
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'fill(65 + 273.15, nBui)',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'fill(63 + 273.15, nBui)'
+        ])
+
+    def test_model_update_argument_with_extends_and_redeclare(self):
+        # Setup
+        source_file = os.path.join(self.data_dir, 'district.mo')
+        model = Model(source_file)
+
+        model.update_extended_component_modification(
+            'Buildings.Experimental.DHC.Examples.Combined.BaseClasses.PartialSeries',
+            'Buildings.Experimental.DHC.Loads.Combined.BuildingTimeSeriesWithETS', 'bui',
+            'datDes',
+            'epsPla', '1.0', if_value='0.935'
+        )
+        self.result = model.execute()
+        model.save_as(os.path.join(self.data_dir, 'district_updated2.mo'))
+
+        # Assert
+        self.assertHasAdditions(source_file, self.result, [
+            'epsPla=1.0',
+        ])
+        self.assertHasDeletions(source_file, self.result, [
+            'epsPla=0.935',
+        ])

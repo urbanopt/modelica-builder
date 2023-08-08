@@ -152,8 +152,7 @@ class ComponentDeclarationSelector(Selector):
 
         # filter component_declaration nodes if identifier was provided
         return [
-            node
-            for node in component_declaration_nodes
+            node for node in component_declaration_nodes
             if node.declaration().IDENT().getText() == self._identifier]
 
 
@@ -176,6 +175,12 @@ class ComponentModificationValueSelector(Selector):
     def _select(self, base, parser):
         xpath = 'component_declaration/declaration/modification/class_modification/argument_list/argument/element_modification_or_replaceable/element_modification'
         element_modifications = XPath.XPath.findAll(base, xpath, parser)
+
+        # if there are no element modifications returned, then try to find them at a different xpath
+        # which is used for extends blocks that are deeper in the tree
+        if len(element_modifications) == 0:
+            xpath = 'argument/element_modification_or_replaceable/element_modification/modification/class_modification/argument_list/argument/element_modification_or_replaceable/element_modification'
+            element_modifications = XPath.XPath.findAll(base, xpath, parser)
 
         # filter modifications (ie arguments) to those that match our name
         filtered_modifications = []
@@ -238,7 +243,7 @@ class ComponentModificationNameSelector(Selector):
 
 
 class ComponentArgumentSelector(Selector):
-    """ComponentArgumentSelector returns the parameter/arugment of a component out of the list
+    """ComponentArgumentSelector returns the parameter/argument of a component out of the list
     including the trailing or leading comma (terminal node impl). This works only for deletion!
     """
 
@@ -378,6 +383,41 @@ class WithinSelector(Selector):
         return [base]
 
 
+class ParameterSelector(Selector):
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list'
+
+    def __init__(self, type_, identifier):
+        self._type = type_
+        self._identifier = identifier
+        super().__init__()
+
+    def _select(self, base, parser):
+        elements_xpath = "element_list/element/component_clause"
+        elements = XPath.XPath.findAll(base, elements_xpath, parser)
+
+        # iterate over the elements (not sure how to constrain the using type_prefix[text()='parameter']
+        for element in elements:
+            prefix_xpath = 'component_clause/type_prefix'
+            prefix_value = XPath.XPath.findAll(element, prefix_xpath, parser)
+            type_xpath = 'component_clause/type_specifier'
+            type_value = XPath.XPath.findAll(element, type_xpath, parser)
+
+            if len(prefix_value) == 1 and prefix_value[0].getText() == 'parameter' and \
+               len(type_value) == 1 and type_value[0].getText() == self._type:
+                # we are a parameter of the right type, now check the name
+                obj_name_xpath = 'component_clause/component_list/component_declaration/declaration/IDENT'
+                obj_name_value = XPath.XPath.findAll(element, obj_name_xpath, parser)
+
+                if len(obj_name_value) == 1 and obj_name_value[0].getText() == self._identifier:
+                    # There should only be one ever, since the name is unique
+                    # Now return the value of the declaration
+                    expression_xpath = 'component_clause/component_list/component_declaration/declaration/modification/expression'
+                    obj = XPath.XPath.findAll(element, expression_xpath, parser)
+                    return obj
+
+        return []
+
+
 class ModelIdentifierSelector(Selector):
     BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier'
 
@@ -385,6 +425,55 @@ class ModelIdentifierSelector(Selector):
         # return both identifiers
         # (first is the initial declaration second is the 'end <modelname>')
         return [base.IDENT()[0], base.IDENT()[1]]
+
+
+class ExtendedComponentWithRedeclarationSelector(Selector):
+    """ExtendedComponentDeclarationSelector is a selector which matches an extended component declarations
+    based on their type and/or identifier
+    """
+    BASE_PATH = 'stored_definition/class_definition/class_specifier/long_class_specifier/composition/element_list/element/extends_clause'
+
+    def __init__(self, extended_type, type_, identifier, obj_name):
+        self._extended_type = extended_type
+        self._type = type_
+        self._identifier = identifier
+        self._obj_name = obj_name
+
+        super().__init__()
+
+    def _select(self, base, parser):
+        # verify that this is an extended component declaration
+        if len(base.children) >= 2 and base.children[0].getText() != 'extends':
+            # we are not an extended component declaration
+            return []
+
+        # check if the type name matches
+        if len(base.children) >= 2 and base.children[2].getText() != self._extended_type:
+            # get the arguments that are in this extends
+            type_xpath = 'extends_clause/class_modification/argument_list/argument/*/component_clause1/type_specifier'
+            type_value = XPath.XPath.findAll(base, type_xpath, parser)
+            obj_name_xpath = 'extends_clause/class_modification/argument_list/argument/*/component_clause1/component_declaration1/declaration/IDENT'
+            obj_name_value = XPath.XPath.findAll(base, obj_name_xpath, parser)
+
+            if len(type_value) == 0 or type_value[0].getText() != self._type or \
+               len(obj_name_value) == 0 or obj_name_value[0].getText() != self._identifier:
+                # check if the identifier matches
+                return []
+
+            # go through the remaining arguments and check of there are any matches
+            extend_xpath = 'extends_clause/class_modification/argument_list/argument'
+            extend_args = XPath.XPath.findAll(base, extend_xpath, parser)
+            result = []
+            # skip the first arg because it is the type
+            for arg in extend_args[1:]:
+                # get the object name and check if it matches
+                object_name_xpath = 'argument/element_modification_or_replaceable/element_modification'
+                object_name = XPath.XPath.findAll(arg, object_name_xpath, parser)
+                if object_name[0].name().getText() == self._obj_name:
+                    # this is the object that is being passed to the extended class
+                    result.append(arg)
+
+            return result
 
 
 class ComponentRedeclarationSelector(Selector):

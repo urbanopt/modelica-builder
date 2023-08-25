@@ -1,7 +1,7 @@
 # Generated from /var/antlrResult/modelica.g4 by ANTLR 4.8
 from antlr4 import *
 from io import StringIO
-from typing.io import TextIO
+from typing import TextIO
 import sys
 
 
@@ -455,41 +455,41 @@ class modelicaLexer(Lexer):
     modeNames = [ "DEFAULT_MODE" ]
 
     literalNames = [ "<INVALID>",
-            "'final'", "';'", "'within'", "'encapsulated'", "'partial'", 
-            "'class'", "'model'", "'operator'", "'record'", "'block'", "'expandable'", 
-            "'connector'", "'type'", "'package'", "'pure'", "'impure'", 
-            "'function'", "'end'", "'extends'", "'='", "'enumeration'", 
-            "'('", "':'", "')'", "'der'", "','", "'public'", "'protected'", 
-            "'external'", "'redeclare'", "'inner'", "'outer'", "'replaceable'", 
-            "'import'", "'.*'", "'.{'", "'}'", "'constrainedby'", "'flow'", 
-            "'stream'", "'discrete'", "'parameter'", "'constant'", "'input'", 
-            "'output'", "'if'", "':='", "'each'", "'initial'", "'equation'", 
-            "'algorithm'", "'break'", "'return'", "'then'", "'elseif'", 
-            "'else'", "'for'", "'loop'", "'in'", "'while'", "'when'", "'elsewhen'", 
-            "'connect'", "'or'", "'and'", "'not'", "'<'", "'<='", "'>'", 
-            "'>='", "'=='", "'<>'", "'+'", "'-'", "'.+'", "'.-'", "'*'", 
-            "'/'", "'./'", "'^'", "'.^'", "'false'", "'true'", "'['", "']'", 
+            "'final'", "';'", "'within'", "'encapsulated'", "'partial'",
+            "'class'", "'model'", "'operator'", "'record'", "'block'", "'expandable'",
+            "'connector'", "'type'", "'package'", "'pure'", "'impure'",
+            "'function'", "'end'", "'extends'", "'='", "'enumeration'",
+            "'('", "':'", "')'", "'der'", "','", "'public'", "'protected'",
+            "'external'", "'redeclare'", "'inner'", "'outer'", "'replaceable'",
+            "'import'", "'.*'", "'.{'", "'}'", "'constrainedby'", "'flow'",
+            "'stream'", "'discrete'", "'parameter'", "'constant'", "'input'",
+            "'output'", "'if'", "':='", "'each'", "'initial'", "'equation'",
+            "'algorithm'", "'break'", "'return'", "'then'", "'elseif'",
+            "'else'", "'for'", "'loop'", "'in'", "'while'", "'when'", "'elsewhen'",
+            "'connect'", "'or'", "'and'", "'not'", "'<'", "'<='", "'>'",
+            "'>='", "'=='", "'<>'", "'+'", "'-'", "'.+'", "'.-'", "'*'",
+            "'/'", "'./'", "'^'", "'.^'", "'false'", "'true'", "'['", "']'",
             "'{'", "'.'", "'annotation'" ]
 
     symbolicNames = [ "<INVALID>",
             "IDENT", "STRING", "UNSIGNED_NUMBER", "WS", "COMMENT", "LINE_COMMENT" ]
 
-    ruleNames = [ "T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", 
-                  "T__7", "T__8", "T__9", "T__10", "T__11", "T__12", "T__13", 
-                  "T__14", "T__15", "T__16", "T__17", "T__18", "T__19", 
-                  "T__20", "T__21", "T__22", "T__23", "T__24", "T__25", 
-                  "T__26", "T__27", "T__28", "T__29", "T__30", "T__31", 
-                  "T__32", "T__33", "T__34", "T__35", "T__36", "T__37", 
-                  "T__38", "T__39", "T__40", "T__41", "T__42", "T__43", 
-                  "T__44", "T__45", "T__46", "T__47", "T__48", "T__49", 
-                  "T__50", "T__51", "T__52", "T__53", "T__54", "T__55", 
-                  "T__56", "T__57", "T__58", "T__59", "T__60", "T__61", 
-                  "T__62", "T__63", "T__64", "T__65", "T__66", "T__67", 
-                  "T__68", "T__69", "T__70", "T__71", "T__72", "T__73", 
-                  "T__74", "T__75", "T__76", "T__77", "T__78", "T__79", 
-                  "T__80", "T__81", "T__82", "T__83", "T__84", "T__85", 
-                  "T__86", "T__87", "IDENT", "Q_IDENT", "S_CHAR", "NONDIGIT", 
-                  "STRING", "Q_CHAR", "S_ESCAPE", "DIGIT", "UNSIGNED_INTEGER", 
+    ruleNames = [ "T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6",
+                  "T__7", "T__8", "T__9", "T__10", "T__11", "T__12", "T__13",
+                  "T__14", "T__15", "T__16", "T__17", "T__18", "T__19",
+                  "T__20", "T__21", "T__22", "T__23", "T__24", "T__25",
+                  "T__26", "T__27", "T__28", "T__29", "T__30", "T__31",
+                  "T__32", "T__33", "T__34", "T__35", "T__36", "T__37",
+                  "T__38", "T__39", "T__40", "T__41", "T__42", "T__43",
+                  "T__44", "T__45", "T__46", "T__47", "T__48", "T__49",
+                  "T__50", "T__51", "T__52", "T__53", "T__54", "T__55",
+                  "T__56", "T__57", "T__58", "T__59", "T__60", "T__61",
+                  "T__62", "T__63", "T__64", "T__65", "T__66", "T__67",
+                  "T__68", "T__69", "T__70", "T__71", "T__72", "T__73",
+                  "T__74", "T__75", "T__76", "T__77", "T__78", "T__79",
+                  "T__80", "T__81", "T__82", "T__83", "T__84", "T__85",
+                  "T__86", "T__87", "IDENT", "Q_IDENT", "S_CHAR", "NONDIGIT",
+                  "STRING", "Q_CHAR", "S_ESCAPE", "DIGIT", "UNSIGNED_INTEGER",
                   "UNSIGNED_NUMBER", "WS", "COMMENT", "LINE_COMMENT" ]
 
     grammarFileName = "modelica.g4"
@@ -500,5 +500,3 @@ class modelicaLexer(Lexer):
         self._interp = LexerATNSimulator(self, self.atn, self.decisionsToDFA, PredictionContextCache())
         self._actions = None
         self._predicates = None
-
-

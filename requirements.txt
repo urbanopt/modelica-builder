@@ -1,6 +1,6 @@
 # Also add to in setup.cfg, but unpinned
 
-antlr4-python3-runtime==4.8
+antlr4-python3-runtime==4.13
 
 # Testing packages
 pre-commit==3.3.3

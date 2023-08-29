@@ -538,47 +538,47 @@ class modelicaParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'final'", "';'", "'within'", "'encapsulated'", 
-                     "'partial'", "'class'", "'model'", "'operator'", "'record'", 
-                     "'block'", "'expandable'", "'connector'", "'type'", 
-                     "'package'", "'pure'", "'impure'", "'function'", "'end'", 
-                     "'extends'", "'='", "'enumeration'", "'('", "':'", 
-                     "')'", "'der'", "','", "'public'", "'protected'", "'external'", 
-                     "'redeclare'", "'inner'", "'outer'", "'replaceable'", 
-                     "'import'", "'.*'", "'.{'", "'}'", "'constrainedby'", 
-                     "'flow'", "'stream'", "'discrete'", "'parameter'", 
-                     "'constant'", "'input'", "'output'", "'if'", "':='", 
-                     "'each'", "'initial'", "'equation'", "'algorithm'", 
-                     "'break'", "'return'", "'then'", "'elseif'", "'else'", 
-                     "'for'", "'loop'", "'in'", "'while'", "'when'", "'elsewhen'", 
-                     "'connect'", "'or'", "'and'", "'not'", "'<'", "'<='", 
-                     "'>'", "'>='", "'=='", "'<>'", "'+'", "'-'", "'.+'", 
-                     "'.-'", "'*'", "'/'", "'./'", "'^'", "'.^'", "'false'", 
+    literalNames = [ "<INVALID>", "'final'", "';'", "'within'", "'encapsulated'",
+                     "'partial'", "'class'", "'model'", "'operator'", "'record'",
+                     "'block'", "'expandable'", "'connector'", "'type'",
+                     "'package'", "'pure'", "'impure'", "'function'", "'end'",
+                     "'extends'", "'='", "'enumeration'", "'('", "':'",
+                     "')'", "'der'", "','", "'public'", "'protected'", "'external'",
+                     "'redeclare'", "'inner'", "'outer'", "'replaceable'",
+                     "'import'", "'.*'", "'.{'", "'}'", "'constrainedby'",
+                     "'flow'", "'stream'", "'discrete'", "'parameter'",
+                     "'constant'", "'input'", "'output'", "'if'", "':='",
+                     "'each'", "'initial'", "'equation'", "'algorithm'",
+                     "'break'", "'return'", "'then'", "'elseif'", "'else'",
+                     "'for'", "'loop'", "'in'", "'while'", "'when'", "'elsewhen'",
+                     "'connect'", "'or'", "'and'", "'not'", "'<'", "'<='",
+                     "'>'", "'>='", "'=='", "'<>'", "'+'", "'-'", "'.+'",
+                     "'.-'", "'*'", "'/'", "'./'", "'^'", "'.^'", "'false'",
                      "'true'", "'['", "']'", "'{'", "'.'", "'annotation'" ]
 
-    symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "IDENT", "STRING", "UNSIGNED_NUMBER", 
+    symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>",
+                      "<INVALID>", "IDENT", "STRING", "UNSIGNED_NUMBER",
                       "WS", "COMMENT", "LINE_COMMENT" ]
 
     RULE_stored_definition = 0
@@ -662,29 +662,29 @@ class modelicaParser ( Parser ):
     RULE_model_annotation = 78
     RULE_annotation = 79
 
-    ruleNames =  [ "stored_definition", "within_statement", "class_definition", 
-                   "class_specifier", "class_prefixes", "long_class_specifier", 
-                   "short_class_specifier", "der_class_specifier", "base_prefix", 
-                   "enum_list", "enumeration_literal", "composition", "language_specification", 
-                   "external_function_call", "element_list", "element", 
-                   "import_clause", "import_list", "extends_clause", "constraining_clause", 
-                   "component_clause", "type_prefix", "type_specifier", 
-                   "component_list", "component_declaration", "condition_attribute", 
-                   "declaration", "modification", "class_modification", 
-                   "argument_list", "argument", "element_modification_or_replaceable", 
-                   "element_modification", "element_redeclaration", "element_replaceable", 
-                   "component_clause1", "component_declaration1", "short_class_definition", 
-                   "equation_section", "algorithm_section", "equation", 
-                   "statement", "if_equation", "if_statement", "for_equation", 
-                   "for_statement", "for_indices", "for_index", "while_statement", 
-                   "when_equation", "when_statement", "connect_clause", 
-                   "expression", "simple_expression", "logical_expression", 
-                   "logical_term", "logical_factor", "relation", "rel_op", 
-                   "arithmetic_expression", "add_op", "term", "mul_op", 
-                   "factor", "primary", "name", "component_reference", "function_call_args", 
-                   "function_arguments", "named_arguments", "named_argument", 
-                   "function_argument", "output_expression_list", "expression_list", 
-                   "array_subscripts", "subscript", "comment", "string_comment", 
+    ruleNames =  [ "stored_definition", "within_statement", "class_definition",
+                   "class_specifier", "class_prefixes", "long_class_specifier",
+                   "short_class_specifier", "der_class_specifier", "base_prefix",
+                   "enum_list", "enumeration_literal", "composition", "language_specification",
+                   "external_function_call", "element_list", "element",
+                   "import_clause", "import_list", "extends_clause", "constraining_clause",
+                   "component_clause", "type_prefix", "type_specifier",
+                   "component_list", "component_declaration", "condition_attribute",
+                   "declaration", "modification", "class_modification",
+                   "argument_list", "argument", "element_modification_or_replaceable",
+                   "element_modification", "element_redeclaration", "element_replaceable",
+                   "component_clause1", "component_declaration1", "short_class_definition",
+                   "equation_section", "algorithm_section", "equation",
+                   "statement", "if_equation", "if_statement", "for_equation",
+                   "for_statement", "for_indices", "for_index", "while_statement",
+                   "when_equation", "when_statement", "connect_clause",
+                   "expression", "simple_expression", "logical_expression",
+                   "logical_term", "logical_factor", "relation", "rel_op",
+                   "arithmetic_expression", "add_op", "term", "mul_op",
+                   "factor", "primary", "name", "component_reference", "function_call_args",
+                   "function_arguments", "named_arguments", "named_argument",
+                   "function_argument", "output_expression_list", "expression_list",
+                   "array_subscripts", "subscript", "comment", "string_comment",
                    "model_annotation", "annotation" ]
 
     EOF = Token.EOF
@@ -785,7 +785,7 @@ class modelicaParser ( Parser ):
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
-        self.checkVersion("4.8")
+        self.checkVersion("4.13.0")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
@@ -3527,7 +3527,7 @@ class modelicaParser ( Parser ):
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     self.state = 539
-                    self.equation() 
+                    self.equation()
                 self.state = 544
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,69,self._ctx)
@@ -3911,7 +3911,7 @@ class modelicaParser ( Parser ):
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     self.state = 599
-                    self.equation() 
+                    self.equation()
                 self.state = 604
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,75,self._ctx)
@@ -3932,7 +3932,7 @@ class modelicaParser ( Parser ):
                 while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                     if _alt==1:
                         self.state = 608
-                        self.equation() 
+                        self.equation()
                     self.state = 613
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,76,self._ctx)
@@ -3953,7 +3953,7 @@ class modelicaParser ( Parser ):
                 while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                     if _alt==1:
                         self.state = 620
-                        self.equation() 
+                        self.equation()
                     self.state = 625
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,78,self._ctx)
@@ -4140,7 +4140,7 @@ class modelicaParser ( Parser ):
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     self.state = 675
-                    self.equation() 
+                    self.equation()
                 self.state = 680
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,85,self._ctx)
@@ -4461,7 +4461,7 @@ class modelicaParser ( Parser ):
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     self.state = 728
-                    self.equation() 
+                    self.equation()
                 self.state = 733
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,90,self._ctx)
@@ -4482,7 +4482,7 @@ class modelicaParser ( Parser ):
                 while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                     if _alt==1:
                         self.state = 737
-                        self.equation() 
+                        self.equation()
                     self.state = 742
                     self._errHandler.sync(self)
                     _alt = self._interp.adaptivePredict(self._input,91,self._ctx)
@@ -6442,8 +6442,3 @@ class modelicaParser ( Parser ):
         finally:
             self.exitRule()
         return localctx
-
-
-
-
-

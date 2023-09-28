@@ -2,7 +2,7 @@
 Modelica Builder
 ================
 
-The Modelica Builder  project aims to make in-place modifcations to Modelica language files easier.
+The Modelica Builder project aims to make in-place modifications to Modelica language files easier.
 The principal use case is to load, modify using higher level abstracted methods, and then save the
 resulting file. The user has access to the entire Abstract Syntax Tree of the entire Modelica grammar.
 

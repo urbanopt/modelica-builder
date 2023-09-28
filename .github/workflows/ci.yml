@@ -11,21 +11,25 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.8
-      - name: Set up package
+          python-version: 3.9
+      - name: Install Poetry
+        # optionally set specific poetry version. Defaults to latest
+        uses: Gr1N/setup-poetry@v8 
+      - name: Install dependencies with Poetry
+        # poetry setuptools workaround sourced from:
+        # https://github.com/python-poetry/poetry/issues/7611#issuecomment-1711443539
         run: |
-          pip install -U pip setuptools
-          pip install tox coveralls
-          pip install -r requirements.txt
-          pre-commit install
-      - name: Run tox
-        run: tox
+          poetry --version
+          poetry self add setuptools
+          poetry install
       - name: Run pre-commit
         run: pre-commit run --all-files
+      - name: Run pytest
+        run: poetry run pytest -v --cov-report term-missing --cov
       - name: Coveralls
         if: ${{ success() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: coveralls --service=github
+        run: poetry run coveralls --service=github

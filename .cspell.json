@@ -1,0 +1,41 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "autoload",
+    "buildingspy",
+    "Combi",
+    "cvrmsd",
+    "dassl",
+    "dymola",
+    "GDHC",
+    "IBPSA",
+    "Jing",
+    "levelname",
+    "libfortran",
+    "linecount",
+    "maxdepth",
+    "mfrt",
+    "microgrid",
+    "Modelica",
+    "MODELICAPATH",
+    "mofile",
+    "nllong",
+    "openstudio",
+    "Optimica",
+    "oversizing",
+    "pygments",
+    "redeclarations",
+    "Reparse",
+    "setpoint",
+    "tanushree",
+    "Templatized",
+    "timeseries",
+    "timestep",
+    "urbanopt",
+    "vtnate"
+  ],
+  "flagWords": [
+    "hte"
+  ]
+}

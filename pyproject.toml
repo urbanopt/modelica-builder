@@ -52,5 +52,3 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
 multi_line_output = 3
-
-

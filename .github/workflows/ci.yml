@@ -26,6 +26,9 @@ jobs:
           poetry install
       - name: Run pre-commit
         run: poetry run pre-commit run --all-files
+      - name: Build docs
+        run: |
+          cd docs && poetry run make html && cd ..
       - name: Run pytest
         run: poetry run pytest -v --cov-report term-missing --cov
       - name: Coveralls

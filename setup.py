@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-    Setup file for modelica_builder.
-    Use setup.cfg to configure your project.
+Setup file for modelica_builder.
+Use setup.cfg to configure your project.
 """
 from pkg_resources import VersionConflict, require
 from setuptools import setup

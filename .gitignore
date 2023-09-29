@@ -38,6 +38,7 @@ coverage.xml
 
 # Build and docs folder/files
 build/*
+docs/build/*
 dist/*
 sdist/*
 ../modelica-builder/docs/api/*

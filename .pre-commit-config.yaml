@@ -30,8 +30,8 @@ repos:
             --skip=seed/models/__init__.py,
             --filter-files,
           ]
-  - repo: https://github.com/humitos/mirrors-autoflake.git
-    rev: v1.1
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v2.2.1
     hooks:
       - id: autoflake
         args:
@@ -40,6 +40,7 @@ repos:
             "--recursive",
             "--remove-all-unused-imports",
             "--remove-unused-variable",
+            "--ignore-init-module-imports",
           ]
   - repo: https://github.com/pycqa/flake8
     rev: 6.1.0
@@ -48,7 +49,7 @@ repos:
         args:
           ["--ignore=F401,E402,E501,E731,W503,W504", "--max-line-length=100"]
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.1
+    rev: v3.0.3
     hooks:
       - id: prettier
         # for now ignoring html, javascript

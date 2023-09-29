@@ -32,13 +32,13 @@ tags
 # Unittest and coverage
 htmlcov/*
 .coverage
-.tox
 junit.xml
 coverage.xml
 .pytest_cache/
 
 # Build and docs folder/files
 build/*
+docs/build/*
 dist/*
 sdist/*
 ../modelica-builder/docs/api/*

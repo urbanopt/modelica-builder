@@ -1003,7 +1003,7 @@ end Test;"""
             'epsPla', '1.0', if_value='0.935'
         )
         self.result = model.execute()
-        model.save_as(os.path.join(self.data_dir, 'district_updated2.mo'))
+        model.save_as(os.path.join(self.output_dir, 'district_updated2.mo'))
 
         # Assert
         self.assertHasAdditions(source_file, self.result, [

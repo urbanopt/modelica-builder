@@ -30,7 +30,7 @@ Contents
     :maxdepth: 2
 
     api
-   
+
     License <license>
     Authors <authors>
     Changelog <changelog>

@@ -74,10 +74,14 @@ See the tests for more examples and information.
 Development
 -----------
 
+For developers, dependency management is through `Poetry`_. Installation is accomplished by running :code:`pip install poetry`.
+
 .. code-block:: bash
 
+    pip install poetry
+
     # install after cloning repo
-    pip install -r requirements.txt
+    poetry install
 
 If you change the source grammar file you need to regenerate the parser and lexer.
 
@@ -124,9 +128,9 @@ Testing
 
 To run the tests, simply run the following:
 
-.. code-block:: python
+.. code-block:: bash
 
-    py.test
+    poetry run pytest
 
 Known Issues
 ------------
@@ -137,7 +141,7 @@ Release Instructions
 --------------------
 
 * Bump version to <NEW_VERSION> in setup.cfg (use semantic versioning as much as possible).
-* Run `pre-commit --all-files`
+* Run `poetry run pre-commit --all-files`
 * In a prep-release branch, push the changes to GitHub and draft a release against the latest branch.
     * Run 'auto-generate changelog' and copy the contents to the CHANGELOG.rst. Cull any items that are repeated.
     * Discard the draft release (you will create an official one off of the main branch)
@@ -150,23 +154,14 @@ Release Instructions
 
     # Remove old dist packages
     rm -rf dist/*
-    python setup.py sdist
 
-* Verify that the files in the dist/* folder have the correct version (no dirty, no sha)
-
-.. code-block:: bash
-
-    pip install twine
-    twine check dist/*
-
-* Run the following to release
-
-.. code-block:: bash
-
-    twine upload dist/*
+    poetry publish --build
 
 * Push the tag to GitHub after everything is published to PyPi, then go to GitHub and add in the CHANGELOG.rst notes into the tagged release and officially release.
 
 .. code-block:: bash
 
     git push origin <NEW_VERSION>
+
+
+.. _Poetry: https://python-poetry.org/docs/

@@ -1,4 +1,4 @@
-FROM openjdk:7-alpine
+FROM eclipse-temurin:17
 
 WORKDIR /usr/local/lib
 RUN wget https://www.antlr.org/download/antlr-4.13.1-complete.jar

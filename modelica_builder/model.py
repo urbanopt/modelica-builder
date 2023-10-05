@@ -439,3 +439,6 @@ class Model(Transformer):
         # https://docs.python.org/3.6/library/functions.html#open
         with open(filename, 'wt', newline=None) as f:
             f.write(result)
+
+        # update the source link
+        self._source = filename

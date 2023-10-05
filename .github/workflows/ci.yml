@@ -2,30 +2,40 @@ name: CI
 
 on:
   push:
-  pull_request:
-    branches: ["develop", "main"]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.9", "3.11"]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.8
-      - name: Set up package
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        # optionally set specific poetry version. Defaults to latest
+        uses: Gr1N/setup-poetry@v8
+      - name: Install dependencies with Poetry
+        # poetry setuptools workaround sourced from:
+        # https://github.com/python-poetry/poetry/issues/7611#issuecomment-1711443539
         run: |
-          pip install -U pip setuptools
-          pip install tox coveralls
-          pip install -r requirements.txt
-          pre-commit install
-      - name: Run tox
-        run: tox
+          poetry --version
+          poetry self add setuptools
+          poetry install
       - name: Run pre-commit
-        run: pre-commit run --all-files
+        run: poetry run pre-commit run --all-files
+      - name: Build docs
+        run: |
+          cd docs && poetry run make html && cd ..
+      - name: Run pytest
+        run: poetry run pytest -v --cov-report term-missing --cov
       - name: Coveralls
         if: ${{ success() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: coveralls --service=github
+        run: poetry run coveralls --service=github

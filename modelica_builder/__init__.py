@@ -15,4 +15,7 @@ finally:
 __all__ = ['Transformer',
            'Transformation',
            'Edit',
-           'Selector']
+           'Selector',
+           'ModelicaProject',
+           'PackageParser',
+           'ModelicaMOS',]

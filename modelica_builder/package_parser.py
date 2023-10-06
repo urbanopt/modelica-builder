@@ -77,15 +77,23 @@ class PackageParser(object):
         return self.within
 
     @classmethod
-    def new_from_template(cls, path: Union[str, Path], name: str, order: list[str], within: Union[str, None] = None) -> "PackageParser":
-        """Create new package data based on the package.mo template. If within is not specified, then it is
+    def new_from_template(cls,
+                          path: Union[str, Path],
+                          name: str,
+                          order: list[str],
+                          mbl_version: Union[str, None] = None,
+                          within: Union[str, None] = None
+                          ) -> "PackageParser":
+        """Create new package data based on the package.mo template. If 'within' is not specified, then it is
         assumed that this is a top level package and will load from the package_base template.
 
         Args:
             path (str): the path where the resulting package file and order will be saved to.
             name (str): the name of the model
             order (list[str]): ordered list of which models will be loaded (saved to package.order)
-            within (str, optional): name where this package is within.. Defaults to None.
+            mbl_version (str, optional): the version of the model buildings library (only used in package_base.mot)
+            within (str, optional): name where this package is within. Defaults to None.
+
 
         Returns:
             PackageParser: object of the package parser
@@ -96,7 +104,7 @@ class PackageParser(object):
         else:
             template = klass.template_env.get_template("package_base.mot")
 
-        klass.package_data = template.render(within=within, name=name, order=order)
+        klass.package_data = template.render(within=within, name=name, order=order, mbl_version=mbl_version)
         klass.order_data = "\n".join(order)
         klass.package_name = name
         klass.parse_within_statement()

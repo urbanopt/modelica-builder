@@ -163,7 +163,6 @@ class ModelicaMOS(object):
         # convert the start_time and end_time to seconds from the beginning of the year
         first_time_stamp = scale_factor[0]["start_time"]
         for scale_factor in scale_factors:
-            # convert the start_time and end_time to seconds from the beginning of the year
             scale_factor["start_time_seconds"] = (scale_factor["start_time"] - first_time_stamp).total_seconds()
             scale_factor["end_time_seconds"] = (scale_factor["end_time"] - first_time_stamp).total_seconds()
 
@@ -171,7 +170,6 @@ class ModelicaMOS(object):
 
         # convert the scale_factor datetime to a seconds value
         for column_index in column_mapper[load_type]:
-            print(column_index)
             # multiple each row's column by the scale factor
             for row, column in enumerate(self.data):
                 # get the scaling factor based on the time (inclusive on both sides)
@@ -179,7 +177,6 @@ class ModelicaMOS(object):
                     if scale_factor["start_time_seconds"] <= column[0] <= scale_factor["end_time_seconds"]:
                         column[column_index] = column[column_index] * scale_factor["scaling_factor"]
                         self.data[row] = column
-                        # break
 
         return True
 

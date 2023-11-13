@@ -11,10 +11,11 @@ logger = logging.getLogger(__name__)
 
 
 class ModelicaMOS(object):
-    def __init__(self, filename: str, header_data: str = None, data_definition: str = None):  # , data: str = None):
+    def __init__(self, filename: str, header_data: str = None, data_definition: str = None):
         """Read in a .mos file if it exists into a data object
         The format is CSV with additional header info, so for
-        now read the data as a string.
+        now read the data as a string and then convert the timeseries
+        data as floats.
 
         Args:
             filename (str): Name of the file to import, typically a full path
@@ -52,7 +53,7 @@ class ModelicaMOS(object):
                     else:
                         self.data.append(line.rstrip().split(';'))
 
-            # convert the data types to have first column be int and the rest float
+            # convert the data types to have first column be int and the remaining float
             for row, column in enumerate(self.data):
                 self.data[row] = [int(column[0])] + [float(x) for x in column[1:]]
         else:

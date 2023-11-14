@@ -124,6 +124,10 @@ class ModelicaMOS(object):
               ...
             ]
 
+        This method can be used to scale the loads for a time period in an attempt to match
+        existing data from another source. For example, if we know the total loads per day, then
+        you can scale the loads to meet the total load.
+
         Args:
             scale_factors (list): A list of dictionaries with start, end, and value to scale.
 

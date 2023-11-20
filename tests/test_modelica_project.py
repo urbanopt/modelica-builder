@@ -66,3 +66,24 @@ class ModelicaProjectTest(unittest.TestCase):
 
         # verify that the package.mo file was saved
         self.assertTrue((self.output_dir / 'test_package_1' / 'package.mo').exists())
+
+    def test_mpignore_file(self):
+        """Verify that the mpignore file is loaded correctly"""
+        package_file = self.data_dir / 'teaser_single' / 'package.mo'
+
+        mpignore_file = package_file.parent / '.mpignore'
+        # delete the mpignore file if it exists
+        if mpignore_file.exists():
+            mpignore_file.unlink()
+        # write an mpignore file into the 'teaser_single' directory
+        with open(mpignore_file, 'w') as f:
+            f.write('*.csv\n')
+
+        project = ModelicaProject(package_file)
+
+        # there should be two ignored files
+        # ignored = [f.file_path.name for f in project.mpignore_files]
+        self.assertEqual(len(project.mpignore_files), 2)
+        ignored = [project.root_directory / Path('results.csv'),
+                   project.root_directory / Path('Districts/unneeded.csv')]
+        self.assertListEqual(project.mpignore_files, ignored)

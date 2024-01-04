@@ -2,6 +2,18 @@
 Changelog
 =========
 
+Version 0.5.0
+=============
+
+## What's Changed
+* Support py312 by @vtnate in https://github.com/urbanopt/modelica-builder/pull/73
+* Add method to scale loads in an MOS file by @nllong in https://github.com/urbanopt/modelica-builder/pull/74
+* Bump version of antlr runtime to 4.13.1 by @nllong in https://github.com/urbanopt/modelica-builder/pull/75
+* Add `.mpignore` to skip loading files in ModelicaProject by @nllong in https://github.com/urbanopt/modelica-builder/pull/77
+* Upgrade to MBLv10 by @vtnate in https://github.com/urbanopt/modelica-builder/pull/72
+
+**Full Changelog**: https://github.com/urbanopt/modelica-builder/compare/v0.4.0...v0.5.0
+
 Version 0.4.0
 =============
 

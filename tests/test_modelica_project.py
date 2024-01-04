@@ -1,9 +1,6 @@
-"""
-****************************************************************************************************
-:copyright (c) 2020-2023, Alliance for Sustainable Energy, LLC.
-All rights reserved.
-****************************************************************************************************
-"""
+# :copyright (c) URBANopt, Alliance for Sustainable Energy, LLC, and other contributors.
+# See also https://github.com/urbanopt/geojson-modelica-translator/blob/develop/LICENSE.md
+
 import os
 import shutil
 import unittest

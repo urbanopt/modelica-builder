@@ -3,6 +3,7 @@
 
 import os
 import unittest
+from pathlib import Path
 
 from modelica_builder.package_parser import PackageParser
 
@@ -16,7 +17,10 @@ class PackageParserTest(unittest.TestCase):
 
     def test_new_from_template(self):
         package = PackageParser.new_from_template(
-            self.output_dir, 'new_model_name', ["model_a", "model_b"], within="SomeWithin"
+            self.output_dir,
+            'new_model_name',
+            ["model_a", "model_b"],
+            within="SomeWithin",
         )
         package.save()
 
@@ -33,9 +37,29 @@ class PackageParserTest(unittest.TestCase):
         with open(os.path.join(self.output_dir, 'package.order')) as f:
             self.assertTrue('model_a\nmodel_b' in f.read(), 'Incorrect package order')
 
+    def test_mbl_version(self):
+        package = PackageParser.new_from_template(
+            self.output_dir,
+            'new_model_name',
+            ["model_a", "model_b"],
+            mbl_version="2.0.0"
+        )
+        package.save()
+
+        self.assertTrue((Path(self.output_dir) / 'package.mo').exists())
+        self.assertTrue((Path(self.output_dir) / 'package.order').exists())
+
+        # check for strings in files
+        with open(Path(self.output_dir) / 'package.mo') as f:
+            file_data = f.read()
+            self.assertTrue('Buildings(version="2.0.0"' in file_data, 'Incorrect mbl_version')
+
     def test_round_trip(self):
         package = PackageParser.new_from_template(
-            self.output_dir, 'another_model', ["model_x", "model_y"], within="DifferentWithin"
+            self.output_dir,
+            'another_model',
+            ["model_x", "model_y"],
+            within="DifferentWithin",
         )
         package.save()
 
@@ -45,7 +69,10 @@ class PackageParserTest(unittest.TestCase):
 
     def test_rename_package_model(self):
         package = PackageParser.new_from_template(
-            self.output_dir, 'rename_model', ["model_1", "model_2"], within="RenameWithin"
+            self.output_dir,
+            'rename_model',
+            ["model_1", "model_2"],
+            within="RenameWithin",
         )
         package.save()
 
@@ -56,7 +83,10 @@ class PackageParserTest(unittest.TestCase):
 
     def test_rename_model_in_order(self):
         package = PackageParser.new_from_template(
-            self.output_dir, 'rename_model', ["model_1", "model_2"], within="RenameWithin"
+            self.output_dir,
+            'rename_model',
+            ["model_1", "model_2"],
+            within="RenameWithin",
         )
         package.save()
 
@@ -66,7 +96,10 @@ class PackageParserTest(unittest.TestCase):
 
     def test_add_model(self):
         package = PackageParser.new_from_template(
-            self.output_dir, 'so_many_models', ["model_beta", "model_gamma"], within="SoMany"
+            self.output_dir,
+            'so_many_models',
+            ["model_beta", "model_gamma"],
+            within="SoMany",
         )
         package.save()
 
@@ -77,7 +110,10 @@ class PackageParserTest(unittest.TestCase):
 
     def test_within_clause(self):
         package = PackageParser.new_from_template(
-            self.output_dir, 'within_clause', ["model_a", "model_b"], within="SomeWithin"
+            self.output_dir,
+            'within_clause',
+            ["model_a", "model_b"],
+            within="SomeWithin",
         )
         package.save()
 

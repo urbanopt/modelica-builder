@@ -1,11 +1,9 @@
-"""
-****************************************************************************************************
-:copyright (c) 2020-2023, Alliance for Sustainable Energy, LLC.
-All rights reserved.
-****************************************************************************************************
-"""
+# :copyright (c) URBANopt, Alliance for Sustainable Energy, LLC, and other contributors.
+# See also https://github.com/urbanopt/geojson-modelica-translator/blob/develop/LICENSE.md
+
 import logging
 import os
+import pathspec
 import time
 from pathlib import Path
 from typing import Union
@@ -86,9 +84,15 @@ class ModelicaProject:
         self.root_directory = Path(package_file).parent
         self.file_types = ['.mo', '.txt', '.mos', '.order', ]
         self.file_types_to_skip = ['.log', '.mat', ]
+
         # skip some specific files that software may create that are not needed to be
         # sent around with the modelica project.
-        self.file_names_to_skip = ['analysis_variables.csv', 'analysis_name.txt', '.DS_Store', ]
+        self.file_names_to_skip = ['.DS_Store', '.mpignore']
+
+        # Keep track of the files that have been ignored.
+        self.mpignore_files = []
+
+        # object to store all the files in the package
         self.file_data = {}
 
         self._load_data()
@@ -96,7 +100,25 @@ class ModelicaProject:
     def _load_data(self) -> None:
         """method to load all of the files into a data structure for processing"""
         # walk the tree and add in all the files
+
+        # Try to find a .mpignore file in the directory with the package.mo.
+        # Eventually we should support searching up the tree.
+        project_ignore_file = self.root_directory / '.mpignore'
+        if project_ignore_file.exists():
+            patterns = []
+            with open(project_ignore_file) as f:
+                patterns = f.read().splitlines()
+            spec = pathspec.PathSpec.from_lines(pathspec.patterns.GitWildMatchPattern, patterns)
+        else:
+            spec = None
+
         for file_path in self.root_directory.rglob('*'):
+            # if there is a spec, check if the file is in the spec and ignore if matches
+            if spec:
+                if spec.match_file(str(file_path.relative_to(self.root_directory))):
+                    self.mpignore_files.append(file_path)
+                    continue
+
             if file_path.suffix in self.file_types_to_skip and file_path.is_file():
                 # skip files that have the file_types_to_skip suffix
                 continue
@@ -113,16 +135,19 @@ class ModelicaProject:
                 # this is a directory, add in an empty ModelicaFileObject
                 # to keep track of the directory.
                 #
-                # however, we ignore if there is a tmp directory or the parent dir is
-                # tmp. Maybe we need to support more than 2 levels here.
+                # We ignore if there is a tmp directory and display only the
+                # first time the tmp shows up in the tree walking.
                 if 'tmp' in file_path.parts:
-                    _log.warning(f"Found a tmp directory, skipping {file_path}")
+                    if file_path.parts[-1] == 'tmp':
+                        _log.warning(f"Found a tmp directory, skipping {file_path}")
+
+                    # always continue
                     continue
 
                 rel_path = file_path.relative_to(self.root_directory)
                 self.file_data[str(rel_path)] = ModelicaFileObject(file_path)
             else:
-                print(f"Unknown file {file_path}")
+                print(f"Unknown file {file_path}, these can be ignored by creating a .mpignore file in the project root")
 
         # now sort the file_data by the keys
         self.file_data = {key: self.file_data[key] for key in sorted(self.file_data)}

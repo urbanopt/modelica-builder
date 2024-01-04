@@ -90,7 +90,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'modelica-builder'
-copyright = u'2023, Nicholas Long'
+copyright = u'2024, Nicholas Long'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

@@ -2,6 +2,15 @@
 Changelog
 =========
 
+Version 0.5.1
+=============
+
+## What's Changed
+* Ensure the correct template is loaded when parsing the package by @vtnate in https://github.com/urbanopt/modelica-builder/pull/81
+* Create config file to automatically publish to pypi when a Github release is made by @vtnate in https://github.com/urbanopt/modelica-builder/pull/82
+
+**Full Changelog**: https://github.com/urbanopt/modelica-builder/compare/v0.5.0...v0.5.1
+
 Version 0.5.0
 =============
 

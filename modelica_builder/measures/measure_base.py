@@ -1,10 +1,6 @@
+# :copyright (c) URBANopt, Alliance for Sustainable Energy, LLC, and other contributors.
+# See also https://github.com/urbanopt/geojson-modelica-translator/blob/develop/LICENSE.md
 
-"""
-****************************************************************************************************
-:copyright (c) 2020-2023, Alliance for Sustainable Energy, LLC.
-All rights reserved.
-****************************************************************************************************
-"""
 # For now all of the measure-based classes are here within the same file.
 # The MeasureAttributes and MeasureArguments classes should be moved
 # to their own files in the future.

@@ -99,7 +99,7 @@ class PackageParser(object):
             PackageParser: object of the package parser
         """
         klass = PackageParser(path)
-        if not mbl_version:
+        if within and not mbl_version:
             template = klass.template_env.get_template("package.mot")
         else:
             template = klass.template_env.get_template("package_base.mot")

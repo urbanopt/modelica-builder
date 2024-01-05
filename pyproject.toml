@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "modelica-builder"
-version = "0.5.0"
+version = "0.5.1"
 description = "Modelica builder enables programmatic parsing and modification of Modelica files."
 authors = ["Nicholas Long <nicholas.long@nrel.gov>", "Nathan Moore <nathan.moore@nrel.gov>"]
 license = "BSD-3-Clause"

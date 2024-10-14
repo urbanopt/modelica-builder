@@ -27,11 +27,18 @@ jobs:
           poetry --version
           poetry self add setuptools
           poetry install
+
+          # Install twine to test build
+          python -m pip install build twine
       - name: Run pre-commit
         run: poetry run pre-commit run --all-files
       - name: Build docs
         run: |
           cd docs && poetry run make html && cd ..
+      - name: Test syntax of build package
+        run: |
+          python -m build
+          python -m twine check dist/*
       - name: Run pytest
         run: poetry run pytest -v --cov-report term-missing --cov
       - name: Coveralls

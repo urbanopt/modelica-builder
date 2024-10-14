@@ -21,6 +21,7 @@ __pycache__/*
 .pydevproject
 .settings
 .idea
+.mpignore
 tags
 
 # Package files

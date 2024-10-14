@@ -28,6 +28,7 @@ tags
 *.eggs/
 .installed.cfg
 *.egg-info
+node_modules/
 
 # Unittest and coverage
 htmlcov/*

@@ -1,5 +1,5 @@
 # :copyright (c) URBANopt, Alliance for Sustainable Energy, LLC, and other contributors.
-# See also https://github.com/urbanopt/geojson-modelica-translator/blob/develop/LICENSE.md
+# See also https://github.com/urbanopt/modelica-builder/blob/develop/LICENSE.md
 
 # For now all of the measure-based classes are here within the same file.
 # The MeasureAttributes and MeasureArguments classes should be moved

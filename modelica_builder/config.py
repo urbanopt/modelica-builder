@@ -1,5 +1,5 @@
 # :copyright (c) URBANopt, Alliance for Sustainable Energy, LLC, and other contributors.
-# See also https://github.com/urbanopt/geojson-modelica-translator/blob/develop/LICENSE.md
+# See also https://github.com/urbanopt/modelica-builder/blob/develop/LICENSE.md
 
 # global config variables
 # If true, then each inserted component/annotation argument will be indented on a new line

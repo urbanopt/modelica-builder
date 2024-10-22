@@ -85,7 +85,9 @@ For developers, dependency management is through `Poetry`_. Installation is acco
 
 If you change the source grammar file you need to regenerate the parser and lexer.
 
-With docker installed, run these commands from this the repo's root directory
+If your network uses custom certificates, ensure you are on a different network before attempting the following.
+
+With docker installed, run these commands from this the repo's root directory:
 
 .. code-block:: bash
 
@@ -104,7 +106,7 @@ If not using Docker, Install antlr4 following `these instructions <https://githu
 
 .. code-block:: bash
 
-    # in modelica_building/modelica_parser
+    # in modelica_builder/modelica_parser
     antlr4 -Dlanguage=Python3 modelica.g4
 
     # commit results along with grammar file

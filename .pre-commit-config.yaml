@@ -6,7 +6,7 @@ exclude: |
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
       - id: trailing-whitespace
       - id: check-added-large-files
@@ -31,7 +31,7 @@ repos:
             --filter-files,
           ]
   - repo: https://github.com/PyCQA/autoflake
-    rev: v2.2.1
+    rev: v2.3.1
     hooks:
       - id: autoflake
         args:
@@ -43,13 +43,13 @@ repos:
             "--ignore-init-module-imports",
           ]
   - repo: https://github.com/pycqa/flake8
-    rev: 6.1.0
+    rev: 7.1.1
     hooks:
       - id: flake8
         args:
           ["--ignore=F401,E402,E501,E731,W503,W504", "--max-line-length=100"]
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.3
+    rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
         # for now ignoring html, javascript

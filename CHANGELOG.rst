@@ -2,6 +2,17 @@
 Changelog
 =========
 
+Version 0.5.2-rc1
+=================
+
+## What's Changed
+* Add Modelica measure base classes in https://github.com/urbanopt/modelica-builder/pull/76
+* build(deps): bump jinja2 from 3.1.2 to 3.1.3 by @dependabot in https://github.com/urbanopt/modelica-builder/pull/84
+* build(deps-dev): bump requests from 2.31.0 to 2.32.0 by @dependabot in https://github.com/urbanopt/modelica-builder/pull/87
+* Update certifi and jinja by @nllong in https://github.com/urbanopt/modelica-builder/pull/94
+
+**Full Changelog**: https://github.com/urbanopt/modelica-builder/compare/v0.5.1...v0.5.2-rc1
+
 Version 0.5.1
 =============
 

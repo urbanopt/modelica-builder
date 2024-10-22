@@ -140,7 +140,7 @@ Known Issues
 Release Instructions
 --------------------
 
-* Bump version to <NEW_VERSION> in setup.cfg (use semantic versioning as much as possible).
+* Bump version to <NEW_VERSION> in pyproject.toml (use semantic versioning, e.g., 0.5.0, 0.5.1.rc1).
 * Run `poetry run pre-commit --all-files`
 * In a prep-release branch, push the changes to GitHub and draft a release against the latest branch.
     * Run 'auto-generate changelog' and copy the contents to the CHANGELOG.rst. Cull any items that are repeated.

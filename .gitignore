@@ -21,6 +21,7 @@ __pycache__/*
 .pydevproject
 .settings
 .idea
+.mpignore
 tags
 
 # Package files
@@ -28,6 +29,7 @@ tags
 *.eggs/
 .installed.cfg
 *.egg-info
+node_modules/
 
 # Unittest and coverage
 htmlcov/*

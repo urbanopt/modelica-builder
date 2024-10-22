@@ -1,5 +1,5 @@
 # :copyright (c) URBANopt, Alliance for Sustainable Energy, LLC, and other contributors.
-# See also https://github.com/urbanopt/geojson-modelica-translator/blob/develop/LICENSE.md
+# See also https://github.com/urbanopt/modelica-builder/blob/develop/LICENSE.md
 
 import logging
 import os
@@ -106,7 +106,7 @@ class Model(Transformer):
         :param new_port_a: string | None, replacement for port a; if None no changes are made
         :param new_port_b: string | None, replacement for port b; if None no changes are made
         """
-        # verify the paramaters are sensible
+        # verify the parameters are sensible
         if (port_a == '*' and new_port_a is not None) or (port_b == '*' and new_port_b is not None):
             raise Exception(
                 'Invalid to have a port match a wildcard and replace it (might result in duplicate clauses)')
@@ -370,6 +370,9 @@ class Model(Transformer):
                 type_cast = str
             elif type_ == 'Boolean':
                 return result.lower() == 'true'
+            else:
+                logger.warning(f"Assuming parameter type '{type_}' is numeric, recommend using Real, Integer, Boolean, or String.")
+                type_cast = float
 
             try:
                 return type_cast(result)
@@ -415,7 +418,7 @@ class Model(Transformer):
         # Explanation
         # there's an edge case where this transformation might try to insert
         # at the end of the model (when the model annotation doesn't exist already) and another
-        # transformation might try to insert at the end  as well (e.g. adding a connect caluse).
+        # transformation might try to insert at the end  as well (e.g. adding a connect clause).
         # Thus we want to make sure our insert operation (if it happens) happens first
         self._updated_model_annotation_modifications = True
         self._transformations.insert(0, ModelAnnotationTransformation(modifications))

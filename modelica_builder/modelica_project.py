@@ -1,5 +1,5 @@
 # :copyright (c) URBANopt, Alliance for Sustainable Energy, LLC, and other contributors.
-# See also https://github.com/urbanopt/geojson-modelica-translator/blob/develop/LICENSE.md
+# See also https://github.com/urbanopt/modelica-builder/blob/develop/LICENSE.md
 
 import logging
 import os
@@ -87,7 +87,7 @@ class ModelicaProject:
 
         # skip some specific files that software may create that are not needed to be
         # sent around with the modelica project.
-        self.file_names_to_skip = ['.DS_Store', '.mpignore']
+        self.file_names_to_skip = ['.DS_Store', '.mpignore', 'analysis_name.txt', 'analysis_variables.csv',]
 
         # Keep track of the files that have been ignored.
         self.mpignore_files = []

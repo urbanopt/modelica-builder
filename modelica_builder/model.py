@@ -370,6 +370,9 @@ class Model(Transformer):
                 type_cast = str
             elif type_ == 'Boolean':
                 return result.lower() == 'true'
+            else:
+                logger.warning(f"Assuming parameter type '{type_}' is numeric, recommend using Real, Integer, Boolean, or String.")
+                type_cast = float
 
             try:
                 return type_cast(result)

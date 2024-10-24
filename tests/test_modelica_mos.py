@@ -187,3 +187,13 @@ class ModelicaMOSTest(unittest.TestCase):
         with self.assertRaises(Exception) as ctx:
             file.scale_loads([])
         self.assertIn("No data to scale", str(ctx.exception))
+
+    def test_creating_file_from_list(self):
+        data = [
+            [0, 1.1, 1.2, 1.3],
+            [3600, 2.1, 2.2, 2.3],
+            [7200, 3.1, 3.2, 3.3],
+            [10800, 4.1, 4.2, 4.3],
+        ]
+        file = ModelicaMOS.from_list(data, header_data="dummy header data to prevent file not found")
+        self.assertEqual(file.data, data)

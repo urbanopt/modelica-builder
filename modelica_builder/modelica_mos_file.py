@@ -60,6 +60,23 @@ class ModelicaMOS(object):
             self.header_data = header_data
             self.data_definition = "double tab1"
 
+    @classmethod
+    def from_list(cls, data: list, header_data: str = None):
+        """Create a ModelicaMOS object from a list of data. Time must
+        be the first column and should be integers. The remaining columns
+        should be floats.
+
+        Args:
+            data (list): List of data in format of [[time, value1, value2, ...], [time2, ...], ...]
+            header_data (str, optional): Header data. Defaults to None.
+
+        Returns:
+            ModelicaMOS: ModelicaMOS object
+        """
+        mos = cls("dummy.mos", header_data)
+        mos.data = data
+        return mos
+
     def retrieve_header_variable_value(self, key: str, cast_type: type = str) -> Any:
         """Retrieve a value from a variable in the header
 

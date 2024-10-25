@@ -2,10 +2,29 @@
 Changelog
 =========
 
+Version 0.5.2-rc3
+=================
+
+What's Changed
+--------------
+* Add from_list method to create an MOS file by @nllong in https://github.com/urbanopt/modelica-builder/pull/100
+
+
+Version 0.5.2-rc2
+=================
+
+What's Changed
+--------------
+* Update GitHub action versions by @nllong in https://github.com/urbanopt/modelica-builder/pull/97
+* Parse Modelica parameters with non-primitive types by @vtnate in https://github.com/urbanopt/modelica-builder/pull/98
+
+
 Version 0.5.2-rc1
 =================
 
-## What's Changed
+What's Changed
+--------------
+
 * Add Modelica measure base classes in https://github.com/urbanopt/modelica-builder/pull/76
 * build(deps): bump jinja2 from 3.1.2 to 3.1.3 by @dependabot in https://github.com/urbanopt/modelica-builder/pull/84
 * build(deps-dev): bump requests from 2.31.0 to 2.32.0 by @dependabot in https://github.com/urbanopt/modelica-builder/pull/87
@@ -16,7 +35,9 @@ Version 0.5.2-rc1
 Version 0.5.1
 =============
 
-## What's Changed
+What's Changed
+--------------
+
 * Ensure the correct template is loaded when parsing the package by @vtnate in https://github.com/urbanopt/modelica-builder/pull/81
 * Create config file to automatically publish to pypi when a Github release is made by @vtnate in https://github.com/urbanopt/modelica-builder/pull/82
 
@@ -25,7 +46,9 @@ Version 0.5.1
 Version 0.5.0
 =============
 
-## What's Changed
+What's Changed
+--------------
+
 * Support py312 by @vtnate in https://github.com/urbanopt/modelica-builder/pull/73
 * Add method to scale loads in an MOS file by @nllong in https://github.com/urbanopt/modelica-builder/pull/74
 * Bump version of antlr runtime to 4.13.1 by @nllong in https://github.com/urbanopt/modelica-builder/pull/75
@@ -38,7 +61,9 @@ Version 0.5.0
 Version 0.4.0
 =============
 
-## What's Changed
+What's Changed
+--------------
+
 * Add get method for a component's argument by @nllong in https://github.com/urbanopt/modelica-builder/pull/57
 * Update README.rst by @nllong in https://github.com/urbanopt/modelica-builder/pull/58
 * build(deps): bump pygments from 2.12.0 to 2.15.0 by @dependabot in https://github.com/urbanopt/modelica-builder/pull/60

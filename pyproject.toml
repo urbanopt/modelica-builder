@@ -5,7 +5,7 @@ description = "Modelica builder enables programmatic parsing and modification of
 authors = ["Nicholas Long <nicholas.long@nrel.gov>", "Nathan Moore <nathan.moore@nrel.gov>"]
 license = "BSD-3-Clause"
 
-readme = "README.rst"
+readme = "README.md"
 
 homepage = "https://github.com/urbanopt/modelica-builder/releases"
 repository = "https://github.com/urbanopt/modelica-builder"

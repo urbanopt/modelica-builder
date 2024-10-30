@@ -433,10 +433,7 @@ class Model(Transformer):
         :param filename: string, name of file
         """
         result = self.execute()
-        # Setting newline=None here means any \n we added will be translated
-        # to the native OS's line separator:
-        # https://docs.python.org/3.6/library/functions.html#open
-        with open(filename, 'wt', newline=None) as f:
+        with open(filename, 'wt', newline='\n') as f:
             f.write(result)
 
         # update the source link

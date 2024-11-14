@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 0.6.0
+### What's Changed
+* Use Mblv11 by @vtnate in https://github.com/urbanopt/modelica-builder/pull/92
+* Support Python 3.13 by @vtnate in https://github.com/urbanopt/modelica-builder/pull/99
+* Bump Antlr patch version by @vtnate in https://github.com/urbanopt/modelica-builder/pull/101
+* Use explicit newline when saving from model.py by @vtnate in https://github.com/urbanopt/modelica-builder/pull/105
+
+
+**Full Changelog**: https://github.com/urbanopt/modelica-builder/compare/v0.5.2...v0.6.0
+
 ## Version 0.5.2
 ### What's Changed
 * build(deps): bump jinja2 from 3.1.2 to 3.1.3 by @dependabot in https://github.com/urbanopt/modelica-builder/pull/84

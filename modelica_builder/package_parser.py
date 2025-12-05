@@ -245,7 +245,7 @@ class PackageParser(object):
         self.package_data = self.package_data.replace(f"within {'.'.join(self.within)};", f"within {'.'.join(new_within_list)};")  # type: ignore
         self.within = new_within_list
 
-    def add_model(self, new_model_name: str, insert_at: int = -1, create_subpackage: bool = True) -> "PackageParser":
+    def add_model(self, new_model_name: str, insert_at: int = -1, create_subpackage: bool = False) -> "PackageParser":
         """Insert a new model into the package. Note that the order_data is stored as a string right now,
         so there is a bit of a hack to get this to work correctly.
 

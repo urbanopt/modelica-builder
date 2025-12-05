@@ -172,10 +172,10 @@ class PackageParser(object):
         # verify that the path exists before saving
         if self.path is None:
             raise ValueError("Path to save the package.mo and package.order files is not set.")
-        
+
         # Ensure the directory exists (important for nested subpackages)
         Path(self.path).mkdir(parents=True, exist_ok=True)
-        
+
         with open(os.path.join(str(self.path), "package.mo"), "w") as f:
             f.write(self.package_data)
 
@@ -267,7 +267,17 @@ class PackageParser(object):
 
         Returns:
             PackageParser: The created subpackage if create_subpackage is True, otherwise self for chaining.
+
+        Raises:
+            ValueError: If create_subpackage is True but self.path is None.
         """
+        # Validate that path exists when creating subpackages
+        if create_subpackage and self.path is None:
+            raise ValueError(
+                f"Cannot create subpackage '{new_model_name}': PackageParser.path is None. "
+                "Either set path during initialization or use create_subpackage=False."
+            )
+
         data = self.order_data.split("\n")
         if insert_at == -1:
             data.append(new_model_name)
@@ -279,7 +289,7 @@ class PackageParser(object):
         self.order_data = self.order_data.replace('\n\n', '\n')
 
         # If create_subpackage is True, create the subpackage structure
-        if create_subpackage and self.path is not None:
+        if create_subpackage:
             subpackage_path = Path(self.path) / new_model_name
             subpackage_path.mkdir(parents=True, exist_ok=True)
 

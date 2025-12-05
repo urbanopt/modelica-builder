@@ -2,6 +2,7 @@
 # See also https://github.com/urbanopt/modelica-builder/blob/develop/LICENSE.md
 
 import os
+import shutil
 import unittest
 from pathlib import Path
 
@@ -303,7 +304,6 @@ class PackageParserTest(unittest.TestCase):
         # This simulates an edge case where package_name might not be set correctly
         project_path = Path(self.output_dir) / 'test_none_package_error'
         if project_path.exists():
-            import shutil
             shutil.rmtree(project_path)
         project_path.mkdir(parents=True)
 

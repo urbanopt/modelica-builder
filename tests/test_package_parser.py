@@ -129,7 +129,7 @@ class PackageParserTest(unittest.TestCase):
             import shutil
             shutil.rmtree(project_path)
         project_path.mkdir(parents=True)
-        
+
         # Create root package
         package = PackageParser.new_from_template(
             project_path,
@@ -137,11 +137,11 @@ class PackageParserTest(unittest.TestCase):
             [],
             mbl_version='12.1.0'
         )
-        
+
         # Add a subpackage
         package.add_model('Districts')
         package.save()  # Save to write files to disk
-        
+
         # Access via attribute notation
         districts = package.districts
         self.assertIsInstance(districts, PackageParser)
@@ -149,7 +149,7 @@ class PackageParserTest(unittest.TestCase):
         self.assertTrue((project_path / 'Districts').exists())
         self.assertTrue((project_path / 'Districts' / 'package.mo').exists())
         self.assertTrue((project_path / 'Districts' / 'package.order').exists())
-        
+
         # Check within statement
         self.assertEqual(districts.within, ['MyProject'])
 
@@ -160,7 +160,7 @@ class PackageParserTest(unittest.TestCase):
             import shutil
             shutil.rmtree(project_path)
         project_path.mkdir(parents=True)
-        
+
         # Create root package
         package = PackageParser.new_from_template(
             project_path,
@@ -168,16 +168,16 @@ class PackageParserTest(unittest.TestCase):
             [],
             mbl_version='12.1.0'
         )
-        
+
         # Add nested subpackages
         package.add_model('Districts')
         package.districts.add_model('Models')
         package.save()  # Save to write files to disk
-        
+
         # Verify structure
         self.assertTrue((project_path / 'Districts' / 'Models').exists())
         self.assertTrue((project_path / 'Districts' / 'Models' / 'package.mo').exists())
-        
+
         # Check within statements
         models = package.districts.models
         self.assertEqual(models.within, ['NestedProject', 'Districts'])
@@ -189,7 +189,7 @@ class PackageParserTest(unittest.TestCase):
             import shutil
             shutil.rmtree(project_path)
         project_path.mkdir(parents=True)
-        
+
         # Create structure
         package = PackageParser.new_from_template(
             project_path,
@@ -197,14 +197,14 @@ class PackageParserTest(unittest.TestCase):
             [],
             mbl_version='12.1.0'
         )
-        
+
         package.add_model('Districts')
         package.districts.add_model('Model1', create_subpackage=False)
         package.districts.add_model('Model2', create_subpackage=False)
-        
+
         # Save only the root
         package.save()
-        
+
         # Verify Districts package.order contains the models
         with open(project_path / 'Districts' / 'package.order') as f:
             content = f.read()
@@ -218,17 +218,17 @@ class PackageParserTest(unittest.TestCase):
             import shutil
             shutil.rmtree(project_path)
         project_path.mkdir(parents=True)
-        
+
         package = PackageParser.new_from_template(
             project_path,
             'ErrorProject',
             [],
             mbl_version='12.1.0'
         )
-        
+
         with self.assertRaises(AttributeError) as context:
             _ = package.nonexistent
-        
+
         self.assertIn('nonexistent', str(context.exception))
 
     def test_case_insensitive_subpackage_access(self):
@@ -238,33 +238,33 @@ class PackageParserTest(unittest.TestCase):
             import shutil
             shutil.rmtree(project_path)
         project_path.mkdir(parents=True)
-        
+
         package = PackageParser.new_from_template(
             project_path,
             'CaseProject',
             [],
             mbl_version='12.1.0'
         )
-        
+
         package.add_model('Districts')
-        
+
         # All these should work
         districts1 = package.districts
         districts2 = package.Districts
         districts3 = package.DISTRICTS
-        
+
         self.assertIs(districts1, districts2)
         self.assertIs(districts2, districts3)
 
     def test_full_workflow(self):
-        """Test the complete workflow from the user's pseudo code"""
+        """Test the complete workflow from example code"""
         project_path = Path(self.output_dir) / 'test_workflow'
         if project_path.exists():
             import shutil
             shutil.rmtree(project_path)
         project_path.mkdir(parents=True)
-        
-        # User's desired pseudo code
+
+        # Example of how we want to access the package
         package = PackageParser.new_from_template(
             project_path,
             'WorkflowProject',
@@ -272,27 +272,27 @@ class PackageParserTest(unittest.TestCase):
             mbl_version='12.1.0'
         )
         package.add_model('Districts')
-        package.districts.add_model('junk')
+        package.districts.add_model('Model_Sigma')
         package.save()
-        
+
         # Verify the structure was created
         self.assertTrue((project_path / 'package.mo').exists())
         self.assertTrue((project_path / 'Districts').exists())
-        self.assertTrue((project_path / 'Districts' / 'junk').exists())
-        self.assertTrue((project_path / 'Districts' / 'junk' / 'package.mo').exists())
-        
+        self.assertTrue((project_path / 'Districts' / 'Model_Sigma').exists())
+        self.assertTrue((project_path / 'Districts' / 'Model_Sigma' / 'package.mo').exists())
+
         # Verify package.order contents
         with open(project_path / 'package.order') as f:
             self.assertIn('Districts', f.read())
-        
+
         with open(project_path / 'Districts' / 'package.order') as f:
-            self.assertIn('junk', f.read())
-        
+            self.assertIn('Model_Sigma', f.read())
+
         # Verify within statements in package.mo files
         with open(project_path / 'Districts' / 'package.mo') as f:
             content = f.read()
             self.assertIn('within WorkflowProject;', content)
-        
-        with open(project_path / 'Districts' / 'junk' / 'package.mo') as f:
+
+        with open(project_path / 'Districts' / 'Model_Sigma' / 'package.mo') as f:
             content = f.read()
             self.assertIn('within WorkflowProject.Districts;', content)

@@ -296,3 +296,33 @@ class PackageParserTest(unittest.TestCase):
         with open(project_path / 'Districts' / 'Model_Sigma' / 'package.mo') as f:
             content = f.read()
             self.assertIn('within WorkflowProject.Districts;', content)
+
+    def test_subpackage_cache_synchronization(self):
+        """Test that accessing a subpackage through different methods returns the same instance."""
+        project_path = Path(self.output_dir) / 'CacheTest'
+        project_path.mkdir(parents=True, exist_ok=True)
+
+        # Create a parent package
+        package = PackageParser.new_from_template(
+            path=project_path,
+            name='CacheTest',
+            order=[]
+        )
+
+        # Create a subpackage using add_model
+        subpackage1 = package.add_model('TestSubpackage', create_subpackage=True)
+
+        # Try to create the same subpackage again - should return the cached instance
+        subpackage2 = package.add_model('TestSubpackage', create_subpackage=True)
+
+        # Verify that both references point to the same instance
+        self.assertIs(subpackage1, subpackage2, "Subpackage instances should be identical")
+
+        # Access the subpackage via attribute notation
+        subpackage3 = package.testsubpackage
+
+        # Verify that attribute access also returns the same instance
+        self.assertIs(subpackage1, subpackage3, "Attribute access should return the same instance")
+
+        # Verify all three references are the same object
+        self.assertIs(subpackage2, subpackage3, "All access methods should return the same instance")

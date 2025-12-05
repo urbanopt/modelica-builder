@@ -296,3 +296,29 @@ class PackageParserTest(unittest.TestCase):
         with open(project_path / 'Districts' / 'Model_Sigma' / 'package.mo') as f:
             content = f.read()
             self.assertIn('within WorkflowProject.Districts;', content)
+
+    def test_add_model_with_none_package_name_raises_error(self):
+        """Test that creating a subpackage with None package_name raises a ValueError"""
+        # Create a PackageParser instance with path but manually set package_name to None
+        # This simulates an edge case where package_name might not be set correctly
+        project_path = Path(self.output_dir) / 'test_none_package_error'
+        if project_path.exists():
+            import shutil
+            shutil.rmtree(project_path)
+        project_path.mkdir(parents=True)
+
+        package = PackageParser.new_from_template(
+            project_path,
+            'TestProject',
+            [],
+            mbl_version='12.1.0'
+        )
+
+        # Manually set package_name to None to simulate the edge case
+        package.package_name = None
+
+        # Attempting to create a subpackage should raise ValueError
+        with self.assertRaises(ValueError) as context:
+            package.add_model('TestModel', create_subpackage=True)
+
+        self.assertIn('package_name is None', str(context.exception))

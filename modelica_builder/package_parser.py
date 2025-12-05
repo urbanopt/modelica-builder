@@ -273,6 +273,13 @@ class PackageParser(object):
 
         # If create_subpackage is True, create the subpackage structure
         if create_subpackage and self.path is not None:
+            # Ensure package_name is set before creating subpackage
+            if self.package_name is None:
+                raise ValueError(
+                    "Cannot create subpackage: package_name is None. "
+                    "Ensure the PackageParser was initialized with a valid path or use new_from_template()."
+                )
+
             subpackage_path = Path(self.path) / new_model_name
             subpackage_path.mkdir(parents=True, exist_ok=True)
 

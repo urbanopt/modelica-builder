@@ -139,7 +139,7 @@ class PackageParserTest(unittest.TestCase):
         )
 
         # Add a subpackage
-        package.add_model('Districts')
+        package.add_model('Districts', create_subpackage=True)
         package.save()  # Save to write files to disk
 
         # Access via attribute notation
@@ -170,8 +170,8 @@ class PackageParserTest(unittest.TestCase):
         )
 
         # Add nested subpackages
-        package.add_model('Districts')
-        package.districts.add_model('Models')
+        package.add_model('Districts', create_subpackage=True)
+        package.districts.add_model('Models', create_subpackage=True)
         package.save()  # Save to write files to disk
 
         # Verify structure
@@ -198,7 +198,7 @@ class PackageParserTest(unittest.TestCase):
             mbl_version='12.1.0'
         )
 
-        package.add_model('Districts')
+        package.add_model('Districts', create_subpackage=True)
         package.districts.add_model('Model1', create_subpackage=False)
         package.districts.add_model('Model2', create_subpackage=False)
 
@@ -246,13 +246,16 @@ class PackageParserTest(unittest.TestCase):
             mbl_version='12.1.0'
         )
 
-        package.add_model('Districts')
+        # Capture the returned subpackage from add_model
+        returned_districts = package.add_model('Districts', create_subpackage=True)
 
         # All these should work
         districts1 = package.districts
         districts2 = package.Districts
         districts3 = package.DISTRICTS
 
+        # Verify that the returned subpackage is the same instance as accessed via attribute notation
+        self.assertIs(returned_districts, districts1)
         self.assertIs(districts1, districts2)
         self.assertIs(districts2, districts3)
 
@@ -271,8 +274,8 @@ class PackageParserTest(unittest.TestCase):
             [],
             mbl_version='12.1.0'
         )
-        package.add_model('Districts')
-        package.districts.add_model('Model_Sigma')
+        package.add_model('Districts', create_subpackage=True)
+        package.districts.add_model('Model_Sigma', create_subpackage=True)
         package.save()
 
         # Verify the structure was created

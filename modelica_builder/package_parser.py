@@ -84,14 +84,18 @@ class PackageParser(object):
             for order_name in orders:
                 if order_name.lower() == name_lower:
                     # Try to load the existing subpackage
-                    if self.path:
-                        subpackage_path = Path(self.path) / order_name
+                    try:
+                        path = object.__getattribute__(self, 'path')
+                    except AttributeError:
+                        path = None
+                    if path:
+                        subpackage_path = Path(path) / order_name
                         if subpackage_path.exists():
                             subpackage = PackageParser(subpackage_path)
                             object.__getattribute__(self, '_subpackages')[name_lower] = subpackage
                             return subpackage
 
-        raise AttributeError(f"Subpackage '{name}' not found. Use add_model('{name}', create_subpackage=True) first.")
+        raise AttributeError(f"Subpackage '{name}' not found. Use add_model('{name}') to create it first.")
 
     def parse_within_statement(self) -> Optional[List[str]]:
         """Read in the package_data and parse out the within statement. The result will
@@ -165,10 +169,17 @@ class PackageParser(object):
     def save(self) -> None:
         """Save the updated files to the same location. Also saves all subpackages recursively.
         """
-        with open(os.path.join(os.path.join(str(self.path), "package.mo")), "w") as f:
+        # verify that the path exists before saving
+        if self.path is None:
+            raise ValueError("Path to save the package.mo and package.order files is not set.")
+        
+        # Ensure the directory exists (important for nested subpackages)
+        Path(self.path).mkdir(parents=True, exist_ok=True)
+        
+        with open(os.path.join(str(self.path), "package.mo"), "w") as f:
             f.write(self.package_data)
 
-        with open(os.path.join(os.path.join(str(self.path), "package.order")), "w") as f:
+        with open(os.path.join(str(self.path), "package.order"), "w") as f:
             f.write(self.order_data)
             f.write("\n")
 
@@ -245,15 +256,14 @@ class PackageParser(object):
         self.package_data = self.package_data.replace(f"within {'.'.join(self.within)};", f"within {'.'.join(new_within_list)};")  # type: ignore
         self.within = new_within_list
 
-    def add_model(self, new_model_name: str, insert_at: int = -1, create_subpackage: bool = True) -> "PackageParser":
+    def add_model(self, new_model_name: str, insert_at: int = -1, create_subpackage: bool = False) -> "PackageParser":
         """Insert a new model into the package. Note that the order_data is stored as a string right now,
         so there is a bit of a hack to get this to work correctly.
 
         Args:
             new_model_name (str): name of the new model to add to the package order.
             insert_at (int, optional):  location to insert package, if 0 at beginning, -1 at end. Defaults to -1.
-            create_subpackage (bool, optional): If True, create a subpackage directory and PackageParser.
-                                                Requires self.path to be set. Defaults to True.
+            create_subpackage (bool, optional): If True, create a subpackage directory and PackageParser. Defaults to False.
 
         Returns:
             PackageParser: The created subpackage if create_subpackage is True, otherwise self for chaining.

@@ -246,13 +246,16 @@ class PackageParserTest(unittest.TestCase):
             mbl_version='12.1.0'
         )
 
-        package.add_model('Districts', create_subpackage=True)
+        # Capture the returned subpackage from add_model
+        returned_districts = package.add_model('Districts', create_subpackage=True)
 
         # All these should work
         districts1 = package.districts
         districts2 = package.Districts
         districts3 = package.DISTRICTS
 
+        # Verify that the returned subpackage is the same instance as accessed via attribute notation
+        self.assertIs(returned_districts, districts1)
         self.assertIs(districts1, districts2)
         self.assertIs(districts2, districts3)
 

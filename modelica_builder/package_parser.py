@@ -91,7 +91,7 @@ class PackageParser(object):
                             object.__getattribute__(self, '_subpackages')[name_lower] = subpackage
                             return subpackage
 
-        raise AttributeError(f"Subpackage '{name}' not found. Use add_model('{name}', create_subpackage=True) first.")
+        raise AttributeError(f"Subpackage '{name}' not found. Use add_model('{name}') to create it first.")
 
     def parse_within_statement(self) -> Optional[List[str]]:
         """Read in the package_data and parse out the within statement. The result will

@@ -172,10 +172,10 @@ class PackageParser(object):
         # verify that the path exists before saving
         if self.path is None:
             raise ValueError("Path to save the package.mo and package.order files is not set.")
-        
+
         # Ensure the directory exists (important for nested subpackages)
         Path(self.path).mkdir(parents=True, exist_ok=True)
-        
+
         with open(os.path.join(str(self.path), "package.mo"), "w") as f:
             f.write(self.package_data)
 

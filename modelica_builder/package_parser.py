@@ -169,10 +169,17 @@ class PackageParser(object):
     def save(self) -> None:
         """Save the updated files to the same location. Also saves all subpackages recursively.
         """
-        with open(os.path.join(os.path.join(str(self.path), "package.mo")), "w") as f:
+        # verify that the path exists before saving
+        if self.path is None:
+            raise ValueError("Path to save the package.mo and package.order files is not set.")
+        
+        # Ensure the directory exists (important for nested subpackages)
+        Path(self.path).mkdir(parents=True, exist_ok=True)
+        
+        with open(os.path.join(str(self.path), "package.mo"), "w") as f:
             f.write(self.package_data)
 
-        with open(os.path.join(os.path.join(str(self.path), "package.order")), "w") as f:
+        with open(os.path.join(str(self.path), "package.order"), "w") as f:
             f.write(self.order_data)
             f.write("\n")
 

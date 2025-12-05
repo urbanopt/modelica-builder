@@ -252,7 +252,7 @@ class PackageParser(object):
         Args:
             new_model_name (str): name of the new model to add to the package order.
             insert_at (int, optional):  location to insert package, if 0 at beginning, -1 at end. Defaults to -1.
-            create_subpackage (bool, optional): If True, create a subpackage directory and PackageParser. Defaults to True.
+            create_subpackage (bool, optional): If True, create a subpackage directory and PackageParser. Defaults to False.
 
         Returns:
             PackageParser: The created subpackage if create_subpackage is True, otherwise self for chaining.

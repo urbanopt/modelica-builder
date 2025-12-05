@@ -296,3 +296,21 @@ class PackageParserTest(unittest.TestCase):
         with open(project_path / 'Districts' / 'Model_Sigma' / 'package.mo') as f:
             content = f.read()
             self.assertIn('within WorkflowProject.Districts;', content)
+
+    def test_add_model_with_no_path_raises_error(self):
+        """Test that add_model raises ValueError when create_subpackage=True but path is None"""
+        # Create a PackageParser without a path
+        package = PackageParser()
+        package.order_data = "model_a\nmodel_b"
+        package.package_name = "TestPackage"
+        
+        # Try to add a model with create_subpackage=True (default)
+        with self.assertRaises(ValueError) as context:
+            package.add_model('NewModel')
+        
+        self.assertIn("Cannot create subpackage 'NewModel'", str(context.exception))
+        self.assertIn("PackageParser.path is None", str(context.exception))
+        
+        # Verify that add_model works with create_subpackage=False
+        package.add_model('NewModel', create_subpackage=False)
+        self.assertIn('NewModel', package.order)

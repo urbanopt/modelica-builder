@@ -84,8 +84,12 @@ class PackageParser(object):
             for order_name in orders:
                 if order_name.lower() == name_lower:
                     # Try to load the existing subpackage
-                    if self.path:
-                        subpackage_path = Path(self.path) / order_name
+                    try:
+                        path = object.__getattribute__(self, 'path')
+                    except AttributeError:
+                        path = None
+                    if path:
+                        subpackage_path = Path(path) / order_name
                         if subpackage_path.exists():
                             subpackage = PackageParser(subpackage_path)
                             object.__getattribute__(self, '_subpackages')[name_lower] = subpackage

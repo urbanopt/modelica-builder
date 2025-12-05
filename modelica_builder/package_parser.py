@@ -80,7 +80,7 @@ class PackageParser(object):
 
         # Check if the subpackage exists in the order but hasn't been loaded yet
         if hasattr(self, 'order_data') and self.order_data:
-            orders = self.order_data.split('\n')
+            orders = [o for o in self.order_data.split('\n') if o.strip()]
             for order_name in orders:
                 if order_name.lower() == name_lower:
                     # Try to load the existing subpackage

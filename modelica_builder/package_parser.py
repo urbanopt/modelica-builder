@@ -252,12 +252,12 @@ class PackageParser(object):
         Args:
             new_model_name (str): name of the new model to add to the package order.
             insert_at (int, optional):  location to insert package, if 0 at beginning, -1 at end. Defaults to -1.
-            create_subpackage (bool, optional): If True, create a subpackage directory and PackageParser. 
+            create_subpackage (bool, optional): If True, create a subpackage directory and PackageParser.
                                                 Requires self.path to be set. Defaults to True.
 
         Returns:
             PackageParser: The created subpackage if create_subpackage is True, otherwise self for chaining.
-            
+
         Raises:
             ValueError: If create_subpackage is True but self.path is None.
         """
@@ -267,7 +267,7 @@ class PackageParser(object):
                 f"Cannot create subpackage '{new_model_name}': PackageParser.path is None. "
                 "Either set path during initialization or use create_subpackage=False."
             )
-        
+
         data = self.order_data.split("\n")
         if insert_at == -1:
             data.append(new_model_name)

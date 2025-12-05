@@ -303,14 +303,14 @@ class PackageParserTest(unittest.TestCase):
         package = PackageParser()
         package.order_data = "model_a\nmodel_b"
         package.package_name = "TestPackage"
-        
+
         # Try to add a model with create_subpackage=True (default)
         with self.assertRaises(ValueError) as context:
             package.add_model('NewModel')
-        
+
         self.assertIn("Cannot create subpackage 'NewModel'", str(context.exception))
         self.assertIn("PackageParser.path is None", str(context.exception))
-        
+
         # Verify that add_model works with create_subpackage=False
         package.add_model('NewModel', create_subpackage=False)
         self.assertIn('NewModel', package.order)

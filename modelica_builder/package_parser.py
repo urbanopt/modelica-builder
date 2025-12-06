@@ -212,17 +212,9 @@ class PackageParser(object):
         self.path = new_path
 
         # Recursively save all subpackages to the new location
-        for subpackage_name, subpackage in self._subpackages.items():
-            # Get the original case-sensitive name from the order data
-            original_name = None
-            for order_name in self.order:
-                if order_name.lower() == subpackage_name:
-                    original_name = order_name
-                    break
-
-            if original_name:
-                subpackage_new_path = new_path / original_name
-                subpackage.save_as(subpackage_new_path)
+        for subpackage in self._subpackages.values():
+            subpackage_new_path = new_path / subpackage.package_name
+            subpackage.save_as(subpackage_new_path)
 
     @property
     def order(self) -> List[str]:

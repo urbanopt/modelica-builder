@@ -2,6 +2,7 @@
 # See also https://github.com/urbanopt/modelica-builder/blob/develop/LICENSE.md
 
 import os
+import shutil
 import unittest
 from pathlib import Path
 
@@ -318,6 +319,7 @@ class PackageParserTest(unittest.TestCase):
         package.add_model('NewModel', create_subpackage=False)
         self.assertIn('NewModel', package.order)
 
+
     def test_save_as_with_subpackages(self):
         """Test that save_as recursively saves all subpackages to new location"""
         import shutil
@@ -331,6 +333,17 @@ class PackageParserTest(unittest.TestCase):
         package = PackageParser.new_from_template(
             original_path,
             'OriginalProject',
+
+    def test_subpackage_cache_synchronization(self):
+        """Test that add_model returns the same instance if subpackage is already cached"""
+        project_path = Path(self.output_dir) / 'test_cache_sync'
+        if project_path.exists():
+            shutil.rmtree(project_path)
+        project_path.mkdir(parents=True)
+
+        package = PackageParser.new_from_template(
+            project_path,
+            'CacheProject',
             [],
             mbl_version='12.1.0'
         )
@@ -370,3 +383,20 @@ class PackageParserTest(unittest.TestCase):
         self.assertEqual(package.path, new_path)
         self.assertEqual(package.districts.path, new_path / 'Districts')
         self.assertEqual(package.districts.models.path, new_path / 'Districts' / 'Models')
+        # First, create the subpackage using add_model
+        districts1 = package.add_model('Districts', create_subpackage=True)
+
+        # Try to call add_model again with the same name
+        districts2 = package.add_model('Districts', create_subpackage=True)
+
+        # Verify they are the same instance
+        self.assertIs(districts1, districts2, "add_model should return cached instance")
+
+        # Also verify attribute access returns the same instance
+        districts3 = package.districts
+        self.assertIs(districts1, districts3, "Attribute access should return cached instance")
+
+        # Verify that the model name only appears once in the order
+        order_lines = [line for line in package.order_data.split('\n') if line.strip()]
+        districts_count = sum(1 for line in order_lines if line == 'Districts')
+        self.assertEqual(districts_count, 1, "Model name should only appear once in order")

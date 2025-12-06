@@ -290,6 +290,11 @@ class PackageParser(object):
 
         # If create_subpackage is True, create the subpackage structure
         if create_subpackage:
+            # Check if the subpackage already exists in cache to avoid creating duplicate instances
+            name_lower = new_model_name.lower()
+            if name_lower in self._subpackages:
+                return self._subpackages[name_lower]
+
             subpackage_path = Path(self.path) / new_model_name
             subpackage_path.mkdir(parents=True, exist_ok=True)
 
@@ -308,7 +313,7 @@ class PackageParser(object):
             )
 
             # Store it for later access
-            self._subpackages[new_model_name.lower()] = subpackage
+            self._subpackages[name_lower] = subpackage
             return subpackage
 
         return self

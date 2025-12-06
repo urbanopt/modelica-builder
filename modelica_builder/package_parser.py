@@ -73,6 +73,10 @@ class PackageParser(object):
         if name.startswith('_'):
             raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
 
+        # Check if this is a class-level attribute or method before treating it as a subpackage
+        if hasattr(type(self), name):
+            raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
+
         # Check if this is a known subpackage
         name_lower = name.lower()
         if name_lower in object.__getattribute__(self, '_subpackages'):

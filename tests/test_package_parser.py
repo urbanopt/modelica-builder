@@ -317,3 +317,56 @@ class PackageParserTest(unittest.TestCase):
         # Verify that add_model works with create_subpackage=False
         package.add_model('NewModel', create_subpackage=False)
         self.assertIn('NewModel', package.order)
+
+    def test_save_as_with_subpackages(self):
+        """Test that save_as recursively saves all subpackages to new location"""
+        import shutil
+
+        # Setup: Create a package with subpackages
+        original_path = Path(self.output_dir) / 'test_save_as_original'
+        if original_path.exists():
+            shutil.rmtree(original_path)
+        original_path.mkdir(parents=True)
+
+        package = PackageParser.new_from_template(
+            original_path,
+            'OriginalProject',
+            [],
+            mbl_version='12.1.0'
+        )
+
+        # Add subpackages with nested structure
+        package.add_model('Districts', create_subpackage=True)
+        package.districts.add_model('Models', create_subpackage=True)
+        package.districts.models.add_model('Model1', create_subpackage=False)
+        package.save()
+
+        # Verify original structure exists
+        self.assertTrue((original_path / 'Districts' / 'Models' / 'package.mo').exists())
+
+        # Act: Use save_as to save to a new location
+        new_path = Path(self.output_dir) / 'test_save_as_new'
+        if new_path.exists():
+            shutil.rmtree(new_path)
+
+        package.save_as(new_path)
+
+        # Assert: Verify the new structure exists
+        self.assertTrue((new_path / 'package.mo').exists())
+        self.assertTrue((new_path / 'package.order').exists())
+        self.assertTrue((new_path / 'Districts').exists())
+        self.assertTrue((new_path / 'Districts' / 'package.mo').exists())
+        self.assertTrue((new_path / 'Districts' / 'package.order').exists())
+        self.assertTrue((new_path / 'Districts' / 'Models').exists())
+        self.assertTrue((new_path / 'Districts' / 'Models' / 'package.mo').exists())
+        self.assertTrue((new_path / 'Districts' / 'Models' / 'package.order').exists())
+
+        # Verify content of nested package.order
+        with open(new_path / 'Districts' / 'Models' / 'package.order') as f:
+            content = f.read()
+            self.assertIn('Model1', content)
+
+        # Verify that paths are updated
+        self.assertEqual(package.path, new_path)
+        self.assertEqual(package.districts.path, new_path / 'Districts')
+        self.assertEqual(package.districts.models.path, new_path / 'Districts' / 'Models')

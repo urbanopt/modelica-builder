@@ -197,6 +197,10 @@ class PackageParser(object):
             new_path (Union[str, Path]): Fully qualified path to save files to.
         """
         new_path = Path(new_path)
+
+        # Ensure the directory exists
+        new_path.mkdir(parents=True, exist_ok=True)
+
         with open(new_path / "package.mo", "w") as f:
             f.write(self.package_data)
 
@@ -206,6 +210,19 @@ class PackageParser(object):
 
         # update link to saved path
         self.path = new_path
+
+        # Recursively save all subpackages to the new location
+        for subpackage_name, subpackage in self._subpackages.items():
+            # Get the original case-sensitive name from the order data
+            original_name = None
+            for order_name in self.order:
+                if order_name.lower() == subpackage_name:
+                    original_name = order_name
+                    break
+
+            if original_name:
+                subpackage_new_path = new_path / original_name
+                subpackage.save_as(subpackage_new_path)
 
     @property
     def order(self) -> List[str]:

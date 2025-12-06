@@ -60,14 +60,22 @@ class PackageParser(object):
     def __getattr__(self, name: str) -> "PackageParser":
         """Enable dynamic access to subpackages via attribute notation.
 
+        This method implements lazy loading of subpackages using a three-step lookup process:
+        1. First checks the `_subpackages` cache for previously loaded subpackages
+        2. If not cached, attempts to load the subpackage from disk if it exists in `order_data`
+        3. Raises AttributeError if the subpackage is not found in either location
+
+        Note: This method may perform disk I/O operations when loading subpackages that haven't
+        been cached yet, which could impact performance if called repeatedly for new subpackages.
+
         Args:
             name (str): The name of the subpackage (case-insensitive)
 
         Returns:
-            PackageParser: The subpackage parser instance
+            PackageParser: The subpackage parser instance, either from cache or newly loaded from disk
 
         Raises:
-            AttributeError: If the subpackage doesn't exist
+            AttributeError: If the subpackage doesn't exist in cache or on disk
         """
         # Avoid recursion for private attributes
         if name.startswith('_'):

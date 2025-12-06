@@ -74,7 +74,18 @@ class PackageParser(object):
             raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
 
         # Check if this is a class-level attribute or method before treating it as a subpackage
+        # This prevents confusing error messages when a property or method fails
         if hasattr(type(self), name):
+            # Get the class attribute
+            class_attr = getattr(type(self), name)
+            # If it's a property, try to call it to get the real error
+            if isinstance(class_attr, property):
+                try:
+                    return class_attr.fget(self)
+                except AttributeError:
+                    # Re-raise the original AttributeError from the property
+                    raise
+            # For other class attributes (methods, etc.), raise a generic error
             raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
 
         # Check if this is a known subpackage

@@ -278,15 +278,17 @@ class PackageParser(object):
                 "Either set path during initialization or use create_subpackage=False."
             )
 
+        # Only add to order_data if not already present
         data = self.order_data.split("\n")
-        if insert_at == -1:
-            data.append(new_model_name)
-        else:
-            data.insert(insert_at, new_model_name)
-        self.order_data = "\n".join(data)
+        if new_model_name not in data:
+            if insert_at == -1:
+                data.append(new_model_name)
+            else:
+                data.insert(insert_at, new_model_name)
+            self.order_data = "\n".join(data)
 
-        # remove any empty lines
-        self.order_data = self.order_data.replace('\n\n', '\n')
+            # remove any empty lines
+            self.order_data = self.order_data.replace('\n\n', '\n')
 
         # If create_subpackage is True, create the subpackage structure
         if create_subpackage:

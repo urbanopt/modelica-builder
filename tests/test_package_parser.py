@@ -2,6 +2,7 @@
 # See also https://github.com/urbanopt/modelica-builder/blob/develop/LICENSE.md
 
 import os
+import shutil
 import unittest
 from pathlib import Path
 
@@ -322,7 +323,6 @@ class PackageParserTest(unittest.TestCase):
         """Test that add_model returns the same instance if subpackage is already cached"""
         project_path = Path(self.output_dir) / 'test_cache_sync'
         if project_path.exists():
-            import shutil
             shutil.rmtree(project_path)
         project_path.mkdir(parents=True)
 
@@ -345,3 +345,8 @@ class PackageParserTest(unittest.TestCase):
         # Also verify attribute access returns the same instance
         districts3 = package.districts
         self.assertIs(districts1, districts3, "Attribute access should return cached instance")
+
+        # Verify that the model name only appears once in the order
+        order_lines = [line for line in package.order_data.split('\n') if line.strip()]
+        districts_count = sum(1 for line in order_lines if line == 'Districts')
+        self.assertEqual(districts_count, 1, "Model name should only appear once in order")

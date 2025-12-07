@@ -8,6 +8,9 @@ from pathlib import Path
 
 from modelica_builder.package_parser import PackageParser
 
+# NOTE: Update this version to test against new Modelica Buildings Library releases
+MBL_VERSION = '12.1.0'
+
 
 class PackageParserTest(unittest.TestCase):
     def setUp(self):
@@ -136,7 +139,7 @@ class PackageParserTest(unittest.TestCase):
             project_path,
             'MyProject',
             [],
-            mbl_version='12.1.0'
+            mbl_version=MBL_VERSION
         )
 
         # Add a subpackage
@@ -167,7 +170,7 @@ class PackageParserTest(unittest.TestCase):
             project_path,
             'NestedProject',
             [],
-            mbl_version='12.1.0'
+            mbl_version=MBL_VERSION
         )
 
         # Add nested subpackages
@@ -196,7 +199,7 @@ class PackageParserTest(unittest.TestCase):
             project_path,
             'SaveProject',
             [],
-            mbl_version='12.1.0'
+            mbl_version=MBL_VERSION
         )
 
         package.add_model('Districts', create_subpackage=True)
@@ -224,7 +227,7 @@ class PackageParserTest(unittest.TestCase):
             project_path,
             'ErrorProject',
             [],
-            mbl_version='12.1.0'
+            mbl_version=MBL_VERSION
         )
 
         with self.assertRaises(AttributeError) as context:
@@ -244,7 +247,7 @@ class PackageParserTest(unittest.TestCase):
             project_path,
             'CaseProject',
             [],
-            mbl_version='12.1.0'
+            mbl_version=MBL_VERSION
         )
 
         # Capture the returned subpackage from add_model
@@ -273,7 +276,7 @@ class PackageParserTest(unittest.TestCase):
             project_path,
             'WorkflowProject',
             [],
-            mbl_version='12.1.0'
+            mbl_version=MBL_VERSION
         )
         package.add_model('Districts', create_subpackage=True)
         package.districts.add_model('Model_Sigma', create_subpackage=True)
@@ -330,7 +333,7 @@ class PackageParserTest(unittest.TestCase):
             project_path,
             'CacheProject',
             [],
-            mbl_version='12.1.0'
+            mbl_version=MBL_VERSION
         )
 
         # First, create the subpackage using add_model

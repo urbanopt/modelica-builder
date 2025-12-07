@@ -1,5 +1,19 @@
 # Changelog
 
+## Versio 0.7.0
+## What's Changed
+* Add dependabot checks by @nllong in https://github.com/urbanopt/modelica-builder/pull/110
+* ci: bump the actions-deps group across 1 directory with 4 updates by @dependabot[bot] in https://github.com/urbanopt/modelica-builder/pull/123
+* deps: bump pytest-benchmark from 5.2.0 to 5.2.3 in the dev-deps group by @dependabot[bot] in https://github.com/urbanopt/modelica-builder/pull/125
+* Bump mbl version by @vtnate in https://github.com/urbanopt/modelica-builder/pull/117
+* deps: bump the dev-deps group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/urbanopt/modelica-builder/pull/128
+* ci: bump actions/checkout from 5 to 6 in the actions-deps group by @dependabot[bot] in https://github.com/urbanopt/modelica-builder/pull/126
+* Allow package parser to include subpackages by @nllong in https://github.com/urbanopt/modelica-builder/pull/129
+* Move `mbl_version` to const that can be easily updated by @nllong in https://github.com/urbanopt/modelica-builder/pull/139
+
+
+**Full Changelog**: https://github.com/urbanopt/modelica-builder/compare/v0.6.0...v0.7.0
+
 ## Version 0.6.0
 ### What's Changed
 * Use Mblv11 by @vtnate in https://github.com/urbanopt/modelica-builder/pull/92

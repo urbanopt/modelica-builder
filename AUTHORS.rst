@@ -2,5 +2,6 @@
 Contributors
 ============
 
-* Nicholas Long <nicholas.long@nrel.gov>
-* Ted Summer <ted@devetry.com>
+* Nicholas Long <https://github.com/nllong>
+* Ted Summer <https://github.com/macintoshpie>
+* Nathan Moore <https://github.com/vtnate>

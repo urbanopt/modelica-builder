@@ -1,4 +1,4 @@
-Copyright (c) 2020, 2025, Alliance for Sustainable Energy, LLC.
+Copyright (c) 2020, 2026, Alliance for Energy Innovation, LLC.
 All rights reserved.
 
 BSD 3-Clause License

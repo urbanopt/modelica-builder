@@ -18,8 +18,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install Poetry
-        # optionally set specific poetry version. Defaults to latest
+        # Use Poetry 2.2.1 for Python 3.9 compatibility
         uses: Gr1N/setup-poetry@v9
+        with:
+          poetry-version: "2.2.1"
       - name: Install dependencies with Poetry
         # poetry setuptools workaround sourced from:
         # https://github.com/python-poetry/poetry/issues/7611#issuecomment-1711443539

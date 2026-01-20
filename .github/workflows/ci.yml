@@ -21,7 +21,7 @@ jobs:
         # Pin to Poetry 2.2.x which supports Python 3.9
         uses: Gr1N/setup-poetry@v9
         with:
-          poetry-version: "2.2.3"
+          poetry-version: "2.2.2"
       - name: Install dependencies with Poetry
         # poetry setuptools workaround sourced from:
         # https://github.com/python-poetry/poetry/issues/7611#issuecomment-1711443539

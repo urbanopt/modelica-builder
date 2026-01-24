@@ -4,8 +4,6 @@
 ## What's Changed
 * Add dependabot checks by @nllong in https://github.com/urbanopt/modelica-builder/pull/110
 * Bump mbl version by @vtnate in https://github.com/urbanopt/modelica-builder/pull/117
-* deps: bump the dev-deps group across 1 directory with 2 updates by @dependabot[bot] in https://github.com/urbanopt/modelica-builder/pull/128
-* ci: bump actions/checkout from 5 to 6 in the actions-deps group by @dependabot[bot] in https://github.com/urbanopt/modelica-builder/pull/126
 * Allow package parser to include subpackages by @nllong in https://github.com/urbanopt/modelica-builder/pull/129
 * Move `mbl_version` to const that can be easily updated by @nllong in https://github.com/urbanopt/modelica-builder/pull/139
 * Update copyright name by @nllong in https://github.com/urbanopt/modelica-builder/pull/147

@@ -2,7 +2,7 @@
 name = "modelica-builder"
 version = "0.7.0"
 description = "Modelica builder enables programmatic parsing and modification of Modelica files."
-authors = ["Nicholas Long <nllong>", "Nathan Moore <vtnate>", "Ted Summer <macintoshpie>"]
+authors = ["Nicholas Long <nllong@users.noreply.github.com>", "Nathan Moore <vtnate@users.noreply.github.com>", "Ted Summer <macintoshpie@users.noreply.github.com>"]
 license = "BSD-3-Clause"
 
 readme = "README.md"

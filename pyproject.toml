@@ -41,7 +41,7 @@ coveralls = ">=3.3,<4.1"
 mypy = ">=1.18,<1.20"
 pre-commit = "~4.3"
 pytest = "~8.4"
-pytest-cov = ">=5.0,<7.1"
+pytest-cov = ">=5.0,<7.2"
 pytest-benchmark = "~5.2.3"
 # don't update sphinx right now
 sphinx = "~7.4"

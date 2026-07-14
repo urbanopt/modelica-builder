@@ -21,7 +21,7 @@ ALL_CUSTOM_FILTERS = {
 
 # Default Modelica version used in package_base.mot when none is provided,
 # kept for backwards compatibility with existing generated packages.
-DEFAULT_MODELICA_VERSION = "4.0.0"
+DEFAULT_MODELICA_VERSION = "4.1.0"
 
 
 class PackageParser(object):

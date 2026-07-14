@@ -108,7 +108,7 @@ class ModelicaProject:
             patterns = []
             with open(project_ignore_file) as f:
                 patterns = f.read().splitlines()
-            spec = pathspec.PathSpec.from_lines(pathspec.patterns.GitWildMatchPattern, patterns)
+            spec = pathspec.GitIgnoreSpec.from_lines(patterns)
         else:
             spec = None
 

@@ -58,6 +58,34 @@ class PackageParserTest(unittest.TestCase):
             file_data = f.read()
             self.assertTrue('Buildings(version="2.0.0"' in file_data, 'Incorrect mbl_version')
 
+    def test_modelica_version_default(self):
+        # verify backwards compatibility: when modelica_version isn't provided, default to 4.0.0
+        package = PackageParser.new_from_template(
+            self.output_dir,
+            'new_model_name',
+            ["model_a", "model_b"],
+            mbl_version="2.0.0"
+        )
+        package.save()
+
+        with open(Path(self.output_dir) / 'package.mo') as f:
+            file_data = f.read()
+            self.assertTrue('Modelica(version="4.0.0"' in file_data, 'Incorrect default modelica_version')
+
+    def test_modelica_version_custom(self):
+        package = PackageParser.new_from_template(
+            self.output_dir,
+            'new_model_name',
+            ["model_a", "model_b"],
+            mbl_version="2.0.0",
+            modelica_version="4.1.0"
+        )
+        package.save()
+
+        with open(Path(self.output_dir) / 'package.mo') as f:
+            file_data = f.read()
+            self.assertTrue('Modelica(version="4.1.0"' in file_data, 'Incorrect custom modelica_version')
+
     def test_round_trip(self):
         package = PackageParser.new_from_template(
             self.output_dir,

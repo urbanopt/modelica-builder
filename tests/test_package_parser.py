@@ -2,6 +2,7 @@
 # See also https://github.com/urbanopt/modelica-builder/blob/develop/LICENSE.md
 
 import os
+import re
 import shutil
 import unittest
 from pathlib import Path
@@ -56,7 +57,10 @@ class PackageParserTest(unittest.TestCase):
         # check for strings in files
         with open(Path(self.output_dir) / 'package.mo') as f:
             file_data = f.read()
-            self.assertTrue('Buildings(version="2.0.0"' in file_data, 'Incorrect mbl_version')
+            self.assertTrue(
+                re.search(r'Buildings\(\s*version="2\.0\.0"', file_data),
+                'Incorrect mbl_version',
+            )
 
     def test_round_trip(self):
         package = PackageParser.new_from_template(

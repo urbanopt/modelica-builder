@@ -3,8 +3,7 @@
 
 
 import sys
-
-from antlr4 import FileStream, CommonTokenStream
+from antlr4 import CommonTokenStream, FileStream
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4.tree.Tree import TerminalNodeImpl
 

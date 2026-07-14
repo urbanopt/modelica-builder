@@ -9,7 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python-version: ["3.9", "3.13"]
+        python-version: ["3.10", "3.13"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v6
@@ -18,10 +18,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install Poetry
-        # Use Poetry 2.2.1 for Python 3.9 compatibility
         uses: Gr1N/setup-poetry@v9
-        with:
-          poetry-version: "2.2.1"
       - name: Install dependencies with Poetry
         # poetry setuptools workaround sourced from:
         # https://github.com/python-poetry/poetry/issues/7611#issuecomment-1711443539
@@ -32,6 +29,14 @@ jobs:
 
           # Install twine to test build
           python -m pip install build twine
+      - name: Install modelicafmt
+        env:
+          MODELICA_FMT_VERSION: v0.3.1
+        run: |
+          curl -SLO "https://github.com/urbanopt/modelica-fmt/releases/download/${MODELICA_FMT_VERSION}/modelica-fmt_Linux_x86_64.tar.gz"
+          tar --exclude='README.md' --exclude='CHANGELOG.md' -xzf modelica-fmt_Linux_x86_64.tar.gz
+          chmod +x modelicafmt
+          sudo mv modelicafmt /usr/local/bin/
       - name: Run pre-commit
         run: poetry run pre-commit run --all-files
       - name: Build docs

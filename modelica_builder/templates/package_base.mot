@@ -1,6 +1,10 @@
 package {{name}}
   extends Modelica.Icons.Package;
-
-  annotation (uses(
-    Modelica(version="{{modelica_version}}"), Buildings(version="{{mbl_version}}")), version="1");
+  annotation (
+    uses(
+      Modelica(
+        version="4.0.0"),
+      Buildings(
+        version="{{mbl_version}}")),
+    version="1");
 end {{name}};

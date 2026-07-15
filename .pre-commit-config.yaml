@@ -1,7 +1,8 @@
 exclude: |
   (?x)(
     ^docs/conf.py|
-    ^modelica_builder/modelica_parser/
+    ^modelica_builder/modelica_parser/|
+    ^tests/data/
   )
 
 repos:
@@ -13,6 +14,7 @@ repos:
       - id: check-ast
       - id: check-json
       - id: check-merge-conflict
+        exclude: ^docs/license\.rst$
       - id: check-xml
       - id: check-yaml
       - id: debug-statements
@@ -48,6 +50,15 @@ repos:
       - id: flake8
         args:
           ["--ignore=F401,E402,E501,E731,W503,W504", "--max-line-length=100"]
+  - repo: local
+    hooks:
+      - id: modelica-fmt
+        name: Modelica Formatter
+        types: [file]
+        files: \.(mo|mot|mopt)$
+        entry: modelicafmt
+        args: ["-w", "-wrap-arrays"]
+        language: system
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v4.0.0-alpha.8
     hooks:

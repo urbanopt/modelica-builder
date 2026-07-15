@@ -19,6 +19,10 @@ ALL_CUSTOM_FILTERS = {
 }
 # end config for jinga2
 
+# Default Modelica version used in package_base.mot when none is provided,
+# kept for backwards compatibility with existing generated packages.
+DEFAULT_MODELICA_VERSION = "4.0.0"
+
 
 class PackageParser(object):
     """Class to read and modify the package.mo and the package.order file
@@ -142,7 +146,8 @@ class PackageParser(object):
                           name: str,
                           order: List[str],
                           mbl_version: Union[str, None] = None,
-                          within: Union[str, None] = None
+                          within: Union[str, None] = None,
+                          modelica_version: Union[str, None] = None
                           ) -> "PackageParser":
         """Create new package data based on the package.mo template. If 'within' is not specified, then it is
         assumed that this is a top level package and will load from the package_base template.
@@ -153,6 +158,9 @@ class PackageParser(object):
             order (list[str]): ordered list of which models will be loaded (saved to package.order)
             mbl_version (str, optional): the version of the model buildings library (only used in package_base.mot)
             within (str, optional): name where this package is within. Defaults to None.
+            modelica_version (str, optional): the version of the Modelica standard library (only used in
+                                              package_base.mot). Defaults to DEFAULT_MODELICA_VERSION for
+                                              backwards compatibility.
 
 
         Returns:
@@ -164,7 +172,12 @@ class PackageParser(object):
         else:
             template = klass.template_env.get_template("package_base.mot")
 
-        klass.package_data = template.render(within=within, name=name, order=order, mbl_version=mbl_version)
+        if modelica_version is None:
+            modelica_version = DEFAULT_MODELICA_VERSION
+
+        klass.package_data = template.render(
+            within=within, name=name, order=order, mbl_version=mbl_version, modelica_version=modelica_version
+        )
         klass.order_data = "\n".join(order)
         klass.package_name = name
         klass.parse_within_statement()

@@ -1,7 +1,20 @@
 # Changelog
 
+## Version 0.8.0
+### What's Changed
+* Update emails in pyproject by @nllong in https://github.com/urbanopt/modelica-builder/pull/149
+* Bump the dev-deps group with 2 updates by @dependabot[bot] in https://github.com/urbanopt/modelica-builder/pull/150
+* deps: bump pytest-cov from 7.0.0 to 7.1.0 in the dev-deps group by @dependabot[bot] in https://github.com/urbanopt/modelica-builder/pull/154
+* ci: bump the actions-deps group with 2 updates by @dependabot[bot] in https://github.com/urbanopt/modelica-builder/pull/153
+* Update dependencies, remove support for Python 3.9 by @nllong in https://github.com/urbanopt/modelica-builder/pull/159
+* ci: bump actions/checkout from 6 to 7 in the actions-deps group by @dependabot[bot] in https://github.com/urbanopt/modelica-builder/pull/157
+* Abstract the Modelica version in package base by @nllong in https://github.com/urbanopt/modelica-builder/pull/158
+
+
+**Full Changelog**: https://github.com/urbanopt/modelica-builder/compare/v0.7.0...v0.8.0
+
 ## Version 0.7.0
-## What's Changed
+### What's Changed
 * Add dependabot checks by @nllong in https://github.com/urbanopt/modelica-builder/pull/110
 * Bump mbl version by @vtnate in https://github.com/urbanopt/modelica-builder/pull/117
 * Allow package parser to include subpackages by @nllong in https://github.com/urbanopt/modelica-builder/pull/129

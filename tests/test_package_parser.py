@@ -74,7 +74,10 @@ class PackageParserTest(unittest.TestCase):
 
         with open(Path(self.output_dir) / 'package.mo') as f:
             file_data = f.read()
-            self.assertTrue('Modelica(version="4.0.0"' in file_data, 'Incorrect default modelica_version')
+            self.assertTrue(
+                re.search(r'Modelica\(\s*version="4\.0\.0"', file_data),
+                'Incorrect default modelica_version',
+            )
 
     def test_modelica_version_custom(self):
         package = PackageParser.new_from_template(
@@ -88,7 +91,10 @@ class PackageParserTest(unittest.TestCase):
 
         with open(Path(self.output_dir) / 'package.mo') as f:
             file_data = f.read()
-            self.assertTrue('Modelica(version="4.1.0"' in file_data, 'Incorrect custom modelica_version')
+            self.assertTrue(
+                re.search(r'Modelica\(\s*version="4\.1\.0"', file_data),
+                'Incorrect custom modelica_version',
+            )
 
     def test_round_trip(self):
         package = PackageParser.new_from_template(

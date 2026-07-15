@@ -3,7 +3,7 @@ package {{name}}
   annotation (
     uses(
       Modelica(
-        version="4.0.0"),
+        version="{{modelica_version}}"),
       Buildings(
         version="{{mbl_version}}")),
     version="1");

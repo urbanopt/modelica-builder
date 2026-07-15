@@ -6,7 +6,7 @@ resulting file. The user has access to the entire Abstract Syntax Tree of the en
 
 The Modelica Builder project does not:
 
-* Compile nor check for syntax validity
+- Compile nor check for syntax validity
 
 ## Install
 
@@ -119,17 +119,18 @@ To run the tests, simply run the following:
 ```bash
     poetry run pytest
 ```
+
 ### Known Issues
 
-* The transformations occur on strings which are immutable. Need to investigate using byte arrays. This does not cause errors, but can be slow when parsing really large modelica files.
+- The transformations occur on strings which are immutable. Need to investigate using byte arrays. This does not cause errors, but can be slow when parsing really large modelica files.
 
 ## Release Instructions
 
 1. Bump version to <NEW_VERSION> in pyproject.toml (use semantic versioning, e.g., 0.5.0, 0.5.1.rc1).
 1. Run `poetry run pre-commit run --all-files`
 1. In a prep-release branch, push the changes to GitHub and draft a release against the latest branch.
-    * Run 'auto-generate changelog' and copy the contents to the CHANGELOG.md. Cull any items that are repeated.
-    * Discard the draft release (you will create an official one off of the main branch later)
+   - Run 'auto-generate changelog' and copy the contents to the CHANGELOG.md. Cull any items that are repeated.
+   - Discard the draft release (you will create an official one off of the main branch later)
 1. Merge the prep-release branch into develop.
 1. From command line, merge develop into main with: `git checkout main; git pull; git merge --ff-only origin develop; git push`
 1. In GitHub, tag the release against main. Copy and paste the changelog entry into the notes. Verify the release is posted to PyPI.

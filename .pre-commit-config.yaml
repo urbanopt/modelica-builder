@@ -14,6 +14,7 @@ repos:
       - id: check-ast
       - id: check-json
       - id: check-merge-conflict
+        exclude: ^docs/license\.rst$
       - id: check-xml
       - id: check-yaml
       - id: debug-statements
@@ -32,7 +33,7 @@ repos:
             --filter-files,
           ]
   - repo: https://github.com/PyCQA/autoflake
-    rev: v2.3.1
+    rev: v2.3.3
     hooks:
       - id: autoflake
         args:
@@ -63,4 +64,4 @@ repos:
     hooks:
       - id: prettier
         # for now ignoring html, javascript
-        types_or: [yaml]
+        types_or: [yaml, markdown]

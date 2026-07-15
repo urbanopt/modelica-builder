@@ -33,7 +33,7 @@ repos:
             --filter-files,
           ]
   - repo: https://github.com/PyCQA/autoflake
-    rev: v2.3.1
+    rev: v2.3.3
     hooks:
       - id: autoflake
         args:
@@ -64,4 +64,4 @@ repos:
     hooks:
       - id: prettier
         # for now ignoring html, javascript
-        types_or: [yaml]
+        types_or: [yaml, markdown]
